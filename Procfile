@@ -1,0 +1,1 @@
+web: gunicorn usemak.wsgi --log-file -

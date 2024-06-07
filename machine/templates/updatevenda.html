@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block titulo %}
+Dashboard
+{% endblock %}
+{% block main %}
+    <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+            <div class="sidebar-sticky">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'machine:dashboardpendentes' %}">
+                            <span data-feather="bar-chart-2"></span>
+                            Dashboard Pendentes
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'machine:dashboardprocessados' %}">
+                            <span data-feather="bar-chart"></span>
+                            Dashboard Processados
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'machine:dashboardcontestados' %}">
+                            <span data-feather="bar-chart"></span>
+                            Dashboard Contestados<span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'machine:readvendas' %}">
+                            <span data-feather="shopping-cart"></span>
+                            Vendas<span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'machine:readestabelecimentos' %}">
+                            <span data-feather="users"></span>
+                            Clientes
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <span data-feather="bar-chart-2"></span>
+                            Relatórios
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <span data-feather="layers"></span>
+                            Integrações
+                        </a>
+                    </li>
+                </ul>
+
+                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                    <span>Relatórios Salvos</span>
+                <a class="d-flex align-items-center text-muted" href="#">
+                    <span data-feather="plus-circle"></span>
+                </a>
+                </h6>
+                <ul class="nav flex-column mb-2">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <span data-feather="file-text"></span>
+                            Neste mês
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <span data-feather="file-text"></span>
+                            Último trimestre
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <form method="post">
+                {% csrf_token %}
+                    <fieldset>
+                        <legend class="border-bottom mb-4">Atualizar Venda Nº {{ object }}</legend>
+                        {{ form|crispy }}
+                        <div class="field margin_0">
+                            <a class="btn btn-outline-secondary btn-lg float-left"
+                                       href="{% url 'machine:readvendas' %}" role="button">Voltar</a>
+                            <button class="btn btn-outline-success btn-lg float-right" data-placement="left">Cadastrar</button>
+                        </div>
+                    </fieldset>
+            </form>
+        </div>
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h2>Vendas</h2>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-striped table-sm">
+                <thead>
+                    <tr>
+                        <th>Estabelecimento</th>
+                        <th>Tipo</th>
+                        <th>Cartão</th>
+                        <th>Data</th>
+                        <th>Valor Bruto</th>
+                        <th>Tarifa Banco</th>
+                        <th>Tarifa Cobrada</th>
+                        <th>Lucro</th>
+                        <th>Valor Líquido</th>
+                        <th>Atualizar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for venda in vendas %}
+                    <tr>
+                        <td>{{ venda.estabelecimento }}</td>
+                        <td>{{ venda.tipo }}</td>
+                        <td>{{ venda.cartao }}</td>
+                        <td>{{ venda.data.day }}/{{ venda.data.month }}/{{ venda.data.year }}</td>
+                        <td>{{ venda.valor_bruto }}</td>
+                        <td>{{ venda.tarifa_maquina }}</td>
+                        <td>{{ venda.tarifa_cliente }}</td>
+                        <td>{{ venda.lucro }}</td>
+                        <td>{{ venda.valor_liquido }}</td>
+                        <td>
+                            <a class="btn btn-success btn-sm"
+                               href="{% url 'machine:updatevenda' venda.id %}" role="button"><span data-feather="file-text"></span></a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+{% endblock %}
