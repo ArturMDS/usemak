@@ -88,7 +88,7 @@ class Venda(models.Model):
     valor_devido = models.DecimalField("Valor devido ao cliente", max_digits=8, decimal_places=2, default=0.00)
     lucro = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
     nr_maquina = models.CharField(max_length=20, null=True, blank=True)
-    cod_venda = models.CharField(max_length=20, null=True, blank=True)
+    cod_venda = models.CharField(max_length=70, null=True, blank=True)
     em_conta = models.BooleanField(default=False)
     pago = models.BooleanField(default=False)
     arquivado = models.BooleanField(default=False)
