@@ -376,7 +376,7 @@ class Updateestabelecimento(LoginRequiredMixin, UpdateView):
 
 
 def create_dados(request):
-    dataframe = pd.read_excel('media/vendas1.xlsx')
+    dataframe = pd.read_excel('static/atualizacoes/vendas1.xlsx')
     d_records = dataframe.to_dict("records")
     estabelecimento = Estabelecimento.objects.last()
     list_vendas = []
