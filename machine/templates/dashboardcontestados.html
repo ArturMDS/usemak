@@ -11,19 +11,19 @@ Dashboard
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'machine:dashboardpendentes' %}">
                             <span data-feather="bar-chart-2"></span>
-                            Dashboard Pendentes
+                            Pendentes
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'machine:dashboardprocessados' %}">
                             <span data-feather="bar-chart"></span>
-                            Dashboard Processados<span class="sr-only">(current)</span>
+                            Processados<span class="sr-only">(current)</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link active" href="{% url 'machine:dashboardcontestados' %}">
                             <span data-feather="bar-chart"></span>
-                            Dashboard Contestados<span class="sr-only">(current)</span>
+                            Contestados<span class="sr-only">(current)</span>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -38,7 +38,7 @@ Dashboard
                             Clientes
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <!--<li class="nav-item">
                         <a class="nav-link" href="#">
                             <span data-feather="bar-chart-2"></span>
                             Relatórios
@@ -70,7 +70,7 @@ Dashboard
                             <span data-feather="file-text"></span>
                             Último trimestre
                         </a>
-                    </li>
+                    </li>-->
                 </ul>
             </div>
         </nav>
@@ -90,6 +90,7 @@ Dashboard
                         <th>Valor Calculado</th>
                         <th>Valor Operadora</th>
                         <th>Ajustar Valor</th>
+                        <th>Modificar</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -106,6 +107,10 @@ Dashboard
                         <td>
                             <a class="btn btn-warning btn-sm"
                                href="{% url 'machine:ajusta_contestados' venda.id %}" role="button">Sim</a>
+                        </td>
+                        <td>
+                            <a class="btn btn-success btn-sm"
+                               href="{% url 'machine:updatecontestado' venda.id %}" role="button"><span data-feather="file-text"></span></a>
                         </td>
                     </tr>
                     {% endfor %}

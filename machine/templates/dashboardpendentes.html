@@ -11,19 +11,19 @@ Dashboard
                     <li class="nav-item">
                         <a class="nav-link active" href="{% url 'machine:dashboardpendentes' %}">
                             <span data-feather="bar-chart-2"></span>
-                            Dashboard Pendentes<span class="sr-only">(current)</span>
+                            Pendentes<span class="sr-only">(current)</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'machine:dashboardprocessados' %}">
                             <span data-feather="bar-chart"></span>
-                            Dashboard Processados
+                            Processados
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'machine:dashboardcontestados' %}">
                             <span data-feather="bar-chart"></span>
-                            Dashboard Contestados<span class="sr-only">(current)</span>
+                            Contestados<span class="sr-only">(current)</span>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -38,7 +38,7 @@ Dashboard
                             Clientes
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <!--<li class="nav-item">
                         <a class="nav-link" href="#">
                             <span data-feather="bar-chart-2"></span>
                             Relatórios
@@ -70,7 +70,7 @@ Dashboard
                             <span data-feather="file-text"></span>
                             Último trimestre
                         </a>
-                    </li>
+                    </li>-->
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'machine:create_dados' %}">
                             <span data-feather="file-text"></span>
@@ -89,25 +89,39 @@ Dashboard
                     <h5 class="text-center card-title">{{ lucro_total }}</h5>
                 </div>
             </div>
-            <p class="text-white">xx</p>
+            <p class="text-white">x</p>
             <div class="card text-white bg-danger mb-3" style="max-width: 18rem;">
                 <div class="text-center card-header">DÉBITO COM O CLIENTE</div>
                 <div class="card-body">
                     <h5 class="text-center card-title">{{ texto_devido }}</h5>
                 </div>
             </div>
-            <p class="text-white">xx</p>
+            <p class="text-white">x</p>
             <div class="card text-white bg-info mb-3" style="max-width: 18rem;">
                 <div class="text-center card-header">TAXAS</div>
                 <div class="card-body">
                     <h5 class="text-center card-title">{{ texto_tarifa }}</h5>
                 </div>
             </div>
-            <p class="text-white">xx</p>
+            <p class="text-white">x</p>
             <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
-                <div class="text-center card-header">ENTRADA</div>
+                <div class="text-center card-header">ENTRADA TOTAL</div>
                 <div class="card-body">
                     <h5 class="text-center card-title">{{ texto_entrada }}</h5>
+                </div>
+            </div>
+            <p class="text-white">x</p>
+            <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+                <div class="text-center card-header">ENTRADA HOJE</div>
+                <div class="card-body">
+                    <h5 class="text-center card-title">{{ texto_entrada_hoje }}</h5>
+                </div>
+            </div>
+            <p class="text-white">x</p>
+            <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+                <div class="text-center card-header">ENTRADA AMANHÃ</div>
+                <div class="card-body">
+                    <h5 class="text-center card-title">{{ texto_entrada_amanha }}</h5>
                 </div>
             </div>
         </div>
@@ -141,7 +155,7 @@ Dashboard
                         <td>R${{ venda.valor_cobranca }}</td>
                         <td>R${{ venda.lucro }}</td>
                         <td>R${{ venda.valor_devido }}</td>
-                        {% if em_conta %}
+                        {% if venda.em_conta %}
                         <td>
                             <a class="btn btn-primary btn-sm"
                                href="#" role="button">Sim</a>

@@ -12,13 +12,13 @@ Dashboard
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'machine:dashboardpendentes' %}">
                             <span data-feather="bar-chart-2"></span>
-                            Dashboard Pendentes
+                            Pendentes
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'machine:dashboardprocessados' %}">
                             <span data-feather="bar-chart"></span>
-                            Dashboard Processados
+                            Processados
                         </a>
                     </li>
                     <li class="nav-item">
@@ -39,7 +39,7 @@ Dashboard
                             Clientes
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <!--<li class="nav-item">
                         <a class="nav-link" href="#">
                             <span data-feather="bar-chart-2"></span>
                             Relatórios
@@ -71,7 +71,7 @@ Dashboard
                             <span data-feather="file-text"></span>
                             Último trimestre
                         </a>
-                    </li>
+                    </li>-->
                 </ul>
             </div>
         </nav>
@@ -91,45 +91,6 @@ Dashboard
                     </fieldset>
             </form>
         </div>
-        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h2>Vendas</h2>
-        </div>
-        <div class="table-responsive">
-            <table class="table table-striped table-sm">
-                <thead>
-                    <tr>
-                        <th>Estabelecimento</th>
-                        <th>Tipo</th>
-                        <th>Cartão</th>
-                        <th>Data</th>
-                        <th>Valor Bruto</th>
-                        <th>Tarifa Banco</th>
-                        <th>Tarifa Cobrada</th>
-                        <th>Lucro</th>
-                        <th>Valor Líquido</th>
-                        <th>Atualizar</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for venda in vendas %}
-                    <tr>
-                        <td>{{ venda.estabelecimento }}</td>
-                        <td>{{ venda.tipo }}</td>
-                        <td>{{ venda.cartao }}</td>
-                        <td>{{ venda.data.day }}/{{ venda.data.month }}/{{ venda.data.year }}</td>
-                        <td>{{ venda.valor_bruto }}</td>
-                        <td>{{ venda.tarifa_maquina }}</td>
-                        <td>{{ venda.tarifa_cliente }}</td>
-                        <td>{{ venda.lucro }}</td>
-                        <td>{{ venda.valor_liquido }}</td>
-                        <td>
-                            <a class="btn btn-success btn-sm"
-                               href="{% url 'machine:updatevenda' venda.id %}" role="button"><span data-feather="file-text"></span></a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+
     </main>
 {% endblock %}
