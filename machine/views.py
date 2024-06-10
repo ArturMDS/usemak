@@ -43,7 +43,7 @@ class AcessoNegado(TemplateView):
 class Dashboardpendentes(TemplateView):
     template_name = "dashboardpendentes.html"
 
-    def dispatch(self, request, *args, **kwargs):
+    """def dispatch(self, request, *args, **kwargs):
         usuario_logado = self.request.user
         vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado).filter(em_conta=False)
         hoje = date.today()
@@ -52,7 +52,7 @@ class Dashboardpendentes(TemplateView):
             if (x.days < 0) or venda.previsao_pgto == hoje:
                 venda.em_conta = True
                 venda.save()
-        return super(Dashboardpendentes, self).dispatch(request, *args, **kwargs)
+        return super(Dashboardpendentes, self).dispatch(request, *args, **kwargs)"""
 
     def get_context_data(self, **kwargs):
         context = super(Dashboardpendentes, self).get_context_data(**kwargs)
