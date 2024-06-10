@@ -46,10 +46,10 @@ class Dashboardpendentes(TemplateView):
     def dispatch(self, request, *args, **kwargs):
         usuario_logado = self.request.user
         vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado).filter(em_conta=False)
-        hoje = datetime.now()
+        hoje = date.today()
         for venda in vendas:
-            x = datetime(year=venda.previsao_pgto.year, month=venda.previsao_pgto.month, day=venda.previsao_pgto.day) - hoje
-            if x.days <= 0:
+            x = date(year=venda.previsao_pgto.year, month=venda.previsao_pgto.month, day=venda.previsao_pgto.day) - hoje
+            if (x.days < 0) or venda.previsao_pgto == hoje:
                 venda.em_conta = True
                 venda.save()
         return super(Dashboardpendentes, self).dispatch(request, *args, **kwargs)
@@ -57,7 +57,7 @@ class Dashboardpendentes(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(Dashboardpendentes, self).get_context_data(**kwargs)
         usuario_logado = self.request.user
-        vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado).filter(pago=False).filter(contesta=False)
+        vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado).filter(pago=False).filter(contesta=False).order_by('data_venda')
         dia = timedelta(days=1)
         hoje = date.today()
         amanha = hoje + dia
@@ -384,7 +384,7 @@ def create_dados(request):
         bandeira = Bandeira.objects.get(nome=str(dado['Bandeira']))
         usuario_logado = request.user #TODO: apenas na fase anterior ao deploy
         vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado) #TODO: apenas na fase anterior ao deploy
-        if not vendas.filter(cod_venda=dado['Código da venda']) is None:
+        if not vendas.filter(cod_venda=dado['Código da venda']):
             if 'édito' in dado['Forma de pagamento']:
                 if dado['Forma de pagamento'] == "Crédito à vista":
                     v = Venda(estabelecimento=estabelecimento,
