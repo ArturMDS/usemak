@@ -222,6 +222,13 @@ def confirma_pgto(request, id):
     return redirect('machine:dashboardpendentes')
 
 
+def arquiva_pgto(request, id):
+    venda = Venda.objects.get(id=id)
+    venda.arquivado = True
+    venda.save()
+    return redirect('machine:dashboardprocessados')
+
+
 def cancela_pgto(request, id):
     venda = Venda.objects.get(id=id)
     venda.pago = False

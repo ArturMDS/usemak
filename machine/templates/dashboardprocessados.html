@@ -161,7 +161,7 @@ Dashboard
                         </td>
                         <td>
                             <a class="btn btn-success btn-sm"
-                               href="#" role="button">Sim</a>
+                               href="{% url 'machine:arquiva_pgto' venda.id %}" role="button">Sim</a>
                         </td>
                     </tr>
                     {% endfor %}

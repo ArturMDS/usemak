@@ -1,6 +1,7 @@
 from django.urls import path, re_path
 from django.contrib.auth import views as auth_view
 from .views import (confirma_pgto,
+                    arquiva_pgto,
                     Dashboardpendentes,
                     Dashboardprocessados,
                     Dashboardcontestados,
@@ -36,5 +37,6 @@ urlpatterns = [
     path('create_dados', create_dados, name='create_dados'),
     re_path(r'^ajusta_contestados/(?P<id>\d+)/$', ajusta_contestados, name='ajusta_contestados'),
     re_path(r'^confirma_pgto/(?P<id>\d+)/$', confirma_pgto, name='confirma_pgto'),
+    re_path(r'^arquiva_pgto/(?P<id>\d+)/$', arquiva_pgto, name='arquiva_pgto'),
     re_path(r'^cancela_pgto/(?P<id>\d+)/$', cancela_pgto, name='cancela_pgto'),
 ]
