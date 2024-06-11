@@ -43,7 +43,7 @@ class AcessoNegado(TemplateView):
 class Dashboardpendentes(TemplateView):
     template_name = "dashboardpendentes.html"
 
-    """def dispatch(self, request, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
         usuario_logado = self.request.user
         vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado).filter(em_conta=False)
         hoje = date.today()
@@ -52,12 +52,17 @@ class Dashboardpendentes(TemplateView):
             if (x.days < 0) or venda.previsao_pgto == hoje:
                 venda.em_conta = True
                 venda.save()
-        return super(Dashboardpendentes, self).dispatch(request, *args, **kwargs)"""
+        return super(Dashboardpendentes, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(Dashboardpendentes, self).get_context_data(**kwargs)
         usuario_logado = self.request.user
         vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado).filter(pago=False).filter(contesta=False).order_by('data_venda')
+        datas = []
+        for venda in vendas:
+            exemplo = date(year=venda.data_venda.year, month=venda.data_venda.month, day=venda.data_venda.day)
+            if exemplo not in datas:
+                datas.append(exemplo)
         dia = timedelta(days=1)
         hoje = date.today()
         amanha = hoje + dia
@@ -116,6 +121,7 @@ class Dashboardpendentes(TemplateView):
         context["texto_entrada"] = texto_entrada
         context["texto_entrada_hoje"] = texto_entrada_hoje
         context["texto_entrada_amanha"] = texto_entrada_amanha
+        context["datas"] = datas
         return context
 
 
@@ -222,10 +228,31 @@ def confirma_pgto(request, id):
     return redirect('machine:dashboardpendentes')
 
 
+def confirma_diapgto(request):
+    usuario_logado = request.user
+    ano = int(request.GET.get("ano_data"))
+    mes = int(request.GET.get("mes_data"))
+    dia = int(request.GET.get("dia_data"))
+    vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado).filter(data_venda__day=dia)
+    for venda in vendas:
+        venda.pago = True
+        venda.save()
+    return redirect('machine:dashboardpendentes')
+
+
 def arquiva_pgto(request, id):
     venda = Venda.objects.get(id=id)
     venda.arquivado = True
     venda.save()
+    return redirect('machine:dashboardprocessados')
+
+
+def arquiva_pgto_todos(request):
+    usuario_logado = request.user
+    vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado).filter(pago=True).filter(arquivado=False)
+    for venda in vendas:
+        venda.arquivado = True
+        venda.save()
     return redirect('machine:dashboardprocessados')
 
 
@@ -386,6 +413,7 @@ def create_dados(request):
     dataframe = pd.read_excel('static/atualizacoes/vendas1.xlsx')
     d_records = dataframe.to_dict("records")
     estabelecimento = Estabelecimento.objects.last()
+    h = timedelta(seconds=10800)
     list_vendas = []
     for dado in d_records:
         bandeira = Bandeira.objects.get(nome=str(dado['Bandeira']))
@@ -397,7 +425,7 @@ def create_dados(request):
                     v = Venda(estabelecimento=estabelecimento,
                               tipo=dado['Forma de pagamento'],
                               bandeira=bandeira,
-                              data_venda=pd.to_datetime(dado['Data da venda'], format='%d/%m/%Y %H:%M'),
+                              data_venda=pd.to_datetime(dado['Data da venda'], format='%d/%m/%Y %H:%M') - h,
                               previsao_pgto=pd.to_datetime(dado['Previsão de pagamento'], format='%d/%m/%Y'),
                               valor_bruto=round(round(decimal.Decimal(dado['Valor da venda']), 2), 2),
                               taxa=estabelecimento.taxa_credito,
@@ -417,7 +445,7 @@ def create_dados(request):
                     v = Venda(estabelecimento=estabelecimento,
                               tipo=dado['Forma de pagamento'],
                               bandeira=bandeira,
-                              data_venda=pd.to_datetime(dado['Data da venda'], format='%d/%m/%Y %H:%M'),
+                              data_venda=pd.to_datetime(dado['Data da venda'], format='%d/%m/%Y %H:%M') - h,
                               previsao_pgto=pd.to_datetime(dado['Previsão de pagamento'], format='%d/%m/%Y'),
                               valor_bruto=round(round(decimal.Decimal(dado['Valor da venda']), 2), 2),
                               taxa=estabelecimento.taxa_credito,
@@ -437,7 +465,7 @@ def create_dados(request):
                     v = Venda(estabelecimento=estabelecimento,
                               tipo=dado['Forma de pagamento'],
                               bandeira=bandeira,
-                              data_venda=pd.to_datetime(dado['Data da venda'], format='%d/%m/%Y %H:%M'),
+                              data_venda=pd.to_datetime(dado['Data da venda'], format='%d/%m/%Y %H:%M') - h,
                               previsao_pgto=pd.to_datetime(dado['Previsão de pagamento'], format='%d/%m/%Y'),
                               valor_bruto=round(round(decimal.Decimal(dado['Valor da venda']), 2), 2),
                               taxa=estabelecimento.taxa_credito,
@@ -457,7 +485,7 @@ def create_dados(request):
                     v = Venda(estabelecimento=estabelecimento,
                               tipo=dado['Forma de pagamento'],
                               bandeira=bandeira,
-                              data_venda=pd.to_datetime(dado['Data da venda'], format='%d/%m/%Y %H:%M'),
+                              data_venda=pd.to_datetime(dado['Data da venda'], format='%d/%m/%Y %H:%M') - h,
                               previsao_pgto=pd.to_datetime(dado['Previsão de pagamento'], format='%d/%m/%Y'),
                               valor_bruto=round(round(decimal.Decimal(dado['Valor da venda']), 2), 2),
                               taxa=estabelecimento.taxa_credito,
@@ -478,7 +506,7 @@ def create_dados(request):
                     v = Venda(estabelecimento=estabelecimento,
                               tipo=dado['Forma de pagamento'],
                               bandeira=bandeira,
-                              data_venda=pd.to_datetime(dado['Data da venda'], format='%d/%m/%Y %H:%M'),
+                              data_venda=pd.to_datetime(dado['Data da venda'], format='%d/%m/%Y %H:%M') - h,
                               previsao_pgto=pd.to_datetime(dado['Previsão de pagamento'], format='%d/%m/%Y'),
                               valor_bruto=round(round(decimal.Decimal(dado['Valor da venda']), 2), 2),
                               taxa=estabelecimento.taxa_debito,
@@ -498,7 +526,7 @@ def create_dados(request):
                     v = Venda(estabelecimento=estabelecimento,
                               tipo=dado['Forma de pagamento'],
                               bandeira=bandeira,
-                              data_venda=pd.to_datetime(dado['Data da venda'], format='%d/%m/%Y %H:%M'),
+                              data_venda=pd.to_datetime(dado['Data da venda'], format='%d/%m/%Y %H:%M') - h,
                               previsao_pgto=pd.to_datetime(dado['Previsão de pagamento'], format='%d/%m/%Y'),
                               valor_bruto=round(round(decimal.Decimal(dado['Valor da venda']), 2), 2),
                               taxa=estabelecimento.taxa_debito,
