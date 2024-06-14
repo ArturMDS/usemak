@@ -42,6 +42,7 @@ class Estabelecimento(models.Model):
 
 class Operadora(models.Model):
     nome = models.CharField(max_length=250, default="Desconhecido")
+    logo = models.ImageField(upload_to='logos', null=True, blank=True)
 
     def __str__(self):
         return self.nome
@@ -49,6 +50,7 @@ class Operadora(models.Model):
 
 class Bandeira(models.Model):
     nome = models.CharField(max_length=250, default="Desconhecido")
+    logo = models.ImageField(upload_to='logos', null=True, blank=True)
     debito_vista = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
     debito_pre = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
     credito_vista = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
