@@ -39,6 +39,12 @@ Dashboard
                             Clientes
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'machine:createatualizacao' %}">
+                            <span data-feather="layers"></span>
+                            Inserir arquivo
+                        </a>
+                    </li>
                     <!--<li class="nav-item">
                         <a class="nav-link" href="#">
                             <span data-feather="bar-chart-2"></span>
@@ -72,6 +78,14 @@ Dashboard
                             Último trimestre
                         </a>
                     </li>-->
+                    {% for arquivo in vigente %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'machine:create_dados' arquivo.id %}">
+                                <span data-feather="file-text"></span>
+                                Atualizar
+                            </a>
+                        </li>
+                    {% endfor %}
                 </ul>
             </div>
         </nav>

@@ -12,35 +12,35 @@ Dashboard
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'machine:dashboardpendentes' %}">
                             <span data-feather="bar-chart-2"></span>
-                            Dashboard Pendentes
+                            Pendentes
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'machine:dashboardprocessados' %}">
                             <span data-feather="bar-chart"></span>
-                            Dashboard Processados
+                            Processados
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'machine:dashboardcontestados' %}">
                             <span data-feather="bar-chart"></span>
-                            Dashboard Contestados<span class="sr-only">(current)</span>
+                            Contestados<span class="sr-only">(current)</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="{% url 'machine:readvendas' %}">
+                        <a class="nav-link" href="{% url 'machine:readvendas' %}">
                             <span data-feather="shopping-cart"></span>
-                            Vendas<span class="sr-only">(current)</span>
+                            Vendas
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'machine:readestabelecimentos' %}">
                             <span data-feather="users"></span>
-                            Clientes
+                            Clientes<span class="sr-only">(current)</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'machine:createatualizacao' %}">
+                        <a class="nav-link active" href="{% url 'machine:createatualizacao' %}">
                             <span data-feather="layers"></span>
                             Inserir arquivo
                         </a>
@@ -92,15 +92,13 @@ Dashboard
     </div>
     <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <form method="post">
+            <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                     <fieldset>
-                        <legend class="border-bottom mb-4">Atualizar Venda Nº {{ object }}</legend>
+                        <legend class="border-bottom mb-4">Cadastrar Nova Atualização</legend>
                         {{ form|crispy }}
                         <div class="field margin_0">
-                            <a class="btn btn-outline-secondary btn-lg float-left"
-                                       href="{% url 'machine:readvendas' %}" role="button">Voltar</a>
-                            <button class="btn btn-outline-success btn-lg float-right" data-placement="left">Atualizar</button>
+                            <button class="btn btn-outline-success btn-lg float-right" data-placement="left">Cadastrar</button>
                         </div>
                     </fieldset>
             </form>

@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import AbstractUser
+from .manager import VendasManager
 
 LISTA_TIPO = (
     ("Débito à vista", "Débito à vista"),
@@ -96,14 +97,13 @@ class Venda(models.Model):
     arquivado = models.BooleanField(default=False)
     contesta = models.BooleanField(default=False)
     valor_contestado = models.DecimalField("Valor cobrado pela operadora", max_digits=8, decimal_places=2, default=0.00)
+    objects = VendasManager()
 
     def __str__(self):
         return str(self.data_venda) + " - " + self.nr_maquina + " - " + str(self.valor_bruto)
 
 
 class Atualizacao(models.Model):
-    data_inicio = models.DateField("Primeiro dia da atualização")
-    data_fim = models.DateField("Último dia da atualização")
     nome = models.CharField(max_length=50)
     vigente = models.BooleanField(default=True)
     arquivo = models.FileField(upload_to='arquivos')

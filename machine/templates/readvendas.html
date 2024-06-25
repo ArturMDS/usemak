@@ -38,6 +38,12 @@ Dashboard
                             Clientes<span class="sr-only">(current)</span>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'machine:createatualizacao' %}">
+                            <span data-feather="layers"></span>
+                            Inserir arquivo
+                        </a>
+                    </li>
                     <!--<li class="nav-item">
                         <a class="nav-link" href="#">
                             <span data-feather="bar-chart-2"></span>
@@ -71,13 +77,21 @@ Dashboard
                             Último trimestre
                         </a>
                     </li>-->
+                    {% for arquivo in vigente %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'machine:create_dados' arquivo.id %}">
+                                <span data-feather="file-text"></span>
+                                Atualizar
+                            </a>
+                        </li>
+                    {% endfor %}
                 </ul>
             </div>
         </nav>
     </div>
     <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h2>Vendas</h2>
+            <h2 class="text-center">Vendas arquivadas</h2>
             <div class="btn-toolbar mb-2 mb-md-0">
                 <div class="btn-group mr-2">
                     <a href="{% url 'machine:createvenda' %}"><button class="btn btn-outline-secondary">
@@ -87,6 +101,61 @@ Dashboard
             </div>
         </div>
         <div class="table-responsive">
+            <h2 class="text-center">Resumo</h2>
+            <table class="table table-striped table-sm">
+                <thead>
+                    <tr>
+                        <th>Data Recebimento</th>
+                        <th>Qtde</th>
+                        <th>Entrada</th>
+                        <th>Taxas</th>
+                        <th>Valor Bruto</th>
+                        <th>Valor Devido</th>
+                        <th>Valor Cobrado</th>
+                        <th>Lucro</th>
+                        <th>Desarquivar?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for venda in vendas_query %}
+                        <tr>
+                            <td>{{ venda.last.previsao_pgto.day }}/{{ venda.last.previsao_pgto.month }}/{{ venda.last.previsao_pgto.year }}</td>
+                            <td>{{ venda.count }}</td>
+                            <td>R$ {{ venda.entrada }}</td>
+                            <td>R$ {{ venda.total_tarifa }}</td>
+                            <td>R$ {{ venda.total_bruto }}</td>
+                            <td>R$ {{ venda.total_devido }}</td>
+                            <td>R$ {{ venda.total_cobranca }}</td>
+                            <td>R$ {{ venda.lucro_total }}</td>
+                            <td>
+                                <form method="get" action="{% url 'machine:cancela_pgto' %}">
+                                    {% csrf_token %}
+                                    <fieldset>
+                                        <input type="hidden" name="dia" value="{{ venda.last.previsao_pgto.day }}">
+                                        <input type="hidden" name="mes" value="{{ venda.last.previsao_pgto.month }}">
+                                        <input type="hidden" name="ano" value="{{ venda.last.previsao_pgto.year }}">
+                                        <button type="submit" class="btn btn-success btn-sm">Desarquivar</button>
+                                    </fieldset>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                        <tr>
+                            <td><b>Total</b></td>
+                            <td>{{ vendas.count }}</td>
+                            <td>R$ {{ vendas.entrada }}</td>
+                            <td>R$ {{ vendas.total_tarifa }}</td>
+                            <td>R$ {{ vendas.total_bruto }}</td>
+                            <td>R$ {{ vendas.total_devido }}</td>
+                            <td>R$ {{ vendas.total_cobranca }}</td>
+                            <td>R$ {{ vendas.lucro_total }}</td>
+                            <td>---</td>
+                        </tr>
+                </tbody>
+            </table>
+        </div><br><br>
+        <div class="table-responsive">
+            <h2 class="text-center">Vendas arquivadas</h2>
             <table class="table table-striped table-sm">
                 <thead>
                     <tr>

@@ -5,16 +5,19 @@ from django.db.models import Sum, F
 from django.views.generic import (CreateView, \
     UpdateView, \
     TemplateView,
-    FormView)
+    FormView,
+    ListView)
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import (Venda,
                      Estabelecimento,
                      Usuario,
                      Bandeira,
-                     Operadora)
-from .forms import FormHomepage
+                     Operadora,
+                     Atualizacao)
+from .forms import FormHomepage, CreateAtualizacaoForm
 import pandas as pd
 from datetime import datetime, timedelta, date
+from .functions import inserir_dados
 
 
 class Homepage(FormView):
@@ -57,71 +60,10 @@ class Dashboardpendentes(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(Dashboardpendentes, self).get_context_data(**kwargs)
         usuario_logado = self.request.user
-        vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado).filter(pago=False).filter(contesta=False).order_by('data_venda')
-        datas = []
-        for venda in vendas:
-            exemplo = date(year=venda.data_venda.year, month=venda.data_venda.month, day=venda.data_venda.day)
-            if exemplo not in datas:
-                datas.append(exemplo)
-        dia = timedelta(days=1)
-        hoje = date.today()
-        amanha = hoje + dia
-        vendas_hoje = vendas.filter(previsao_pgto=hoje)
-        vendas_amanha = vendas.filter(previsao_pgto=amanha)
-        total_bruto = vendas.aggregate(tb=Sum(F('valor_bruto')))['tb']
-        total_tarifa = vendas.aggregate(tt=Sum(F('valor_tarifa')))['tt']
-        total_cobranca = vendas.aggregate(tc=Sum(F('valor_cobranca')))['tc']
-        total_devido = vendas.aggregate(td=Sum(F('valor_devido')))['td']
-        lucro_total = vendas.aggregate(lt=Sum(F('lucro')))['lt']
-        total_bruto_hoje = vendas_hoje.aggregate(tbh=Sum(F('valor_bruto')))['tbh']
-        total_tarifa_hoje = vendas_hoje.aggregate(tth=Sum(F('valor_tarifa')))['tth']
-        total_bruto_amanha = vendas_amanha.aggregate(tba=Sum(F('valor_bruto')))['tba']
-        total_tarifa_amanha = vendas_amanha.aggregate(tta=Sum(F('valor_tarifa')))['tta']
-        if total_bruto:
-            texto_bruto = f'R$ {total_bruto:.2f}'
-        else:
-            texto_bruto = "-"
-        if total_tarifa:
-            texto_tarifa = f'R$ {total_tarifa:.2f}'
-        else:
-            texto_tarifa = "-"
-        if total_cobranca:
-            texto_cobranca = f'R$ {total_cobranca:.2f}'
-        else:
-            texto_cobranca = "-"
-        if total_devido:
-            texto_devido = f'R$ {total_devido:.2f}'
-        else:
-            texto_devido = "-"
-        if lucro_total:
-            texto_lucro = f'R$ {lucro_total:.2f}'
-        else:
-            texto_lucro = "-"
-        if total_bruto and total_tarifa:
-            entrada = total_bruto - total_tarifa
-            texto_entrada = f'R$ {entrada:.2f}'
-        else:
-            texto_entrada = "-"
-        if total_bruto_hoje and total_tarifa_hoje:
-            entrada_hoje = total_bruto_hoje - total_tarifa_hoje
-            texto_entrada_hoje = f'R$ {entrada_hoje:.2f}'
-        else:
-            texto_entrada_hoje = "-"
-        if total_bruto_amanha and total_tarifa_amanha:
-            entrada_amanha = total_bruto_amanha - total_tarifa_amanha
-            texto_entrada_amanha = f'R$ {entrada_amanha:.2f}'
-        else:
-            texto_entrada_amanha = "-"
+        vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado).pendente().order_by('data_venda')
+        vigente = Atualizacao.objects.filter(estabelecimento__usuario=self.request.user).filter(vigente=True)
+        context["vigente"] = vigente
         context["vendas"] = vendas
-        context["texto_bruto"] = texto_bruto
-        context["texto_tarifa"] = texto_tarifa
-        context["texto_cobranca"] = texto_cobranca
-        context["texto_devido"] = texto_devido
-        context["lucro_total"] = texto_lucro
-        context["texto_entrada"] = texto_entrada
-        context["texto_entrada_hoje"] = texto_entrada_hoje
-        context["texto_entrada_amanha"] = texto_entrada_amanha
-        context["datas"] = datas
         return context
 
 
@@ -132,37 +74,9 @@ class Dashboardcontestados(LoginRequiredMixin, TemplateView):
         context = super(Dashboardcontestados, self).get_context_data(**kwargs)
         usuario_logado = self.request.user
         vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado).filter(contesta=True)
-        total_bruto = vendas.aggregate(tb=Sum(F('valor_bruto')))['tb']
-        total_tarifa = vendas.aggregate(tt=Sum(F('valor_tarifa')))['tt']
-        total_cobranca = vendas.aggregate(tc=Sum(F('valor_cobranca')))['tc']
-        total_devido = vendas.aggregate(td=Sum(F('valor_devido')))['td']
-        lucro_total = vendas.aggregate(lt=Sum(F('lucro')))['lt']
-        if total_bruto:
-            texto_bruto = f'R$ {total_bruto:.2f}'
-        else:
-            texto_bruto = "-"
-        if total_tarifa:
-            texto_tarifa = f'R$ {total_tarifa:.2f}'
-        else:
-            texto_tarifa = "-"
-        if total_cobranca:
-            texto_cobranca = f'R$ {total_cobranca:.2f}'
-        else:
-            texto_cobranca = "-"
-        if total_devido:
-            texto_devido = f'R$ {total_devido:.2f}'
-        else:
-            texto_devido = "-"
-        if lucro_total:
-            texto_lucro = f'R$ {lucro_total:.2f}'
-        else:
-            texto_lucro = "-"
+        vigente = Atualizacao.objects.filter(estabelecimento__usuario=usuario_logado).filter(vigente=True)
+        context["vigente"] = vigente
         context["vendas"] = vendas
-        context["texto_bruto"] = texto_bruto
-        context["texto_tarifa"] = texto_tarifa
-        context["texto_cobranca"] = texto_cobranca
-        context["texto_devido"] = texto_devido
-        context["lucro_total"] = texto_lucro
         return context
 
 
@@ -172,44 +86,10 @@ class Dashboardprocessados(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(Dashboardprocessados, self).get_context_data(**kwargs)
         usuario_logado = self.request.user
-        vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado).filter(pago=True).filter(arquivado=False)
-        total_bruto = vendas.aggregate(tb=Sum(F('valor_bruto')))['tb']
-        total_tarifa = vendas.aggregate(tt=Sum(F('valor_tarifa')))['tt']
-        total_cobranca = vendas.aggregate(tc=Sum(F('valor_cobranca')))['tc']
-        total_devido = vendas.aggregate(td=Sum(F('valor_devido')))['td']
-        lucro_total = vendas.aggregate(lt=Sum(F('lucro')))['lt']
-        if total_bruto:
-            texto_bruto = f'R$ {total_bruto:.2f}'
-        else:
-            texto_bruto = "-"
-        if total_tarifa:
-            texto_tarifa = f'R$ {total_tarifa:.2f}'
-        else:
-            texto_tarifa = "-"
-        if total_cobranca:
-            texto_cobranca = f'R$ {total_cobranca:.2f}'
-        else:
-            texto_cobranca = "-"
-        if total_devido:
-            texto_devido = f'R$ {total_devido:.2f}'
-        else:
-            texto_devido = "-"
-        if lucro_total:
-            texto_lucro = f'R$ {lucro_total:.2f}'
-        else:
-            texto_lucro = "-"
-        if total_bruto and total_tarifa:
-            entrada = total_bruto - total_tarifa
-            texto_entrada = f'R$ {entrada:.2f}'
-        else:
-            texto_entrada = "-"
+        vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado).processado()
+        vigente = Atualizacao.objects.filter(estabelecimento__usuario=usuario_logado).filter(vigente=True)
+        context["vigente"] = vigente
         context["vendas"] = vendas
-        context["texto_bruto"] = texto_bruto
-        context["texto_tarifa"] = texto_tarifa
-        context["texto_cobranca"] = texto_cobranca
-        context["texto_devido"] = texto_devido
-        context["lucro_total"] = texto_lucro
-        context["texto_entrada"] = texto_entrada
         return context
 
 
@@ -228,16 +108,42 @@ def confirma_pgto(request, id):
     return redirect('machine:dashboardpendentes')
 
 
-def confirma_diapgto(request):
-    usuario_logado = request.user
-    ano = int(request.GET.get("ano_data"))
-    mes = int(request.GET.get("mes_data"))
-    dia = int(request.GET.get("dia_data"))
-    vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado).filter(data_venda__day=dia)
-    for venda in vendas:
-        venda.pago = True
-        venda.save()
-    return redirect('machine:dashboardpendentes')
+class PesquisaPendentes(ListView):
+    template_name = "pesquisapendentes.html"
+    model = Venda
+
+    def get_queryset(self):
+        inicio = self.request.GET.get('data_inicio')
+        fim = self.request.GET.get('data_fim')
+        usuario_logado = self.request.user
+        if (len(inicio) == 10) and (len(fim) == 10):
+            data_inicio = date(year=int(inicio[6:10]), month=int(inicio[3:5]), day=int(inicio[0:2]))
+            data_fim = date(year=int(fim[6:10]), month=int(fim[3:5]), day=int(fim[0:2]))
+            object_list = (Venda.objects.filter(estabelecimento__usuario=usuario_logado).pendente()
+                           .filter(data_venda__gte=data_inicio).filter(data_venda__lte=data_fim).order_by('data_venda'))
+            return object_list
+        else:
+            object_list = Venda.objects.filter(estabelecimento__usuario=usuario_logado).filter(pago=False).filter(
+                contesta=False).order_by('data_venda')
+            return object_list
+
+    def get_context_data(self, **kwargs):
+        context = super(PesquisaPendentes, self).get_context_data(**kwargs)
+        inicio = self.request.GET.get('data_inicio')
+        fim = self.request.GET.get('data_fim')
+        usuario_logado = self.request.user
+        if (len(inicio) == 10) and (len(fim) == 10):
+            vigente = Atualizacao.objects.filter(estabelecimento__usuario=usuario_logado).filter(vigente=True)
+            context["vigente"] = vigente
+            context["inicio"] = inicio
+            context["fim"] = fim
+            return context
+        else:
+            msg = "Data inválida, digite no formato dd/mm/aaaa"
+            vigente = Atualizacao.objects.filter(estabelecimento__usuario=usuario_logado).filter(vigente=True)
+            context["vigente"] = vigente
+            context["msg"] = msg
+            return context
 
 
 def arquiva_pgto(request, id):
@@ -249,18 +155,45 @@ def arquiva_pgto(request, id):
 
 def arquiva_pgto_todos(request):
     usuario_logado = request.user
-    vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado).filter(pago=True).filter(arquivado=False)
+    if request.GET.get('data_inicio') and request.GET.get('data_fim'):
+        inicio = request.GET.get('data_inicio')
+        fim = request.GET.get('data_fim')
+        data_inicio = date(year=int(inicio[6:10]), month=int(inicio[3:5]), day=int(inicio[0:2]))
+        data_fim = date(year=int(fim[6:10]), month=int(fim[3:5]), day=int(fim[0:2]))
+        tipo = request.GET.get('tipo')
+        if tipo == "Débito":
+            vendas = (Venda.objects.filter(estabelecimento__usuario=usuario_logado).debito()
+                      .pendente().filter(data_venda__gte=data_inicio)
+                      .filter(data_venda__lte=data_fim))
+        else:
+            vendas = (Venda.objects.filter(estabelecimento__usuario=usuario_logado).credito()
+                      .pendente().filter(data_venda__gte=data_inicio).filter(data_venda__lte=data_fim))
+        for venda in vendas:
+            venda.pago = True
+            venda.save()
+        return redirect('machine:pesquisapendentes')
+    else:
+        tipo = request.GET.get('tipo')
+        if tipo == "Débito":
+            vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado).debito().pendente()
+        else:
+            vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado).credito().pendente()
+        for venda in vendas:
+            venda.pago = True
+            venda.save()
+        return redirect('machine:dashboardpendentes')
+
+
+def cancela_pgto(request):
+    usuario_logado = request.user
+    dia = int(request.GET.get('dia'))
+    mes = int(request.GET.get('mes'))
+    ano = int(request.GET.get('ano'))
+    vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado).filter(previsao_pgto__day=dia).filter(previsao_pgto__month=mes).filter(previsao_pgto__year=ano).filter(pago=True)
     for venda in vendas:
-        venda.arquivado = True
+        venda.pago = False
         venda.save()
-    return redirect('machine:dashboardprocessados')
-
-
-def cancela_pgto(request, id):
-    venda = Venda.objects.get(id=id)
-    venda.pago = False
-    venda.save()
-    return redirect('machine:dashboardprocessados')
+    return redirect('machine:readvendas')
 
 
 class Readestabelecimento(LoginRequiredMixin, TemplateView):
@@ -269,6 +202,9 @@ class Readestabelecimento(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(Readestabelecimento, self).get_context_data(**kwargs)
         clientes = self.request.user.estabelecimento.all()
+        usuario_logado = self.request.user
+        vigente = Atualizacao.objects.filter(estabelecimento__usuario=usuario_logado).filter(vigente=True)
+        context["vigente"] = vigente
         context['clientes'] = clientes
         return context
 
@@ -279,8 +215,15 @@ class Readvendas(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(Readvendas, self).get_context_data(**kwargs)
         usuario_logado = self.request.user
-        vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado)
+        vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado).filter(pago=True).order_by('previsao_pgto')
+        datas_set = {venda.previsao_pgto.toordinal() for venda in vendas}
+        datas = [num for num in datas_set]
+        datas.sort(reverse=True)
+        vendas_query = [vendas.filter(previsao_pgto=date.fromordinal(data)) for data in datas]
+        vigente = Atualizacao.objects.filter(estabelecimento__usuario=usuario_logado).filter(vigente=True)
+        context["vigente"] = vigente
         context['vendas'] = vendas
+        context['vendas_query'] = vendas_query
         return context
 
 
@@ -291,7 +234,10 @@ class Createestabelecimento(LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super(Createestabelecimento, self).get_context_data(**kwargs)
+        usuario_logado = self.request.user
         clientes = self.request.user.estabelecimento.all()
+        vigente = Atualizacao.objects.filter(estabelecimento__usuario=usuario_logado).filter(vigente=True)
+        context["vigente"] = vigente
         context['clientes'] = clientes
         return context
 
@@ -312,6 +258,13 @@ class Createvenda(LoginRequiredMixin, CreateView):
               'bandeira', 'data_venda',
               'previsao_pgto', 'valor_bruto',
               'nr_maquina', 'cod_venda']
+
+    def get_context_data(self, **kwargs):
+        context = super(Createvenda, self).get_context_data(**kwargs)
+        usuario_logado = self.request.user
+        vigente = Atualizacao.objects.filter(estabelecimento__usuario=usuario_logado).filter(vigente=True)
+        context["vigente"] = vigente
+        return context
 
     def form_valid(self, form):
         if form.instance.tipo == "Débito à vista":
@@ -368,6 +321,27 @@ class Createvenda(LoginRequiredMixin, CreateView):
         return reverse('machine:readvendas')
 
 
+class Createatualizacao(LoginRequiredMixin, CreateView):
+    template_name = "createatualizacao.html"
+    model = Atualizacao
+    form_class = CreateAtualizacaoForm
+
+    def get_form_kwargs(self):
+        kwargs = super(Createatualizacao, self).get_form_kwargs()
+        kwargs.update({'user': self.request.user})
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super(Createatualizacao, self).get_context_data(**kwargs)
+        usuario_logado = self.request.user
+        vigente = Atualizacao.objects.filter(estabelecimento__usuario=usuario_logado).filter(vigente=True)
+        context["vigente"] = vigente
+        return context
+
+    def get_success_url(self):
+        return reverse('machine:dashboardpendentes')
+
+
 class Updatevenda(LoginRequiredMixin, UpdateView):
     template_name = "updatevenda.html"
     model = Venda
@@ -376,6 +350,13 @@ class Updatevenda(LoginRequiredMixin, UpdateView):
               'previsao_pgto', 'valor_bruto',
               'taxa', 'valor_tarifa', 'valor_cobranca',
               'valor_devido', 'lucro', 'valor_contestado']
+
+    def get_context_data(self, **kwargs):
+        context = super(Updatevenda, self).get_context_data(**kwargs)
+        usuario_logado = self.request.user
+        vigente = Atualizacao.objects.filter(estabelecimento__usuario=usuario_logado).filter(vigente=True)
+        context["vigente"] = vigente
+        return context
 
     def get_success_url(self):
         return reverse('machine:readvendas')
@@ -402,6 +383,9 @@ class Updateestabelecimento(LoginRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super(Updateestabelecimento, self).get_context_data(**kwargs)
         clientes = self.request.user.estabelecimento.all()
+        usuario_logado = self.request.user
+        vigente = Atualizacao.objects.filter(estabelecimento__usuario=usuario_logado).filter(vigente=True)
+        context["vigente"] = vigente
         context['clientes'] = clientes
         return context
 
@@ -409,16 +393,35 @@ class Updateestabelecimento(LoginRequiredMixin, UpdateView):
         return reverse('machine:readestabelecimentos')
 
 
-def create_dados(request):
-    dataframe = pd.read_excel('static/atualizacoes/vendas1.xlsx')
+def create_dados(request, id):
+    atual = Atualizacao.objects.get(id=id)
+    dataframe = pd.read_excel(atual.arquivo)
+    dataframe = dataframe.drop([0, 1, 2], axis=0)
+    dataframe.columns = dataframe.loc[3]
+    dataframe = dataframe.drop([3], axis=0)
+    dataframe = dataframe.drop(['Data da autorização da venda', 'Quantidade de parcelas', 'Resumo da operação', 'Taxas (%)',
+                        'Tarifa', 'Número do cartão', 'Tipo de captura', 'Recebimento automático', 'Comissão mínima',
+                        'Número da nota fiscal', 'Taxa de embarque', 'Valor da entrada', 'Valor do saque', 'Status',
+                        'ID', 'Código de autorização', 'NSU'], axis=1)
     d_records = dataframe.to_dict("records")
+    inserir_dados(request, d_records)
+    """dataframe['Valor da venda'] = dataframe['Valor da venda'].str.replace('R$ ', '')
+    dataframe['Valor da venda'] = dataframe['Valor da venda'].str.replace('.', '')
+    dataframe['Valor da venda'] = dataframe['Valor da venda'].str.replace(',', '.')
+    dataframe['Valor líquido da venda'] = dataframe['Valor líquido da venda'].str.replace('R$ ', '')
+    dataframe['Valor líquido da venda'] = dataframe['Valor líquido da venda'].str.replace('.', '')
+    dataframe['Valor líquido da venda'] = dataframe['Valor líquido da venda'].str.replace(',', '.')
+    dataframe['Valor descontado'] = dataframe['Valor descontado'].str.replace('-R$ ', '')
+    dataframe['Valor descontado'] = dataframe['Valor descontado'].str.replace('.', '')
+    dataframe['Valor descontado'] = dataframe['Valor descontado'].str.replace(',', '.')    
+    
     estabelecimento = Estabelecimento.objects.last()
     h = timedelta(seconds=10800)
     list_vendas = []
     for dado in d_records:
         bandeira = Bandeira.objects.get(nome=str(dado['Bandeira']))
-        usuario_logado = request.user #TODO: apenas na fase anterior ao deploy
-        vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado) #TODO: apenas na fase anterior ao deploy
+        usuario_logado = request.user
+        vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado) 
         if not vendas.filter(cod_venda=dado['Código da venda']):
             if 'édito' in dado['Forma de pagamento']:
                 if dado['Forma de pagamento'] == "Crédito à vista":
@@ -508,7 +511,7 @@ def create_dados(request):
                               bandeira=bandeira,
                               data_venda=pd.to_datetime(dado['Data da venda'], format='%d/%m/%Y %H:%M') - h,
                               previsao_pgto=pd.to_datetime(dado['Previsão de pagamento'], format='%d/%m/%Y'),
-                              valor_bruto=round(round(decimal.Decimal(dado['Valor da venda']), 2), 2),
+                              valor_bruto=round(round(decimal.Decimal((dado['Valor da venda'])), 2), 2),
                               taxa=estabelecimento.taxa_debito,
                               valor_tarifa=round(
                                   round(decimal.Decimal(dado['Valor da venda']) * bandeira.debito_vista) / 100, 2),
@@ -556,6 +559,8 @@ def create_dados(request):
                 else:
                     venda.contesta = True
                     venda.valor_contestado = round(decimal.Decimal(dado['Valor descontado']), 2)
-                    venda.save()
+                    venda.save()"""
+    atual.vigente = False
+    atual.save()
     return redirect('machine:dashboardpendentes')
 

@@ -1,0 +1,164 @@
+import decimal
+from .models import (Bandeira,
+                     Estabelecimento,
+                     Venda)
+from datetime import timedelta
+import pandas as pd
+
+
+def calculo_valor_bruto(numero):
+    x = round(
+        round(decimal.Decimal(str(numero).replace('R$ ', '').replace('.', '').replace(',', '.')), 2), 2)
+    return x
+
+
+def calculo_valor_cobranca(numero, taxa):
+    x = round(round(decimal.Decimal(
+                                  str(numero).replace('R$ ', '').replace('.', '').replace(',', '.')) * taxa) / 100, 2)
+    return x
+
+
+def calculo_valor_devido(numero, taxa):
+    x = round(round(decimal.Decimal(str(numero).replace('R$ ', '').replace('.', '').replace(',', '.'))) - round(
+                                  decimal.Decimal(str(numero).replace('R$ ', '').replace('.', '').replace(',', '.')) * taxa) / 100, 2)
+    return x
+
+
+def calculo_valor_tarifa(numero, taxa):
+    x = round(
+                                  round(decimal.Decimal(str(numero).replace('R$ ', '').replace('.', '').replace(',', '.')) * taxa) / 100, 2)
+    return x
+
+
+def calculo_lucro(numero, taxa1, taxa2):
+    x = round(round(
+                                  decimal.Decimal(str(numero).replace('R$ ', '').replace('.', '').replace(',', '.')) * taxa1) / 100 - round(
+                                  decimal.Decimal(str(numero).replace('R$ ', '').replace('.', '').replace(',', '.')) * taxa2) / 100, 2)
+    return x
+
+
+def calculo_valor_descontado(numero1):
+    x = round(decimal.Decimal(str(numero1).replace('-R$ ', '').replace('.', '').replace(',', '.')), 2)
+    return x
+
+
+def inserir_dados(request, d_records):
+    estabelecimento = Estabelecimento.objects.last()
+    h = timedelta(seconds=10800)
+    list_vendas = []
+    for dado in d_records:
+        bandeira = Bandeira.objects.get(nome=str(dado['Bandeira']))
+        usuario_logado = request.user
+        vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado)
+        numero = dado['Valor da venda']
+        if not vendas.filter(cod_venda=dado['Código da venda']):
+            if 'édito' in dado['Forma de pagamento']:
+                if dado['Forma de pagamento'] == "Crédito à vista":
+                    v = Venda(estabelecimento=estabelecimento,
+                              tipo=dado['Forma de pagamento'],
+                              bandeira=bandeira,
+                              data_venda=pd.to_datetime(dado['Data da venda'], format='%d/%m/%Y %H:%M') - h,
+                              previsao_pgto=pd.to_datetime(dado['Previsão de pagamento'], format='%d/%m/%Y'),
+                              valor_bruto=calculo_valor_bruto(numero),
+                              taxa=estabelecimento.taxa_credito,
+                              valor_tarifa=calculo_valor_tarifa(numero, bandeira.credito_vista),
+                              valor_cobranca=calculo_valor_cobranca(numero, estabelecimento.taxa_credito),
+                              valor_devido=calculo_valor_devido(numero, estabelecimento.taxa_credito),
+                              lucro=calculo_lucro(numero, estabelecimento.taxa_credito, bandeira.credito_vista),
+                              nr_maquina=dado['Número da máquina'],
+                              cod_venda=dado['Código da venda'])
+                    list_vendas.append(v)
+                elif dado['Forma de pagamento'] == "Crédito parcelado loja":
+                    v = Venda(estabelecimento=estabelecimento,
+                              tipo=dado['Forma de pagamento'],
+                              bandeira=bandeira,
+                              data_venda=pd.to_datetime(dado['Data da venda'], format='%d/%m/%Y %H:%M') - h,
+                              previsao_pgto=pd.to_datetime(dado['Previsão de pagamento'], format='%d/%m/%Y'),
+                              valor_bruto=calculo_valor_bruto(numero),
+                              taxa=estabelecimento.taxa_credito,
+                              valor_tarifa=calculo_valor_tarifa(numero, bandeira.credito_2x),
+                              valor_cobranca=calculo_valor_cobranca(numero, estabelecimento.taxa_credito),
+                              valor_devido=calculo_valor_devido(numero, estabelecimento.taxa_credito),
+                              lucro=calculo_lucro(numero, estabelecimento.taxa_credito, bandeira.credito_2x),
+                              nr_maquina=dado['Número da máquina'],
+                              cod_venda=dado['Código da venda'])
+                    list_vendas.append(v)
+                elif dado['Forma de pagamento'] == "Pré-pago crédito":
+                    v = Venda(estabelecimento=estabelecimento,
+                              tipo=dado['Forma de pagamento'],
+                              bandeira=bandeira,
+                              data_venda=pd.to_datetime(dado['Data da venda'], format='%d/%m/%Y %H:%M') - h,
+                              previsao_pgto=pd.to_datetime(dado['Previsão de pagamento'], format='%d/%m/%Y'),
+                              valor_bruto=calculo_valor_bruto(numero),
+                              taxa=estabelecimento.taxa_credito,
+                              valor_tarifa=calculo_valor_tarifa(numero, bandeira.credito_pre),
+                              valor_cobranca=calculo_valor_cobranca(numero, estabelecimento.taxa_credito),
+                              valor_devido=calculo_valor_devido(numero, estabelecimento.taxa_credito),
+                              lucro=calculo_lucro(numero, estabelecimento.taxa_credito, bandeira.credito_pre),
+                              nr_maquina=dado['Número da máquina'],
+                              cod_venda=dado['Código da venda'])
+                    list_vendas.append(v)
+                else:
+                    v = Venda(estabelecimento=estabelecimento,
+                              tipo=dado['Forma de pagamento'],
+                              bandeira=bandeira,
+                              data_venda=pd.to_datetime(dado['Data da venda'], format='%d/%m/%Y %H:%M') - h,
+                              previsao_pgto=pd.to_datetime(dado['Previsão de pagamento'], format='%d/%m/%Y'),
+                              valor_bruto=calculo_valor_bruto(numero),
+                              taxa=estabelecimento.taxa_credito,
+                              valor_tarifa=calculo_valor_tarifa(numero, bandeira.credito_moeda),
+                              valor_cobranca=calculo_valor_cobranca(numero, estabelecimento.taxa_credito),
+                              valor_devido=calculo_valor_devido(numero, estabelecimento.taxa_credito),
+                              lucro=calculo_lucro(numero, estabelecimento.taxa_credito, bandeira.credito_moeda),
+                              nr_maquina=dado['Número da máquina'],
+                              cod_venda=dado['Código da venda'])
+                    list_vendas.append(v)
+            else:
+                if dado['Forma de pagamento'] == "Débito à vista":
+                    v = Venda(estabelecimento=estabelecimento,
+                              tipo=dado['Forma de pagamento'],
+                              bandeira=bandeira,
+                              data_venda=pd.to_datetime(dado['Data da venda'], format='%d/%m/%Y %H:%M') - h,
+                              previsao_pgto=pd.to_datetime(dado['Previsão de pagamento'], format='%d/%m/%Y'),
+                              valor_bruto=calculo_valor_bruto(numero),
+                              taxa=estabelecimento.taxa_debito,
+                              valor_tarifa=calculo_valor_tarifa(numero, bandeira.debito_vista),
+                              valor_cobranca=calculo_valor_cobranca(numero, estabelecimento.taxa_debito),
+                              valor_devido=calculo_valor_devido(numero, estabelecimento.taxa_debito),
+                              lucro=calculo_lucro(numero, estabelecimento.taxa_debito, bandeira.debito_vista),
+                              nr_maquina=dado['Número da máquina'],
+                              cod_venda=dado['Código da venda'])
+                    list_vendas.append(v)
+                else:
+                    v = Venda(estabelecimento=estabelecimento,
+                              tipo=dado['Forma de pagamento'],
+                              bandeira=bandeira,
+                              data_venda=pd.to_datetime(dado['Data da venda'], format='%d/%m/%Y %H:%M') - h,
+                              previsao_pgto=pd.to_datetime(dado['Previsão de pagamento'], format='%d/%m/%Y'),
+                              valor_bruto=calculo_valor_bruto(numero),
+                              taxa=estabelecimento.taxa_debito,
+                              valor_tarifa=calculo_valor_tarifa(numero, bandeira.debito_pre),
+                              valor_cobranca=calculo_valor_cobranca(numero, estabelecimento.taxa_debito),
+                              valor_devido=calculo_valor_devido(numero, estabelecimento.taxa_debito),
+                              lucro=calculo_lucro(numero, estabelecimento.taxa_debito, bandeira.debito_pre),
+                              nr_maquina=dado['Número da máquina'],
+                              cod_venda=dado['Código da venda'])
+                    list_vendas.append(v)
+    Venda.objects.bulk_create(list_vendas)
+    for dado in d_records:
+        numero1 = dado['Valor descontado']
+        venda = Venda.objects.filter(cod_venda=dado['Código da venda'],
+                                     valor_bruto=calculo_valor_bruto(numero))
+        if venda:
+            venda = Venda.objects.get(cod_venda=dado['Código da venda'],
+                                      valor_bruto=calculo_valor_bruto(numero))
+            diferenca = venda.valor_tarifa - calculo_valor_descontado(numero1)
+            if venda.valor_tarifa != calculo_valor_descontado(numero1):
+                if decimal.Decimal(-0.01) <= diferenca <= decimal.Decimal(0.01):
+                    venda.valor_tarifa = calculo_valor_descontado(numero1)
+                    venda.save()
+                else:
+                    venda.contesta = True
+                    venda.valor_contestado = calculo_valor_descontado(numero1)
+                    venda.save()
+
