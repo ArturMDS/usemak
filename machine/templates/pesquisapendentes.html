@@ -79,7 +79,7 @@ Dashboard
                     </li>-->
                     {% for arquivo in vigente %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'machine:create_dados' %}">
+                            <a class="nav-link" href="{% url 'machine:create_dados' arquivo.id %}">
                                 <span data-feather="file-text"></span>
                                 Atualizar
                             </a>
