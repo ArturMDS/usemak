@@ -71,14 +71,12 @@ Dashboard
                             Último trimestre
                         </a>
                     </li>-->
-                    {% for arquivo in vigente %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'machine:create_dados' arquivo.id %}">
-                                <span data-feather="file-text"></span>
-                                Atualizar
-                            </a>
-                        </li>
-                    {% endfor %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'machine:create_dados' %}">
+                            <span data-feather="file-text"></span>
+                            Atualizar
+                        </a>
+                    </li>
                 </ul>
             </div>
         </nav>

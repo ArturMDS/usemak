@@ -338,6 +338,10 @@ class Createatualizacao(LoginRequiredMixin, CreateView):
         context["vigente"] = vigente
         return context
 
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
+
     def get_success_url(self):
         return reverse('machine:dashboardpendentes')
 
@@ -393,9 +397,10 @@ class Updateestabelecimento(LoginRequiredMixin, UpdateView):
         return reverse('machine:readestabelecimentos')
 
 
-def create_dados(request, id):
-    atual = Atualizacao.objects.get(id=id)
-    dataframe = pd.read_excel(atual.arquivo)
+def create_dados(request):
+    """atual = Atualizacao.objects.get(id=id)"""
+    """dataframe = pd.read_excel(atual.arquivo)"""
+    dataframe = pd.read_excel(r"static/atualizacoes/vendas.xls")
     dataframe = dataframe.drop([0, 1, 2], axis=0)
     dataframe.columns = dataframe.loc[3]
     dataframe = dataframe.drop([3], axis=0)
@@ -405,162 +410,7 @@ def create_dados(request, id):
                         'ID', 'Código de autorização', 'NSU'], axis=1)
     d_records = dataframe.to_dict("records")
     inserir_dados(request, d_records)
-    """dataframe['Valor da venda'] = dataframe['Valor da venda'].str.replace('R$ ', '')
-    dataframe['Valor da venda'] = dataframe['Valor da venda'].str.replace('.', '')
-    dataframe['Valor da venda'] = dataframe['Valor da venda'].str.replace(',', '.')
-    dataframe['Valor líquido da venda'] = dataframe['Valor líquido da venda'].str.replace('R$ ', '')
-    dataframe['Valor líquido da venda'] = dataframe['Valor líquido da venda'].str.replace('.', '')
-    dataframe['Valor líquido da venda'] = dataframe['Valor líquido da venda'].str.replace(',', '.')
-    dataframe['Valor descontado'] = dataframe['Valor descontado'].str.replace('-R$ ', '')
-    dataframe['Valor descontado'] = dataframe['Valor descontado'].str.replace('.', '')
-    dataframe['Valor descontado'] = dataframe['Valor descontado'].str.replace(',', '.')    
-    
-    estabelecimento = Estabelecimento.objects.last()
-    h = timedelta(seconds=10800)
-    list_vendas = []
-    for dado in d_records:
-        bandeira = Bandeira.objects.get(nome=str(dado['Bandeira']))
-        usuario_logado = request.user
-        vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado) 
-        if not vendas.filter(cod_venda=dado['Código da venda']):
-            if 'édito' in dado['Forma de pagamento']:
-                if dado['Forma de pagamento'] == "Crédito à vista":
-                    v = Venda(estabelecimento=estabelecimento,
-                              tipo=dado['Forma de pagamento'],
-                              bandeira=bandeira,
-                              data_venda=pd.to_datetime(dado['Data da venda'], format='%d/%m/%Y %H:%M') - h,
-                              previsao_pgto=pd.to_datetime(dado['Previsão de pagamento'], format='%d/%m/%Y'),
-                              valor_bruto=round(round(decimal.Decimal(dado['Valor da venda']), 2), 2),
-                              taxa=estabelecimento.taxa_credito,
-                              valor_tarifa=round(
-                                  round(decimal.Decimal(dado['Valor da venda']) * bandeira.credito_vista) / 100, 2),
-                              valor_cobranca=round(round(decimal.Decimal(
-                                  dado['Valor da venda']) * estabelecimento.taxa_credito) / 100, 2),
-                              valor_devido=round(round(decimal.Decimal(dado['Valor da venda'])) - round(
-                                  decimal.Decimal(dado['Valor da venda']) * estabelecimento.taxa_credito) / 100, 2),
-                              lucro=round(round(
-                                  decimal.Decimal(dado['Valor da venda']) * estabelecimento.taxa_credito) / 100 - round(
-                                  decimal.Decimal(dado['Valor da venda']) * bandeira.credito_vista) / 100, 2),
-                              nr_maquina=dado['Número da máquina'],
-                              cod_venda=dado['Código da venda'])
-                    list_vendas.append(v)
-                elif dado['Forma de pagamento'] == "Crédito parcelado loja":
-                    v = Venda(estabelecimento=estabelecimento,
-                              tipo=dado['Forma de pagamento'],
-                              bandeira=bandeira,
-                              data_venda=pd.to_datetime(dado['Data da venda'], format='%d/%m/%Y %H:%M') - h,
-                              previsao_pgto=pd.to_datetime(dado['Previsão de pagamento'], format='%d/%m/%Y'),
-                              valor_bruto=round(round(decimal.Decimal(dado['Valor da venda']), 2), 2),
-                              taxa=estabelecimento.taxa_credito,
-                              valor_tarifa=round(
-                                  round(decimal.Decimal(dado['Valor da venda']) * bandeira.credito_2x) / 100, 2),
-                              valor_cobranca=round(round(decimal.Decimal(
-                                  dado['Valor da venda']) * estabelecimento.taxa_credito) / 100, 2),
-                              valor_devido=round(round(decimal.Decimal(dado['Valor da venda'])) - round(
-                                  decimal.Decimal(dado['Valor da venda']) * estabelecimento.taxa_credito) / 100, 2),
-                              lucro=round(round(
-                                  decimal.Decimal(dado['Valor da venda']) * estabelecimento.taxa_credito) / 100 - round(
-                                  decimal.Decimal(dado['Valor da venda']) * bandeira.credito_2x) / 100, 2),
-                              nr_maquina=dado['Número da máquina'],
-                              cod_venda=dado['Código da venda'])
-                    list_vendas.append(v)
-                elif dado['Forma de pagamento'] == "Pré-pago crédito":
-                    v = Venda(estabelecimento=estabelecimento,
-                              tipo=dado['Forma de pagamento'],
-                              bandeira=bandeira,
-                              data_venda=pd.to_datetime(dado['Data da venda'], format='%d/%m/%Y %H:%M') - h,
-                              previsao_pgto=pd.to_datetime(dado['Previsão de pagamento'], format='%d/%m/%Y'),
-                              valor_bruto=round(round(decimal.Decimal(dado['Valor da venda']), 2), 2),
-                              taxa=estabelecimento.taxa_credito,
-                              valor_tarifa=round(
-                                  round(decimal.Decimal(dado['Valor da venda']) * bandeira.credito_pre) / 100, 2),
-                              valor_cobranca=round(round(decimal.Decimal(
-                                  dado['Valor da venda']) * estabelecimento.taxa_credito) / 100, 2),
-                              valor_devido=round(round(decimal.Decimal(dado['Valor da venda'])) - round(
-                                  decimal.Decimal(dado['Valor da venda']) * estabelecimento.taxa_credito) / 100, 2),
-                              lucro=round(round(
-                                  decimal.Decimal(dado['Valor da venda']) * estabelecimento.taxa_credito) / 100 - round(
-                                  decimal.Decimal(dado['Valor da venda']) * bandeira.credito_pre) / 100, 2),
-                              nr_maquina=dado['Número da máquina'],
-                              cod_venda=dado['Código da venda'])
-                    list_vendas.append(v)
-                else:
-                    v = Venda(estabelecimento=estabelecimento,
-                              tipo=dado['Forma de pagamento'],
-                              bandeira=bandeira,
-                              data_venda=pd.to_datetime(dado['Data da venda'], format='%d/%m/%Y %H:%M') - h,
-                              previsao_pgto=pd.to_datetime(dado['Previsão de pagamento'], format='%d/%m/%Y'),
-                              valor_bruto=round(round(decimal.Decimal(dado['Valor da venda']), 2), 2),
-                              taxa=estabelecimento.taxa_credito,
-                              valor_tarifa=round(
-                                  round(decimal.Decimal(dado['Valor da venda']) * bandeira.credito_moeda) / 100, 2),
-                              valor_cobranca=round(round(decimal.Decimal(
-                                  dado['Valor da venda']) * estabelecimento.taxa_credito) / 100, 2),
-                              valor_devido=round(round(decimal.Decimal(dado['Valor da venda'])) - round(
-                                  decimal.Decimal(dado['Valor da venda']) * estabelecimento.taxa_credito) / 100, 2),
-                              lucro=round(round(
-                                  decimal.Decimal(dado['Valor da venda']) * estabelecimento.taxa_credito) / 100 - round(
-                                  decimal.Decimal(dado['Valor da venda']) * bandeira.credito_moeda) / 100, 2),
-                              nr_maquina=dado['Número da máquina'],
-                              cod_venda=dado['Código da venda'])
-                    list_vendas.append(v)
-            else:
-                if dado['Forma de pagamento'] == "Débito à vista":
-                    v = Venda(estabelecimento=estabelecimento,
-                              tipo=dado['Forma de pagamento'],
-                              bandeira=bandeira,
-                              data_venda=pd.to_datetime(dado['Data da venda'], format='%d/%m/%Y %H:%M') - h,
-                              previsao_pgto=pd.to_datetime(dado['Previsão de pagamento'], format='%d/%m/%Y'),
-                              valor_bruto=round(round(decimal.Decimal((dado['Valor da venda'])), 2), 2),
-                              taxa=estabelecimento.taxa_debito,
-                              valor_tarifa=round(
-                                  round(decimal.Decimal(dado['Valor da venda']) * bandeira.debito_vista) / 100, 2),
-                              valor_cobranca=round(round(decimal.Decimal(
-                                  dado['Valor da venda']) * estabelecimento.taxa_debito) / 100, 2),
-                              valor_devido=round(round(decimal.Decimal(dado['Valor da venda'])) - round(
-                                  decimal.Decimal(dado['Valor da venda']) * estabelecimento.taxa_debito) / 100, 2),
-                              lucro=round(round(
-                                  decimal.Decimal(dado['Valor da venda']) * estabelecimento.taxa_debito) / 100 - round(
-                                  decimal.Decimal(dado['Valor da venda']) * bandeira.debito_vista) / 100, 2),
-                              nr_maquina=dado['Número da máquina'],
-                              cod_venda=dado['Código da venda'])
-                    list_vendas.append(v)
-                else:
-                    v = Venda(estabelecimento=estabelecimento,
-                              tipo=dado['Forma de pagamento'],
-                              bandeira=bandeira,
-                              data_venda=pd.to_datetime(dado['Data da venda'], format='%d/%m/%Y %H:%M') - h,
-                              previsao_pgto=pd.to_datetime(dado['Previsão de pagamento'], format='%d/%m/%Y'),
-                              valor_bruto=round(round(decimal.Decimal(dado['Valor da venda']), 2), 2),
-                              taxa=estabelecimento.taxa_debito,
-                              valor_tarifa=round(
-                                  round(decimal.Decimal(dado['Valor da venda']) * bandeira.debito_pre) / 100, 2),
-                              valor_cobranca=round(round(decimal.Decimal(
-                                  dado['Valor da venda']) * estabelecimento.taxa_debito) / 100, 2),
-                              valor_devido=round(round(decimal.Decimal(dado['Valor da venda'])) - round(
-                                  decimal.Decimal(dado['Valor da venda']) * estabelecimento.taxa_debito) / 100, 2),
-                              lucro=round(round(
-                                  decimal.Decimal(dado['Valor da venda']) * estabelecimento.taxa_debito) / 100 - round(
-                                  decimal.Decimal(dado['Valor da venda']) * bandeira.debito_pre) / 100, 2),
-                              nr_maquina=dado['Número da máquina'],
-                              cod_venda=dado['Código da venda'])
-                    list_vendas.append(v)
-    Venda.objects.bulk_create(list_vendas)
-    for dado in d_records:
-        venda = Venda.objects.filter(cod_venda=dado['Código da venda'], valor_bruto=round(decimal.Decimal(dado['Valor da venda']), 2))
-        if venda:
-            venda = Venda.objects.get(cod_venda=dado['Código da venda'],
-                                         valor_bruto=round(decimal.Decimal(dado['Valor da venda']), 2))
-            diferenca = venda.valor_tarifa - round(decimal.Decimal(dado['Valor descontado']), 2)
-            if venda.valor_tarifa != round(decimal.Decimal(dado['Valor descontado']), 2):
-                if decimal.Decimal(-0.01) <= diferenca <= decimal.Decimal(0.01):
-                    venda.valor_tarifa = round(decimal.Decimal(dado['Valor descontado']), 2)
-                    venda.save()
-                else:
-                    venda.contesta = True
-                    venda.valor_contestado = round(decimal.Decimal(dado['Valor descontado']), 2)
-                    venda.save()"""
-    atual.vigente = False
-    atual.save()
+    """atual.vigente = False
+    atual.save()"""
     return redirect('machine:dashboardpendentes')
 

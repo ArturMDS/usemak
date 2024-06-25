@@ -71,22 +71,20 @@ Dashboard
                             <span data-feather="file-text"></span>
                             Último trimestre
                         </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'machine:create_dados' %}">
+                            <span data-feather="file-text"></span>
+                            Atualizar
+                        </a>
                     </li>-->
-                    {% for arquivo in vigente %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'machine:create_dados' arquivo.id %}">
-                                <span data-feather="file-text"></span>
-                                Atualizar
-                            </a>
-                        </li>
-                    {% endfor %}
                 </ul>
             </div>
         </nav>
     </div>
     <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <form method="post" enctype="multipart/form-data">
+            <!--<form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                     <fieldset>
                         <legend class="border-bottom mb-4">Cadastrar Nova Atualização</legend>
@@ -95,7 +93,7 @@ Dashboard
                             <button class="btn btn-outline-success btn-lg float-right" data-placement="left">Cadastrar</button>
                         </div>
                     </fieldset>
-            </form>
+            </form>-->
         </div>
     </main>
 {% endblock %}
