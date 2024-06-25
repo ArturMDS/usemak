@@ -77,7 +77,7 @@ Dashboard
                             Atualizar
                         </a>
                     </li>-->
-                    {% if vigente %}
+                    {% for arquivo in vigente %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'machine:create_dados' %}">
                                 <span data-feather="file-text"></span>
