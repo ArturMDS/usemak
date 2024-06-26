@@ -156,10 +156,15 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'hrhviljqf',
-    'API_KEY': '878964813615291',
-    'API_SECRET': '81SEuujFXjqOo0PsfIvduMAn0cE'
-}
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+try:
+    CLOUDINARY_STORAGE = {
+        'CLOUD_NAME': 'hrhviljqf',
+        'API_KEY': '878964813615291',
+        'API_SECRET': '81SEuujFXjqOo0PsfIvduMAn0cE'
+    }
+
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+except:
+    pass
+
