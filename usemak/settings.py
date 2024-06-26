@@ -157,7 +157,8 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
 
-try:
+CLOUDINARY_URL = os.getenv("CLOUDINARY_URL")
+if CLOUDINARY_URL:
     CLOUDINARY_STORAGE = {
         'CLOUD_NAME': 'hrhviljqf',
         'API_KEY': '878964813615291',
@@ -165,6 +166,4 @@ try:
     }
 
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-except:
-    pass
 
