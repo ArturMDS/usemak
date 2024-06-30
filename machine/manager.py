@@ -54,43 +54,43 @@ class VendasQuerySet(models.QuerySet):
         if self.aggregate(tb=Sum(F('valor_bruto')))['tb']:
             return round(decimal.Decimal(self.aggregate(tb=Sum(F('valor_bruto')))['tb']), 2)
         else:
-            return None
+            return "---"
 
     def total_tarifa(self):
         if self.aggregate(tt=Sum(F('valor_tarifa')))['tt']:
             return round(decimal.Decimal(self.aggregate(tt=Sum(F('valor_tarifa')))['tt']), 2)
         else:
-            return None
+            return "---"
 
     def total_cobranca(self):
         if self.aggregate(tc=Sum(F('valor_cobranca')))['tc']:
             return round(decimal.Decimal(self.aggregate(tc=Sum(F('valor_cobranca')))['tc']), 2)
         else:
-            return None
+            return "---"
 
     def total_devido(self):
         if self.aggregate(td=Sum(F('valor_devido')))['td']:
             return round(decimal.Decimal(self.aggregate(td=Sum(F('valor_devido')))['td']), 2)
         else:
-            return None
+            return "---"
 
     def total_contestado(self):
         if self.aggregate(tc=Sum(F('valor_contestado')))['tc']:
             return round(decimal.Decimal(self.aggregate(tc=Sum(F('valor_contestado')))['tc']), 2)
         else:
-            return None
+            return "---"
 
     def lucro_total(self):
         if self.aggregate(lt=Sum(F('lucro')))['lt']:
             return round(decimal.Decimal(self.aggregate(lt=Sum(F('lucro')))['lt']), 2)
         else:
-            return None
+            return "---"
 
     def entrada(self):
         if self.aggregate(en=Sum(F('valor_bruto') - F('valor_tarifa')))['en']:
             return round(decimal.Decimal(self.aggregate(en=Sum(F('valor_bruto') - F('valor_tarifa')))['en']), 2)
         else:
-            return None
+            return "---"
 
 
 class VendasManager(models.Manager):

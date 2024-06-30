@@ -156,14 +156,11 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
+AWS_ACCESS_KEY_ID = 'AKIA6ODU5O47ZX4OR6OS'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'heroku-usemak-artursantana'
 
-CLOUDINARY_URL = os.getenv("CLOUDINARY_URL")
-if CLOUDINARY_URL:
-    CLOUDINARY_STORAGE = {
-        'CLOUD_NAME': 'hrhviljqf',
-        'API_KEY': '878964813615291',
-        'API_SECRET': '81SEuujFXjqOo0PsfIvduMAn0cE'
-    }
-
-    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = None
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
