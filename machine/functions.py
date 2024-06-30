@@ -42,8 +42,8 @@ def calculo_valor_descontado(numero1):
     return x
 
 
-def inserir_dados(request, d_records):
-    estabelecimento = Estabelecimento.objects.last()
+def inserir_dados(request, d_records, pk):
+    estabelecimento = Estabelecimento.objects.get(id=pk)
     h = timedelta(seconds=10800)
     list_vendas = []
     for dado in d_records:

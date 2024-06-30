@@ -70,12 +70,6 @@ Dashboard
                             <span data-feather="file-text"></span>
                             Último trimestre
                         </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'machine:create_dados' %}">
-                            <span data-feather="file-text"></span>
-                            Atualizar
-                        </a>
                     </li>-->
                 </ul>
             </div>
@@ -92,87 +86,104 @@ Dashboard
                 </div>
             </div>
         </div>
-        <div class="table-responsive">
-            <h2 class="text-center">Resumo</h2>
-            <table class="table table-striped table-sm">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th></th>
-                        <th class="text-center" colspan="5">Crédito</th>
-                        <th class="text-center" colspan="5">Débito</th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <th class="text-center">Data Recebimento</th>
-                        <th class="text-center">Qtde</th>
-                        <th class="text-center"><img src="{% static 'images/Mastercard-Logo.png' %}" width="30" height="20"></th>
-                        <th class="text-center"><img src="{% static 'images/visa.png' %}" width="30" height="20"></th>
-                        <th class="text-center"><img src="{% static 'images/american.png' %}" width="30" height="20"></th>
-                        <th class="text-center"><img src="{% static 'images/elo.png' %}" width="30" height="20"></th>
-                        <th class="text-center"><img src="{% static 'images/hipercard.png' %}" width="30" height="20"></th>
-                        <th class="text-center"><img src="{% static 'images/Mastercard-Logo.png' %}" width="30" height="20"></th>
-                        <th class="text-center"><img src="{% static 'images/visa.png' %}" width="30" height="20"></th>
-                        <th class="text-center"><img src="{% static 'images/american.png' %}" width="30" height="20"></th>
-                        <th class="text-center"><img src="{% static 'images/elo.png' %}" width="30" height="20"></th>
-                        <th class="text-center"><img src="{% static 'images/hipercard.png' %}" width="30" height="20"></th>
-                        <th class="text-center">Entrada</th>
-                        <th class="text-center">Bruto</th>
-                        <th class="text-center">Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for venda in vendas_query %}
+            <div class="table-responsive">
+                <h2 class="text-center">Resumo</h2>
+                <table class="table table-striped table-sm">
+                    <thead>
                         <tr>
-                            <td class="text-center">{{ venda.last.previsao_pgto.day }}/{{ venda.last.previsao_pgto.month }}/{{ venda.last.previsao_pgto.year }}</td>
-                            <td class="text-center">{{ venda.count }}</td>
-                            <td class="text-center">{{ venda.credito.master.entrada }}</td>
-                            <td class="text-center">{{ venda.credito.visa.entrada }}</td>
-                            <td class="text-center">{{ venda.credito.amex.entrada }}</td>
-                            <td class="text-center">{{ venda.credito.elo.entrada }}</td>
-                            <td class="text-center">{{ venda.credito.hiper.entrada }}</td>
-                            <td class="text-center">{{ venda.debito.master.entrada }}</td>
-                            <td class="text-center">{{ venda.debito.visa.entrada }}</td>
-                            <td class="text-center">{{ venda.debito.amex.entrada }}</td>
-                            <td class="text-center">{{ venda.debito.elo.entrada }}</td>
-                            <td class="text-center">{{ venda.debito.hiper.entrada }}</td>
-                            <td class="text-center">{{ venda.entrada }}</td>
-                            <td class="text-center">{{ venda.total_bruto }}</td>
-                            <td class="text-center">
-                                <form method="get" action="{% url 'machine:cancela_pgto' %}">
-                                    {% csrf_token %}
-                                    <fieldset>
-                                        <input type="hidden" name="dia" value="{{ venda.last.previsao_pgto.day }}">
-                                        <input type="hidden" name="mes" value="{{ venda.last.previsao_pgto.month }}">
-                                        <input type="hidden" name="ano" value="{{ venda.last.previsao_pgto.year }}">
-                                        <button type="submit" class="btn btn-success btn-sm"><i class="bi bi-arrow-clockwise"></i></button>
-                                    </fieldset>
-                                </form>
-                            </td>
+                            <th></th>
+                            <th></th>
+                            <th class="text-center" colspan="5">Crédito</th>
+                            <th class="text-center" colspan="5">Débito</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
                         </tr>
-                    {% endfor %}
-                        <tr class="table-success">
-                            <td class="text-center"><b>Total</b></td>
-                            <td class="text-center">{{ vendas.count }}</td>
-                            <td class="text-center">{{ vendas.credito.master.entrada }}</td>
-                            <td class="text-center">{{ vendas.credito.visa.entrada }}</td>
-                            <td class="text-center">{{ vendas.credito.amex.entrada }}</td>
-                            <td class="text-center">{{ vendas.credito.elo.entrada }}</td>
-                            <td class="text-center">{{ vendas.credito.hiper.entrada }}</td>
-                            <td class="text-center">{{ vendas.debito.master.entrada }}</td>
-                            <td class="text-center">{{ vendas.debito.visa.entrada }}</td>
-                            <td class="text-center">{{ vendas.debito.amex.entrada }}</td>
-                            <td class="text-center">{{ vendas.debito.elo.entrada }}</td>
-                            <td class="text-center">{{ vendas.debito.hiper.entrada }}</td>
-                            <td class="text-center">{{ vendas.entrada }}</td>
-                            <td class="text-center">{{ vendas.total_bruto }}</td>
-                            <td class="text-center">---</td>
+                        <tr>
+                            <th class="text-center">Data Recebimento</th>
+                            <th class="text-center">Qtde</th>
+                            <th class="text-center"><img src="{% static 'images/Mastercard-Logo.png' %}" width="30" height="20"></th>
+                            <th class="text-center"><img src="{% static 'images/visa.png' %}" width="30" height="20"></th>
+                            <th class="text-center"><img src="{% static 'images/american.png' %}" width="30" height="20"></th>
+                            <th class="text-center"><img src="{% static 'images/elo.png' %}" width="30" height="20"></th>
+                            <th class="text-center"><img src="{% static 'images/hipercard.png' %}" width="30" height="20"></th>
+                            <th class="text-center"><img src="{% static 'images/Mastercard-Logo.png' %}" width="30" height="20"></th>
+                            <th class="text-center"><img src="{% static 'images/visa.png' %}" width="30" height="20"></th>
+                            <th class="text-center"><img src="{% static 'images/american.png' %}" width="30" height="20"></th>
+                            <th class="text-center"><img src="{% static 'images/elo.png' %}" width="30" height="20"></th>
+                            <th class="text-center"><img src="{% static 'images/hipercard.png' %}" width="30" height="20"></th>
+                            <th class="text-center">Entrada</th>
+                            <th class="text-center">Bruto</th>
+                            <th class="text-center" style="width: 10%">Ações</th>
                         </tr>
-                </tbody>
-            </table>
-        </div><br><br>
+                    </thead>
+                    <tbody>
+                        {% for venda in vendas_query %}
+
+                            <tr>
+                                <td class="text-center">{{ venda.last.previsao_pgto.day }}/{{ venda.last.previsao_pgto.month }}/{{ venda.last.previsao_pgto.year }}</td>
+                                <td class="text-center">{{ venda.count }}</td>
+                                <td class="text-center">{{ venda.credito.master.entrada }}</td>
+                                <td class="text-center">{{ venda.credito.visa.entrada }}</td>
+                                <td class="text-center">{{ venda.credito.amex.entrada }}</td>
+                                <td class="text-center">{{ venda.credito.elo.entrada }}</td>
+                                <td class="text-center">{{ venda.credito.hiper.entrada }}</td>
+                                <td class="text-center">{{ venda.debito.master.entrada }}</td>
+                                <td class="text-center">{{ venda.debito.visa.entrada }}</td>
+                                <td class="text-center">{{ venda.debito.amex.entrada }}</td>
+                                <td class="text-center">{{ venda.debito.elo.entrada }}</td>
+                                <td class="text-center">{{ venda.debito.hiper.entrada }}</td>
+                                <td class="text-center">{{ venda.entrada }}</td>
+                                <td class="text-center">{{ venda.total_bruto }}</td>
+                                <td class="text-center" style="width: 10%">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <form method="get" action="{% url 'machine:cancela_pgto' %}">
+                                                {% csrf_token %}
+                                                <fieldset>
+                                                    <input type="hidden" name="dia" value="{{ venda.last.previsao_pgto.day }}">
+                                                    <input type="hidden" name="mes" value="{{ venda.last.previsao_pgto.month }}">
+                                                    <input type="hidden" name="ano" value="{{ venda.last.previsao_pgto.year }}">
+                                                    <button type="submit" class="btn btn-success btn-sm"><i class="bi bi-arrow-clockwise"></i></button>
+                                                </fieldset>
+                                            </form>
+                                        </div>
+                                        <div class="col-6">
+                                            <form method="get" action="{% url 'machine:arquiva_pgto_todos' %}">
+                                                {% csrf_token %}
+                                                <fieldset>
+                                                    <input type="hidden" name="dia" value="{{ venda.last.previsao_pgto.day }}">
+                                                    <input type="hidden" name="mes" value="{{ venda.last.previsao_pgto.month }}">
+                                                    <input type="hidden" name="ano" value="{{ venda.last.previsao_pgto.year }}">
+                                                    <button type="submit" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i></button>
+                                                </fieldset>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                            <tr class="table-success">
+                                <td class="text-center"><b>Total</b></td>
+                                <td class="text-center">{{ vendas.count }}</td>
+                                <td class="text-center">{{ vendas.credito.master.entrada }}</td>
+                                <td class="text-center">{{ vendas.credito.visa.entrada }}</td>
+                                <td class="text-center">{{ vendas.credito.amex.entrada }}</td>
+                                <td class="text-center">{{ vendas.credito.elo.entrada }}</td>
+                                <td class="text-center">{{ vendas.credito.hiper.entrada }}</td>
+                                <td class="text-center">{{ vendas.debito.master.entrada }}</td>
+                                <td class="text-center">{{ vendas.debito.visa.entrada }}</td>
+                                <td class="text-center">{{ vendas.debito.amex.entrada }}</td>
+                                <td class="text-center">{{ vendas.debito.elo.entrada }}</td>
+                                <td class="text-center">{{ vendas.debito.hiper.entrada }}</td>
+                                <td class="text-center">{{ vendas.entrada }}</td>
+                                <td class="text-center">{{ vendas.total_bruto }}</td>
+                                <td class="text-center">---</td>
+                            </tr>
+                    </tbody>
+                </table>
+            </div>
+        <br><br>
         <div class="table-responsive">
             <h2 class="text-center">Vendas arquivadas</h2>
             <table class="table table-striped table-sm">

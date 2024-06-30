@@ -61,8 +61,6 @@ class Dashboardpendentes(TemplateView):
         context = super(Dashboardpendentes, self).get_context_data(**kwargs)
         usuario_logado = self.request.user
         vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado).pendente().order_by('data_venda')
-        vigente = Atualizacao.objects.filter(estabelecimento__usuario=self.request.user).filter(vigente=True)
-        context["vigente"] = vigente
         context["vendas"] = vendas
         return context
 
@@ -74,8 +72,6 @@ class Dashboardcontestados(LoginRequiredMixin, TemplateView):
         context = super(Dashboardcontestados, self).get_context_data(**kwargs)
         usuario_logado = self.request.user
         vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado).filter(contesta=True)
-        vigente = Atualizacao.objects.filter(estabelecimento__usuario=usuario_logado).filter(vigente=True)
-        context["vigente"] = vigente
         context["vendas"] = vendas
         return context
 
@@ -87,8 +83,6 @@ class Dashboardprocessados(LoginRequiredMixin, TemplateView):
         context = super(Dashboardprocessados, self).get_context_data(**kwargs)
         usuario_logado = self.request.user
         vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado).processado()
-        vigente = Atualizacao.objects.filter(estabelecimento__usuario=usuario_logado).filter(vigente=True)
-        context["vigente"] = vigente
         context["vendas"] = vendas
         return context
 
@@ -131,17 +125,12 @@ class PesquisaPendentes(ListView):
         context = super(PesquisaPendentes, self).get_context_data(**kwargs)
         inicio = self.request.GET.get('data_inicio')
         fim = self.request.GET.get('data_fim')
-        usuario_logado = self.request.user
         if (len(inicio) == 10) and (len(fim) == 10):
-            vigente = Atualizacao.objects.filter(estabelecimento__usuario=usuario_logado).filter(vigente=True)
-            context["vigente"] = vigente
             context["inicio"] = inicio
             context["fim"] = fim
             return context
         else:
             msg = "Data inválida, digite no formato dd/mm/aaaa"
-            vigente = Atualizacao.objects.filter(estabelecimento__usuario=usuario_logado).filter(vigente=True)
-            context["vigente"] = vigente
             context["msg"] = msg
             return context
 
@@ -155,33 +144,15 @@ def arquiva_pgto(request, id):
 
 def arquiva_pgto_todos(request):
     usuario_logado = request.user
-    if request.GET.get('data_inicio') and request.GET.get('data_fim'):
-        inicio = request.GET.get('data_inicio')
-        fim = request.GET.get('data_fim')
-        data_inicio = date(year=int(inicio[6:10]), month=int(inicio[3:5]), day=int(inicio[0:2]))
-        data_fim = date(year=int(fim[6:10]), month=int(fim[3:5]), day=int(fim[0:2]))
-        tipo = request.GET.get('tipo')
-        if tipo == "Débito":
-            vendas = (Venda.objects.filter(estabelecimento__usuario=usuario_logado).debito()
-                      .pendente().filter(data_venda__gte=data_inicio)
-                      .filter(data_venda__lte=data_fim))
-        else:
-            vendas = (Venda.objects.filter(estabelecimento__usuario=usuario_logado).credito()
-                      .pendente().filter(data_venda__gte=data_inicio).filter(data_venda__lte=data_fim))
-        for venda in vendas:
-            venda.pago = True
-            venda.save()
-        return redirect('machine:pesquisapendentes')
-    else:
-        tipo = request.GET.get('tipo')
-        if tipo == "Débito":
-            vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado).debito().pendente()
-        else:
-            vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado).credito().pendente()
-        for venda in vendas:
-            venda.pago = True
-            venda.save()
-        return redirect('machine:dashboardpendentes')
+    dia = int(request.GET.get('dia'))
+    mes = int(request.GET.get('mes'))
+    ano = int(request.GET.get('ano'))
+    vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado).filter(previsao_pgto__day=dia).filter(
+        previsao_pgto__month=mes).filter(previsao_pgto__year=ano).filter(pago=True)
+    for venda in vendas:
+        venda.arquivado = True
+        venda.save()
+    return redirect('machine:readvendas')
 
 
 def cancela_pgto(request):
@@ -201,10 +172,8 @@ class Readestabelecimento(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(Readestabelecimento, self).get_context_data(**kwargs)
-        clientes = self.request.user.estabelecimento.all()
         usuario_logado = self.request.user
-        vigente = Atualizacao.objects.filter(estabelecimento__usuario=usuario_logado).filter(vigente=True)
-        context["vigente"] = vigente
+        clientes = self.request.user.estabelecimento.filter(usuario=usuario_logado)
         context['clientes'] = clientes
         return context
 
@@ -215,13 +184,11 @@ class Readvendas(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(Readvendas, self).get_context_data(**kwargs)
         usuario_logado = self.request.user
-        vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado).filter(pago=True).order_by('previsao_pgto')
+        vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado).filter(pago=True).filter(arquivado=False).order_by('previsao_pgto')
         datas_set = {venda.previsao_pgto.toordinal() for venda in vendas}
         datas = [num for num in datas_set]
         datas.sort(reverse=True)
         vendas_query = [vendas.filter(previsao_pgto=date.fromordinal(data)) for data in datas]
-        vigente = Atualizacao.objects.filter(estabelecimento__usuario=usuario_logado).filter(vigente=True)
-        context["vigente"] = vigente
         context['vendas'] = vendas
         context['vendas_query'] = vendas_query
         return context
@@ -235,9 +202,7 @@ class Createestabelecimento(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super(Createestabelecimento, self).get_context_data(**kwargs)
         usuario_logado = self.request.user
-        clientes = self.request.user.estabelecimento.all()
-        vigente = Atualizacao.objects.filter(estabelecimento__usuario=usuario_logado).filter(vigente=True)
-        context["vigente"] = vigente
+        clientes = self.request.user.estabelecimento.filter(usuario=usuario_logado)
         context['clientes'] = clientes
         return context
 
@@ -248,7 +213,7 @@ class Createestabelecimento(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse('machine:readestabelecimentos')
+        return reverse('machine:createestabelecimento')
 
 
 class Createvenda(LoginRequiredMixin, CreateView):
@@ -258,13 +223,6 @@ class Createvenda(LoginRequiredMixin, CreateView):
               'bandeira', 'data_venda',
               'previsao_pgto', 'valor_bruto',
               'nr_maquina', 'cod_venda']
-
-    def get_context_data(self, **kwargs):
-        context = super(Createvenda, self).get_context_data(**kwargs)
-        usuario_logado = self.request.user
-        vigente = Atualizacao.objects.filter(estabelecimento__usuario=usuario_logado).filter(vigente=True)
-        context["vigente"] = vigente
-        return context
 
     def form_valid(self, form):
         if form.instance.tipo == "Débito à vista":
@@ -334,16 +292,12 @@ class Createatualizacao(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super(Createatualizacao, self).get_context_data(**kwargs)
         usuario_logado = self.request.user
-        vigente = Atualizacao.objects.filter(estabelecimento__usuario=usuario_logado).filter(vigente=True)
-        context["vigente"] = vigente
+        vigentes = Atualizacao.objects.filter(estabelecimento__usuario=usuario_logado).filter(vigente=True)
+        context["vigentes"] = vigentes
         return context
 
-    def form_valid(self, form):
-        form.save()
-        return super().form_valid(form)
-
     def get_success_url(self):
-        return reverse('machine:dashboardpendentes')
+        return reverse('machine:createatualizacao')
 
 
 class Updatevenda(LoginRequiredMixin, UpdateView):
@@ -354,13 +308,6 @@ class Updatevenda(LoginRequiredMixin, UpdateView):
               'previsao_pgto', 'valor_bruto',
               'taxa', 'valor_tarifa', 'valor_cobranca',
               'valor_devido', 'lucro', 'valor_contestado']
-
-    def get_context_data(self, **kwargs):
-        context = super(Updatevenda, self).get_context_data(**kwargs)
-        usuario_logado = self.request.user
-        vigente = Atualizacao.objects.filter(estabelecimento__usuario=usuario_logado).filter(vigente=True)
-        context["vigente"] = vigente
-        return context
 
     def get_success_url(self):
         return reverse('machine:readvendas')
@@ -386,10 +333,8 @@ class Updateestabelecimento(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(Updateestabelecimento, self).get_context_data(**kwargs)
-        clientes = self.request.user.estabelecimento.all()
         usuario_logado = self.request.user
-        vigente = Atualizacao.objects.filter(estabelecimento__usuario=usuario_logado).filter(vigente=True)
-        context["vigente"] = vigente
+        clientes = self.request.user.estabelecimento.filter(usuario=usuario_logado)
         context['clientes'] = clientes
         return context
 
@@ -397,10 +342,9 @@ class Updateestabelecimento(LoginRequiredMixin, UpdateView):
         return reverse('machine:readestabelecimentos')
 
 
-def create_dados(request):
-    """atual = Atualizacao.objects.get(id=id)"""
-    """dataframe = pd.read_excel(atual.arquivo)"""
-    dataframe = pd.read_excel(r"static/atualizacoes/vendas.xls")
+def create_dados(request, id):
+    atual = Atualizacao.objects.get(id=id)
+    dataframe = pd.read_excel(atual.arquivo)
     dataframe = dataframe.drop([0, 1, 2], axis=0)
     dataframe.columns = dataframe.loc[3]
     dataframe = dataframe.drop([3], axis=0)
@@ -409,8 +353,9 @@ def create_dados(request):
                         'Número da nota fiscal', 'Taxa de embarque', 'Valor da entrada', 'Valor do saque', 'Status',
                         'ID', 'Código de autorização', 'NSU'], axis=1)
     d_records = dataframe.to_dict("records")
-    inserir_dados(request, d_records)
-    """atual.vigente = False
-    atual.save()"""
-    return redirect('machine:dashboardpendentes')
+    pk = atual.estabelecimento.id
+    inserir_dados(request, d_records, pk)
+    atual.vigente = False
+    atual.delete()
+    return redirect('machine:createatualizacao')
 
