@@ -135,14 +135,7 @@ class PesquisaPendentes(ListView):
             return context
 
 
-def arquiva_pgto(request, id):
-    venda = Venda.objects.get(id=id)
-    venda.arquivado = True
-    venda.save()
-    return redirect('machine:dashboardprocessados')
-
-
-def arquiva_pgto_todos(request):
+def arquiva_pgto(request):
     usuario_logado = request.user
     dia = int(request.GET.get('dia'))
     mes = int(request.GET.get('mes'))
@@ -153,6 +146,37 @@ def arquiva_pgto_todos(request):
         venda.arquivado = True
         venda.save()
     return redirect('machine:readvendas')
+
+
+def arquiva_pgto_todos(request):
+    usuario_logado = request.user
+    if request.GET.get('data_inicio') and request.GET.get('data_fim'):
+        inicio = request.GET.get('data_inicio')
+        fim = request.GET.get('data_fim')
+        data_inicio = date(year=int(inicio[6:10]), month=int(inicio[3:5]), day=int(inicio[0:2]))
+        data_fim = date(year=int(fim[6:10]), month=int(fim[3:5]), day=int(fim[0:2]))
+        tipo = request.GET.get('tipo')
+        if tipo == "Débito":
+            vendas = (Venda.objects.filter(estabelecimento__usuario=usuario_logado).debito()
+                      .pendente().filter(data_venda__gte=data_inicio)
+                      .filter(data_venda__lte=data_fim))
+        else:
+            vendas = (Venda.objects.filter(estabelecimento__usuario=usuario_logado).credito()
+                      .pendente().filter(data_venda__gte=data_inicio).filter(data_venda__lte=data_fim))
+        for venda in vendas:
+            venda.pago = True
+            venda.save()
+        return redirect('machine:pesquisapendentes')
+    else:
+        tipo = request.GET.get('tipo')
+        if tipo == "Débito":
+            vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado).debito().pendente()
+        else:
+            vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado).credito().pendente()
+        for venda in vendas:
+            venda.pago = True
+            venda.save()
+        return redirect('machine:dashboardpendentes')
 
 
 def cancela_pgto(request):

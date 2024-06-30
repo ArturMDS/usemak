@@ -149,7 +149,7 @@ Dashboard
                                             </form>
                                         </div>
                                         <div class="col-6">
-                                            <form method="get" action="{% url 'machine:arquiva_pgto_todos' %}">
+                                            <form method="get" action="{% url 'machine:arquiva_pgto' %}">
                                                 {% csrf_token %}
                                                 <fieldset>
                                                     <input type="hidden" name="dia" value="{{ venda.last.previsao_pgto.day }}">
@@ -198,7 +198,6 @@ Dashboard
                         <th>Tarifa Cobrada</th>
                         <th>Lucro</th>
                         <th>Valor Líquido</th>
-                        <th>Atualizar</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -213,10 +212,6 @@ Dashboard
                         <td>{{ venda.valor_cobranca }}</td>
                         <td>{{ venda.lucro }}</td>
                         <td>{{ venda.valor_devido }}</td>
-                        <td>
-                            <a class="btn btn-success btn-sm"
-                               href="{% url 'machine:updatevenda' venda.id %}" role="button"><span data-feather="file-text"></span></a>
-                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>

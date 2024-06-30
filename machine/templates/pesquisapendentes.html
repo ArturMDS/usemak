@@ -507,7 +507,6 @@ Dashboard
                             <th class="text-center">Lucro</th>
                             <th class="text-center">Valor Devido</th>
                             <th class="text-center">Valor em conta</th>
-                            <th class="text-center">Processar</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -531,10 +530,7 @@ Dashboard
                                 {{ venda.previsao_pgto.day }}/{{ venda.previsao_pgto.month }}/{{ venda.previsao_pgto.year }}
                             </td>
                             {% endif %}
-                            <td class="text-center">
-                                <a class="btn btn-success btn-sm"
-                                   href="{% url 'machine:confirma_pgto' venda.id %}" role="button">Sim</a>
-                            </td>
+
                         </tr>
                         {% endfor %}
                         <tr>
@@ -547,7 +543,7 @@ Dashboard
                             <td class="text-center">{{ object_list.total_cobranca }}</td>
                             <td class="text-center">{{ object_list.lucro_total }}</td>
                             <td class="text-center">{{ object_list.total_devido }}</td>
-                            <td></td>
+
                         </tr>
                     </tbody>
                 </table>

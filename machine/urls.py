@@ -43,6 +43,6 @@ urlpatterns = [
     re_path(r'^ajusta_contestados/(?P<id>\d+)/$', ajusta_contestados, name='ajusta_contestados'),
     re_path(r'^confirma_pgto/(?P<id>\d+)/$', confirma_pgto, name='confirma_pgto'),
     re_path(r'^arquiva_pgto_todos/$', arquiva_pgto_todos, name='arquiva_pgto_todos'),
-    re_path(r'^arquiva_pgto/(?P<id>\d+)/$', arquiva_pgto, name='arquiva_pgto'),
+    path('arquiva_pgto', arquiva_pgto, name='arquiva_pgto'),
     re_path(r'^cancela_pgto/$', cancela_pgto, name='cancela_pgto'),
 ]
