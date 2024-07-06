@@ -137,7 +137,7 @@ Dashboard
             </div>
             <br><br>
 
-            <h2 class="text-center">{{ object_list.credito.count }} Vendas a Crédito</h2>
+            <h2 class="text-center">Vendas a Crédito</h2>
             <div class="table-responsive">
                 <table class="table table-striped table-sm">
                     <thead>
@@ -396,7 +396,7 @@ Dashboard
                 </form>
             </div>
             <br><br>
-            <h2 class="text-center">{{ object_list.debito.count }} Vendas a Débito</h2>
+            <h2 class="text-center">Vendas a Débito</h2>
             <div class="table-responsive">
                 <table class="table table-striped table-sm">
                     <thead>
@@ -489,8 +489,30 @@ Dashboard
                     </fieldset>
                 </form>
             </div>
-            <br><br>
-            <h2 class="text-center">{{ object_list.count }} Vendas no Período</h2>
+            <h2 class="text-center">Todas as Vendas do Período</h2>
+            <div class="table-responsive">
+                <table class="table table-striped table-sm">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Qtde</th>
+                            <th class="text-center">Valor Bruto</th>
+                            <th class="text-center">Valor Taxa (Banco)</th>
+                            <th class="text-center">Valor Devido</th>
+                            <th class="text-center">Lucro</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-center">{{ object_list.count }}</td>
+                            <td class="text-center">R$ {{ object_list.total_bruto }}</td>
+                            <td class="text-center">R$ {{ object_list.total_tarifa }}</td>
+                            <td class="text-center">R$ {{ object_list.total_devido }}</td>
+                            <td class="text-center">R$ {{ object_list.lucro_total }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <h2 class="text-center">Vendas no Período</h2>
             <br>
             <br>
             <div class="table-responsive">

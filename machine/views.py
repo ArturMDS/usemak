@@ -114,7 +114,7 @@ class PesquisaPendentes(ListView):
             data_inicio = date(year=int(inicio[6:10]), month=int(inicio[3:5]), day=int(inicio[0:2]))
             data_fim = date(year=int(fim[6:10]), month=int(fim[3:5]), day=int(fim[0:2]))
             object_list = (Venda.objects.filter(estabelecimento__usuario=usuario_logado).pendente()
-                           .filter(data_venda__gte=data_inicio).filter(data_venda__lte=data_fim).order_by('data_venda'))
+                           .filter(data_venda__range=(data_inicio, data_fim)).order_by('data_venda'))
             return object_list
         else:
             object_list = Venda.objects.filter(estabelecimento__usuario=usuario_logado).filter(pago=False).filter(
