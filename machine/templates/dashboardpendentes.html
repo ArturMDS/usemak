@@ -97,6 +97,14 @@ Dashboard
                 </fieldset>
             </form>
         </div>
+        <br>
+        <div class="container">
+            <div class="row">
+                <div class="col align-self-end">
+                    <a href="{% url 'machine:ajusta_lucro' %}"><button class="btn btn-success btn-sm">Rever lucro</button></a>
+                </div>
+            </div>
+        </div>
         <br><br>
         <div class="d-flex bd-highlight">
             <div class="card text-white bg-success mb-3" style="max-width: 18rem;">
@@ -526,7 +534,7 @@ Dashboard
                     </tbody>
                 </table>
             </div>
-        <h2 class="text-center">{{ vendas.count }} Vendas Pendentes</h2>
+        <h2 class="text-center">Vendas Pendentes</h2>
         <br><br>
         <div class="table-responsive">
             <table class="table table-striped table-sm">

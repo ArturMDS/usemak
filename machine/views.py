@@ -191,6 +191,16 @@ def cancela_pgto(request):
     return redirect('machine:readvendas')
 
 
+def ajusta_lucro(request):
+    usuario_logado = request.user
+    vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado).filter(pago=False)
+    for venda in vendas:
+        if venda.lucro/venda.valor_bruto <= 0.01:
+            venda.lucro = decimal.Decimal((float(venda.valor_tarifa/venda.valor_bruto) + 0.03)*float(venda.valor_bruto))
+            venda.save()
+    return redirect('machine:dashboardpendentes')
+
+
 class Readestabelecimento(LoginRequiredMixin, TemplateView):
     template_name = "readestabelecimento.html"
 
