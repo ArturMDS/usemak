@@ -379,13 +379,27 @@ class Updateestabelecimento(LoginRequiredMixin, UpdateView):
 def create_dados(request, id):
     atual = Atualizacao.objects.get(id=id)
     dataframe = pd.read_excel(atual.arquivo)
-    dataframe = dataframe.drop([0, 1, 2], axis=0)
-    dataframe.columns = dataframe.loc[3]
-    dataframe = dataframe.drop([3], axis=0)
-    dataframe = dataframe.drop(['Data da autorização da venda', 'Quantidade de parcelas', 'Resumo da operação', 'Taxas (%)',
-                        'Tarifa', 'Número do cartão', 'Tipo de captura', 'Recebimento automático', 'Comissão mínima',
-                        'Número da nota fiscal', 'Taxa de embarque', 'Valor da entrada', 'Valor do saque', 'Status',
-                        'ID', 'Código de autorização', 'NSU'], axis=1)
+    num = 0
+    m = 0
+    list = []
+    while num == 0:
+        for dado in dataframe.iloc[m]:
+            if "Hora" in str(dado):
+                num = 1
+        list.append(m)
+        print(list)
+        m += 1
+    list.pop(list[-1])
+    dataframe = dataframe.drop(list, axis=0)
+    dataframe.columns = dataframe.loc[8]
+    dataframe = dataframe.drop([8], axis=0)
+    dataframe = dataframe.drop(['Canal da venda', 'Tipo de captura', 'Total de taxas',
+                                'Taxa administrativa (MDR)', 'Taxa de recebimento automático',
+                                'Valor da taxa administrativa (MDR)', 'Tipo de lançamento', 'Valor do saque',
+                                'Valor do troco', 'Código de autorização', 'NSU/DOC', 'TID', 'Origem do cartão',
+                                'ID Pix', 'Número do pedido', 'Nota fiscal', 'Número do lote',
+                                'Valor líquido', 'Status da venda', 'Taxa de recebimento automático (%)', 'Motivo',
+                                'Data do lançamento'], axis=1)
     d_records = dataframe.to_dict("records")
     pk = atual.estabelecimento.id
     inserir_dados(request, d_records, pk)
