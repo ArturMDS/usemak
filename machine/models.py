@@ -77,7 +77,7 @@ class Bandeira(models.Model):
 class Venda(models.Model):
     estabelecimento = models.ForeignKey(Estabelecimento, related_name="venda", on_delete=models.CASCADE)
     tipo = models.CharField(
-        max_length=30,
+        max_length=50,
         choices=LISTA_TIPO,
         default="Crédito à vista",
     )
