@@ -102,7 +102,7 @@ def inserir_dados(request, d_records, pk):
                               nr_maquina=dado['Número da máquina'],
                               cod_venda=dado['Código da venda'])
                     list_vendas.append(v)
-                elif dado['Forma de pagamento'] == "Pré-pago crédito":
+                elif dado['Forma de pagamento'] == "Crédito pré-pago":
                     v = Venda(estabelecimento=estabelecimento,
                               tipo=dado['Forma de pagamento'],
                               bandeira=bandeira,

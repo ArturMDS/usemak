@@ -5,9 +5,9 @@ from .manager import VendasManager
 
 LISTA_TIPO = (
     ("Débito à vista", "Débito à vista"),
-    ("Débito Pré-pago", "Débito Pré-pago"),
+    ("Débito pré-pago", "Débito pré-pago"),
     ("Crédito à vista", "Crédito à vista"),
-    ("Crédito Pré-pago", "Crédito Pré-pago"),
+    ("Crédito pré-pago", "Crédito pré-pago"),
     ("Crédito conversor moeda", "Crédito conversor moeda"),
     ("Crédito parcelado loja 2x", "Crédito parcelado loja 2x"),
     ("Crédito parcelado loja 3x", "Crédito parcelado loja 3x"),
@@ -90,7 +90,7 @@ class Venda(models.Model):
     valor_cobranca = models.DecimalField("Valor a ser cobrado", max_digits=8, decimal_places=2, default=0.00)
     valor_devido = models.DecimalField("Valor devido ao cliente", max_digits=8, decimal_places=2, default=0.00)
     lucro = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
-    nr_maquina = models.CharField(max_length=20, null=True, blank=True)
+    nr_maquina = models.CharField(max_length=40, null=True, blank=True)
     cod_venda = models.CharField(max_length=70, null=True, blank=True)
     em_conta = models.BooleanField(default=False)
     pago = models.BooleanField(default=False)
