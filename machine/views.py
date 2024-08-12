@@ -393,13 +393,13 @@ def create_dados(request, id):
     dataframe = dataframe.drop(list, axis=0)
     dataframe.columns = dataframe.loc[8]
     dataframe = dataframe.drop([8], axis=0)
-    dataframe = dataframe.drop(['Canal da venda', 'Tipo de captura', 'Total de taxas',
+    """dataframe = dataframe.drop(['Canal da venda', 'Tipo de captura', 'Total de taxas',
                                 'Taxa administrativa (MDR)', 'Taxa de recebimento automático',
                                 'Valor da taxa administrativa (MDR)', 'Tipo de lançamento', 'Valor do saque',
                                 'Valor do troco', 'Código de autorização', 'NSU/DOC', 'TID', 'Origem do cartão',
                                 'ID Pix', 'Número do pedido', 'Nota fiscal', 'Número do lote',
                                 'Valor líquido', 'Status da venda', 'Taxa de recebimento automático (%)', 'Motivo',
-                                'Data do lançamento'], axis=1)
+                                'Data do lançamento'], axis=1)"""
     d_records = dataframe.to_dict("records")
     pk = atual.estabelecimento.id
     inserir_dados(request, d_records, pk)
