@@ -97,42 +97,34 @@ Dashboard
                 </fieldset>
             </form>
         </div>
-        <br>
-        <div class="container">
-            <div class="row">
-                <div class="col align-self-end">
-                    <a href="{% url 'machine:ajusta_lucro' %}"><button class="btn btn-success btn-sm">Rever lucro</button></a>
-                </div>
-            </div>
-        </div>
         <br><br>
         <div class="d-flex bd-highlight">
             <div class="card text-white bg-success mb-3" style="max-width: 18rem;">
                 <div class="text-center card-header">LUCRO PENDENTE</div>
                 <div class="card-body">
-                    <h5 class="text-center card-title">R$ {{ vendas.lucro_total }}</h5>
+                    <h5 class="text-center card-title">R$ {{ total_vendas.lucro_total }}</h5>
                 </div>
             </div>
             <p class="text-white">x</p>
             <div class="card text-white bg-danger mb-3" style="max-width: 18rem;">
                 <div class="text-center card-header">DÉBITO COM O CLIENTE</div>
                 <div class="card-body">
-                    <h5 class="text-center card-title">R$ {{ vendas.total_devido }}</h5>
+                    <h5 class="text-center card-title">R$ {{ total_vendas.total_devido }}</h5>
                 </div>
             </div>
             <p class="text-white">x</p>
             <div class="card text-white bg-info mb-3" style="max-width: 18rem;">
                 <div class="text-center card-header">TAXAS</div>
                 <div class="card-body">
-                    <h5 class="text-center card-title">R$ {{ vendas.total_tarifa }}</h5>
+                    <h5 class="text-center card-title">R$ {{ total_vendas.total_tarifa }}</h5>
                 </div>
             </div>
             <p class="text-white">x</p>
             <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
                 <div class="text-center card-header">ENTRADA TOTAL</div>
                 <div class="card-body">
-                    {% if vendas.entrada %}
-                        <h5 class="text-center card-title">R$ {{ vendas.entrada }}</h5>
+                    {% if total_vendas.entrada %}
+                        <h5 class="text-center card-title">R$ {{ total_vendas.entrada }}</h5>
                     {% else %}
                         <h5 class="text-center card-title">---</h5>
                     {% endif %}
@@ -142,8 +134,8 @@ Dashboard
             <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
                 <div class="text-center card-header">ENTRADA HOJE</div>
                 <div class="card-body">
-                    {% if vendas.hoje.entrada %}
-                        <h5 class="text-center card-title">R$ {{ vendas.hoje.entrada }}</h5>
+                    {% if total_vendas.hoje.entrada %}
+                        <h5 class="text-center card-title">R$ {{ total_vendas.hoje.entrada }}</h5>
                     {% else %}
                         <h5 class="text-center card-title">---</h5>
                     {% endif %}
@@ -154,15 +146,15 @@ Dashboard
                 <div class="text-center card-header">ENTRADA AMANHÃ</div>
                 <div class="card-body">
                     {% if vendas.amanha.entrada %}
-                        <h5 class="text-center card-title">R$ {{ vendas.amanha.entrada }}</h5>
+                        <h5 class="text-center card-title">R$ {{ total_vendas.amanha.entrada }}</h5>
                     {% else %}
                         <h5 class="text-center card-title">---</h5>
                     {% endif %}
                 </div>
             </div>
         </div>
-
-        <h2 class="text-center">Vendas a Crédito</h2>
+        {% for vendas in estabelecimentos %}
+            <h2 class="text-center">{{ vendas.first.estabelecimento.razao_social }} - Vendas a Crédito</h2>
             <div class="table-responsive">
                 <table class="table table-striped table-sm">
                     <thead>
@@ -414,12 +406,13 @@ Dashboard
                     {% csrf_token %}
                     <fieldset>
                         <input type="hidden" name="tipo" value="Crédito">
+                        <input type="hidden" name="estabelecimento" value="{{ vendas.first.estabelecimento.razao_social }}">
                         <button type="submit" class="btn btn-danger btn-sm">Arquivar</button>
                     </fieldset>
                 </form>
             </div>
             <br><br>
-            <h2 class="text-center">Vendas a Débito</h2>
+            <h2 class="text-center">{{ vendas.first.estabelecimento.razao_social }} - Vendas a Débito</h2>
             <div class="table-responsive">
                 <table class="table table-striped table-sm">
                     <thead>
@@ -506,12 +499,13 @@ Dashboard
                     {% csrf_token %}
                     <fieldset>
                         <input type="hidden" name="tipo" value="Débito">
+                        <input type="hidden" name="estabelecimento" value="{{ vendas.first.estabelecimento.razao_social }}">
                         <button type="submit" class="btn btn-danger btn-sm">Arquivar</button>
                     </fieldset>
                 </form>
             </div>
             <br><br>
-            <h2 class="text-center">Todas as Vendas</h2>
+            <h2 class="text-center">{{ vendas.first.estabelecimento.razao_social }} - Total de Vendas</h2>
             <div class="table-responsive">
                 <table class="table table-striped table-sm">
                     <thead>
@@ -534,61 +528,30 @@ Dashboard
                     </tbody>
                 </table>
             </div>
-        <h2 class="text-center">Vendas Pendentes</h2>
-        <br><br>
-        <div class="table-responsive">
-            <table class="table table-striped table-sm">
-                <thead>
-                    <tr>
-                        <th class="text-center">Data</th>
-                        <th class="text-center">Bandeira</th>
-                        <th class="text-center">Forma</th>
-                        <th class="text-center">Taxa</th>
-                        <th class="text-center">Valor Bruto</th>
-                        <th class="text-center">Valor Taxa</th>
-                        <th class="text-center">Valor Cobrado</th>
-                        <th class="text-center">Lucro</th>
-                        <th class="text-center">Valor Devido</th>
-                        <th class="text-center">Valor em conta</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for venda in vendas %}
-                    <tr>
-                        <td class="text-center">{{ venda.data_venda.day }}/{{ venda.data_venda.month }}/{{ venda.data_venda.year }}</td>
-                        <td class="text-center"><img src="{{ venda.bandeira.logo.url }}" width="30" height="20"></td>
-                        <td class="text-center">{{ venda.tipo }}</td>
-                        <td class="text-center">{{ venda.taxa }}</td>
-                        <td class="text-center">{{ venda.valor_bruto }}</td>
-                        <td class="text-center">R${{ venda.valor_tarifa }}</td>
-                        <td class="text-center">R${{ venda.valor_cobranca }}</td>
-                        <td class="text-center">R${{ venda.lucro }}</td>
-                        <td class="text-center">R${{ venda.valor_devido }}</td>
-                        {% if venda.em_conta %}
-                        <td class="text-center">
-                            <img src="{% static 'images/dinheiro.png' %}" width="30" height="20">
-                        </td>
-                        {% else %}
-                        <td class="text-center">
-                            {{ venda.previsao_pgto.day }}/{{ venda.previsao_pgto.month }}/{{ venda.previsao_pgto.year }}
-                        </td>
-                        {% endif %}
-                    </tr>
-                    {% endfor %}
-                    <tr>
-                        <td class="text-center"><b>Total</b></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td class="text-center">{{ vendas.total_bruto }}</td>
-                        <td class="text-center">{{ vendas.total_tarifa }}</td>
-                        <td class="text-center">{{ vendas.total_cobranca }}</td>
-                        <td class="text-center">{{ vendas.lucro_total }}</td>
-                        <td class="text-center">{{ vendas.total_devido }}</td>
-
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        {% endfor %}
+            <br><br>
+            <h2 class="text-center">Todas as Vendas</h2>
+            <div class="table-responsive">
+                <table class="table table-striped table-sm">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Qtde</th>
+                            <th class="text-center">Valor Bruto</th>
+                            <th class="text-center">Valor Taxa (Banco)</th>
+                            <th class="text-center">Valor Devido</th>
+                            <th class="text-center">Lucro</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-center">{{ total_vendas.count }}</td>
+                            <td class="text-center">R$ {{ total_vendas.total_bruto }}</td>
+                            <td class="text-center">R$ {{ total_vendas.total_tarifa }}</td>
+                            <td class="text-center">R$ {{ total_vendas.total_devido }}</td>
+                            <td class="text-center">R$ {{ total_vendas.lucro_total }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
     </main>
 {% endblock %}

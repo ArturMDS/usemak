@@ -136,359 +136,386 @@ Dashboard
                 </div>
             </div>
             <br><br>
-
-            <h2 class="text-center">Vendas a Crédito</h2>
-            <div class="table-responsive">
-                <table class="table table-striped table-sm">
-                    <thead>
-                        <tr>
-                            <th class="text-center">Forma</th>
-                            <th class="text-center">Qtde</th>
-                            <th class="text-center">Valor Bruto</th>
-                            <th class="text-center">Taxa</th>
-                            <th class="text-center">Valor Taxa (Banco)</th>
-                            <th class="text-center">Valor Devido</th>
-                            <th class="text-center">Lucro</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% if object_list.master.credito_vista %}
+            {% for vendas in estabelecimentos %}
+                <h2 class="text-center">{{ vendas.first.estabelecimento.razao_social }} - Vendas a Crédito</h2>
+                <div class="table-responsive">
+                    <table class="table table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Forma</th>
+                                <th class="text-center">Qtde</th>
+                                <th class="text-center">Valor Bruto</th>
+                                <th class="text-center">Taxa</th>
+                                <th class="text-center">Valor Taxa (Banco)</th>
+                                <th class="text-center">Valor Devido</th>
+                                <th class="text-center">Lucro</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% if vendas.master.credito_vista %}
                             <tr>
                                 <td class="text-center"><img src="{% static 'images/Mastercard-Logo.png' %}" width="30" height="20"> Crédito à Vista</td>
-                                <td class="text-center">{{ object_list.master.credito_vista.count }}</td>
-                                <td class="text-center">R$ {{ object_list.master.credito_vista.total_bruto }}</td>
-                                <td class="text-center">%{{ object_list.master.credito_vista.last.bandeira.credito_vista }}</td>
-                                <td class="text-center">R$ {{ object_list.master.credito_vista.total_tarifa }}</td>
-                                <td class="text-center">R$ {{ object_list.master.credito_vista.total_devido }}</td>
-                                <td class="text-center">R$ {{ object_list.master.credito_vista.lucro_total }}</td>
+                                <td class="text-center">{{ vendas.master.credito_vista.count }}</td>
+                                <td class="text-center">R$ {{ vendas.master.credito_vista.total_bruto }}</td>
+                                <td class="text-center">%{{ vendas.master.credito_vista.last.bandeira.credito_vista }}</td>
+                                <td class="text-center">R$ {{ vendas.master.credito_vista.total_tarifa }}</td>
+                                <td class="text-center">R$ {{ vendas.master.credito_vista.total_devido }}</td>
+                                <td class="text-center">R$ {{ vendas.master.credito_vista.lucro_total }}</td>
                             </tr>
                         {% endif %}
-                        {% if object_list.master.credito_pre %}
+                        {% if vendas.master.credito_pre %}
                             <tr>
                                 <td class="text-center"><img src="{% static 'images/Mastercard-Logo.png' %}" width="30" height="20"> Crédito Pré-pago</td>
-                                <td class="text-center">{{ object_list.master.credito_pre.count }}</td>
-                                <td class="text-center">R$ {{ object_list.master.credito_pre.total_bruto }}</td>
-                                <td class="text-center">%{{ object_list.master.credito_pre.last.bandeira.credito_pre }}</td>
-                                <td class="text-center">R$ {{ object_list.master.credito_pre.total_tarifa }}</td>
-                                <td class="text-center">R$ {{ object_list.master.credito_pre.total_devido }}</td>
-                                <td class="text-center">R$ {{ object_list.master.credito_pre.lucro_total }}</td>
+                                <td class="text-center">{{ vendas.master.credito_pre.count }}</td>
+                                <td class="text-center">R$ {{ vendas.master.credito_pre.total_bruto }}</td>
+                                <td class="text-center">%{{ vendas.master.credito_pre.last.bandeira.credito_pre }}</td>
+                                <td class="text-center">R$ {{ vendas.master.credito_pre.total_tarifa }}</td>
+                                <td class="text-center">R$ {{ vendas.master.credito_pre.total_devido }}</td>
+                                <td class="text-center">R$ {{ vendas.master.credito_pre.lucro_total }}</td>
                             </tr>
                         {% endif %}
-                        {% if object_list.master.credito_moeda %}
+                        {% if vendas.master.credito_moeda %}
                             <tr>
                                 <td class="text-center"><img src="{% static 'images/Mastercard-Logo.png' %}" width="30" height="20"> Crédito Conv. Moeda</td>
-                                <td class="text-center">{{ object_list.master.credito_moeda.count }}</td>
-                                <td class="text-center">R$ {{ object_list.master.credito_moeda.total_bruto }}</td>
-                                <td class="text-center">%{{ object_list.master.credito_moeda.last.bandeira.credito_moeda }}</td>
-                                <td class="text-center">R$ {{ object_list.master.credito_moeda.total_tarifa }}</td>
-                                <td class="text-center">R$ {{ object_list.master.credito_moeda.total_devido }}</td>
-                                <td class="text-center">R$ {{ object_list.master.credito_moeda.lucro_total }}</td>
+                                <td class="text-center">{{ vendas.master.credito_moeda.count }}</td>
+                                <td class="text-center">R$ {{ vendas.master.credito_moeda.total_bruto }}</td>
+                                <td class="text-center">%{{ vendas.master.credito_moeda.last.bandeira.credito_moeda }}</td>
+                                <td class="text-center">R$ {{ vendas.master.credito_moeda.total_tarifa }}</td>
+                                <td class="text-center">R$ {{ vendas.master.credito_moeda.total_devido }}</td>
+                                <td class="text-center">R$ {{ vendas.master.credito_moeda.lucro_total }}</td>
                             </tr>
                         {% endif %}
-                        {% if object_list.master.credito_parcelado %}
+                        {% if vendas.master.credito_parcelado %}
                             <tr>
                                 <td class="text-center"><img src="{% static 'images/Mastercard-Logo.png' %}" width="30" height="20"> Crédito Parcelado</td>
-                                <td class="text-center">{{ object_list.master.credito_parcelado.count }}</td>
-                                <td class="text-center">R$ {{ object_list.master.credito_parcelado.total_bruto }}</td>
-                                <td class="text-center">%{{ object_list.master.credito_parcelado.last.bandeira.credito_2x }}</td>
-                                <td class="text-center">R$ {{ object_list.master.credito_parcelado.total_tarifa }}</td>
-                                <td class="text-center">R$ {{ object_list.master.credito_parcelado.total_devido }}</td>
-                                <td class="text-center">R$ {{ object_list.master.credito_parcelado.lucro_total }}</td>
+                                <td class="text-center">{{ vendas.master.credito_parcelado.count }}</td>
+                                <td class="text-center">R$ {{ vendas.master.credito_parcelado.total_bruto }}</td>
+                                <td class="text-center">%{{ vendas.master.credito_parcelado.last.bandeira.credito_2x }}</td>
+                                <td class="text-center">R$ {{ vendas.master.credito_parcelado.total_tarifa }}</td>
+                                <td class="text-center">R$ {{ vendas.master.credito_parcelado.total_devido }}</td>
+                                <td class="text-center">R$ {{ vendas.master.credito_parcelado.lucro_total }}</td>
                             </tr>
                         {% endif %}
-                        {% if object_list.visa.credito_vista %}
+                        {% if vendas.visa.credito_vista %}
                             <tr>
                                 <td class="text-center"><img src="{% static 'images/visa.png' %}" width="30" height="20"> Crédito à Vista</td>
-                                <td class="text-center">{{ object_list.visa.credito_vista.count }}</td>
-                                <td class="text-center">R$ {{ object_list.visa.credito_vista.total_bruto }}</td>
-                                <td class="text-center">%{{ object_list.visa.credito_vista.last.bandeira.credito_vista }}</td>
-                                <td class="text-center">R$ {{ object_list.visa.credito_vista.total_tarifa }}</td>
-                                <td class="text-center">R$ {{ object_list.visa.credito_vista.total_devido }}</td>
-                                <td class="text-center">R$ {{ object_list.visa.credito_vista.lucro_total }}</td>
+                                <td class="text-center">{{ vendas.visa.credito_vista.count }}</td>
+                                <td class="text-center">R$ {{ vendas.visa.credito_vista.total_bruto }}</td>
+                                <td class="text-center">%{{ vendas.visa.credito_vista.last.bandeira.credito_vista }}</td>
+                                <td class="text-center">R$ {{ vendas.visa.credito_vista.total_tarifa }}</td>
+                                <td class="text-center">R$ {{ vendas.visa.credito_vista.total_devido }}</td>
+                                <td class="text-center">R$ {{ vendas.visa.credito_vista.lucro_total }}</td>
                             </tr>
                         {% endif %}
-                        {% if object_list.visa.credito_pre %}
+                        {% if vendas.visa.credito_pre %}
                             <tr>
                                 <td class="text-center"><img src="{% static 'images/visa.png' %}" width="30" height="20"> Crédito Pré-pago</td>
-                                <td class="text-center">{{ object_list.visa.credito_pre.count }}</td>
-                                <td class="text-center">R$ {{ object_list.visa.credito_pre.total_bruto }}</td>
-                                <td class="text-center">%{{ object_list.visa.credito_pre.last.bandeira.credito_pre }}</td>
-                                <td class="text-center">R$ {{ object_list.visa.credito_pre.total_tarifa }}</td>
-                                <td class="text-center">R$ {{ object_list.visa.credito_pre.total_devido }}</td>
-                                <td class="text-center">R$ {{ object_list.visa.credito_pre.lucro_total }}</td>
+                                <td class="text-center">{{ vendas.visa.credito_pre.count }}</td>
+                                <td class="text-center">R$ {{ vendas.visa.credito_pre.total_bruto }}</td>
+                                <td class="text-center">%{{ vendas.visa.credito_pre.last.bandeira.credito_pre }}</td>
+                                <td class="text-center">R$ {{ vendas.visa.credito_pre.total_tarifa }}</td>
+                                <td class="text-center">R$ {{ vendas.visa.credito_pre.total_devido }}</td>
+                                <td class="text-center">R$ {{ vendas.visa.credito_pre.lucro_total }}</td>
                             </tr>
                         {% endif %}
-                        {% if object_list.visa.credito_moeda %}
+                        {% if vendas.visa.credito_moeda %}
                             <tr>
                                 <td class="text-center"><img src="{% static 'images/visa.png' %}" width="30" height="20"> Crédito Conv. Moeda</td>
-                                <td class="text-center">{{ object_list.visa.credito_moeda.count }}</td>
-                                <td class="text-center">R$ {{ object_list.visa.credito_moeda.total_bruto }}</td>
-                                <td class="text-center">%{{ object_list.visa.credito_moeda.last.bandeira.credito_moeda }}</td>
-                                <td class="text-center">R$ {{ object_list.visa.credito_moeda.total_tarifa }}</td>
-                                <td class="text-center">R$ {{ object_list.visa.credito_moeda.total_devido }}</td>
-                                <td class="text-center">R$ {{ object_list.visa.credito_moeda.lucro_total }}</td>
+                                <td class="text-center">{{ vendas.visa.credito_moeda.count }}</td>
+                                <td class="text-center">R$ {{ vendas.visa.credito_moeda.total_bruto }}</td>
+                                <td class="text-center">%{{ vendas.visa.credito_moeda.last.bandeira.credito_moeda }}</td>
+                                <td class="text-center">R$ {{ vendas.visa.credito_moeda.total_tarifa }}</td>
+                                <td class="text-center">R$ {{ vendas.visa.credito_moeda.total_devido }}</td>
+                                <td class="text-center">R$ {{ vendas.visa.credito_moeda.lucro_total }}</td>
                             </tr>
                         {% endif %}
-                        {% if object_list.visa.credito_parcelado %}
+                        {% if vendas.visa.credito_parcelado %}
                             <tr>
                                 <td class="text-center"><img src="{% static 'images/visa.png' %}" width="30" height="20"> Crédito Parcelado</td>
-                                <td class="text-center">{{ object_list.visa.credito_parcelado.count }}</td>
-                                <td class="text-center">R$ {{ object_list.visa.credito_parcelado.total_bruto }}</td>
-                                <td class="text-center">%{{ object_list.visa.credito_parcelado.last.bandeira.credito_2x }}</td>
-                                <td class="text-center">R$ {{ object_list.visa.credito_parcelado.total_tarifa }}</td>
-                                <td class="text-center">R$ {{ object_list.visa.credito_parcelado.total_devido }}</td>
-                                <td class="text-center">R$ {{ object_list.visa.credito_parcelado.lucro_total }}</td>
+                                <td class="text-center">{{ vendas.visa.credito_parcelado.count }}</td>
+                                <td class="text-center">R$ {{ vendas.visa.credito_parcelado.total_bruto }}</td>
+                                <td class="text-center">%{{ vendas.visa.credito_parcelado.last.bandeira.credito_2x }}</td>
+                                <td class="text-center">R$ {{ vendas.visa.credito_parcelado.total_tarifa }}</td>
+                                <td class="text-center">R$ {{ vendas.visa.credito_parcelado.total_devido }}</td>
+                                <td class="text-center">R$ {{ vendas.visa.credito_parcelado.lucro_total }}</td>
                             </tr>
                         {% endif %}
-                        {% if object_list.amex.credito_vista %}
+                        {% if vendas.amex.credito_vista %}
                             <tr>
                                 <td class="text-center"><img src="{% static 'images/american.png' %}" width="30" height="20"> Crédito à Vista</td>
-                                <td class="text-center">{{ object_list.amex.credito_vista.count }}</td>
-                                <td class="text-center">R$ {{ object_list.amex.credito_vista.total_bruto }}</td>
-                                <td class="text-center">%{{ object_list.amex.credito_vista.last.bandeira.credito_vista }}</td>
-                                <td class="text-center">R$ {{ object_list.amex.credito_vista.total_tarifa }}</td>
-                                <td class="text-center">R$ {{ object_list.amex.credito_vista.total_devido }}</td>
-                                <td class="text-center">R$ {{ object_list.amex.credito_vista.lucro_total }}</td>
+                                <td class="text-center">{{ vendas.amex.credito_vista.count }}</td>
+                                <td class="text-center">R$ {{ vendas.amex.credito_vista.total_bruto }}</td>
+                                <td class="text-center">%{{ vendas.amex.credito_vista.last.bandeira.credito_vista }}</td>
+                                <td class="text-center">R$ {{ vendas.amex.credito_vista.total_tarifa }}</td>
+                                <td class="text-center">R$ {{ vendas.amex.credito_vista.total_devido }}</td>
+                                <td class="text-center">R$ {{ vendas.amex.credito_vista.lucro_total }}</td>
                             </tr>
                         {% endif %}
-                        {% if object_list.amex.credito_pre %}
+                        {% if vendas.amex.credito_pre %}
                             <tr>
                                 <td class="text-center"><img src="{% static 'images/american.png' %}" width="30" height="20"> Crédito Pré-pago</td>
-                                <td class="text-center">{{ object_list.amex.credito_pre.count }}</td>
-                                <td class="text-center">R$ {{ object_list.amex.credito_pre.total_bruto }}</td>
-                                <td class="text-center">%{{ object_list.amex.credito_pre.last.bandeira.credito_pre }}</td>
-                                <td class="text-center">R$ {{ object_list.amex.credito_pre.total_tarifa }}</td>
-                                <td class="text-center">R$ {{ object_list.amex.credito_pre.total_devido }}</td>
-                                <td class="text-center">R$ {{ object_list.amex.credito_pre.lucro_total }}</td>
+                                <td class="text-center">{{ vendas.amex.credito_pre.count }}</td>
+                                <td class="text-center">R$ {{ ovendas.amex.credito_pre.total_bruto }}</td>
+                                <td class="text-center">%{{ vendas.amex.credito_pre.last.bandeira.credito_pre }}</td>
+                                <td class="text-center">R$ {{ vendas.amex.credito_pre.total_tarifa }}</td>
+                                <td class="text-center">R$ {{ vendas.amex.credito_pre.total_devido }}</td>
+                                <td class="text-center">R$ {{ vendas.amex.credito_pre.lucro_total }}</td>
                             </tr>
                         {% endif %}
-                        {% if object_list.amex.credito_moeda %}
+                        {% if vendas.amex.credito_moeda %}
                             <tr>
                                 <td class="text-center"><img src="{% static 'images/american.png' %}" width="30" height="20"> Crédito Conv. Moeda</td>
-                                <td class="text-center">{{ object_list.amex.credito_moeda.count }}</td>
-                                <td class="text-center">R$ {{ object_list.amex.credito_moeda.total_bruto }}</td>
-                                <td class="text-center">%{{ object_list.amex.credito_moeda.last.bandeira.credito_moeda }}</td>
-                                <td class="text-center">R$ {{ object_list.amex.credito_moeda.total_tarifa }}</td>
-                                <td class="text-center">R$ {{ object_list.amex.credito_moeda.total_devido }}</td>
-                                <td class="text-center">R$ {{ object_list.amex.credito_moeda.lucro_total }}</td>
+                                <td class="text-center">{{ vendas.amex.credito_moeda.count }}</td>
+                                <td class="text-center">R$ {{ vendas.amex.credito_moeda.total_bruto }}</td>
+                                <td class="text-center">%{{ vendas.amex.credito_moeda.last.bandeira.credito_moeda }}</td>
+                                <td class="text-center">R$ {{ vendas.amex.credito_moeda.total_tarifa }}</td>
+                                <td class="text-center">R$ {{ vendas.amex.credito_moeda.total_devido }}</td>
+                                <td class="text-center">R$ {{ vendas.amex.credito_moeda.lucro_total }}</td>
                             </tr>
                         {% endif %}
-                        {% if object_list.amex.credito_parcelado %}
+                        {% if vendas.amex.credito_parcelado %}
                             <tr>
                                 <td class="text-center"><img src="{% static 'images/american.png' %}" width="30" height="20"> Crédito Parcelado</td>
-                                <td class="text-center">{{ object_list.amex.credito_parcelado.count }}</td>
-                                <td class="text-center">R$ {{ object_list.amex.credito_parcelado.total_bruto }}</td>
-                                <td class="text-center">%{{ object_list.amex.credito_parcelado.last.bandeira.credito_2x }}</td>
-                                <td class="text-center">R$ {{ object_list.amex.credito_parcelado.total_tarifa }}</td>
-                                <td class="text-center">R$ {{ object_list.amex.credito_parcelado.total_devido }}</td>
-                                <td class="text-center">R$ {{ object_list.amex.credito_parcelado.lucro_total }}</td>
+                                <td class="text-center">{{ vendas.amex.credito_parcelado.count }}</td>
+                                <td class="text-center">R$ {{ vendas.amex.credito_parcelado.total_bruto }}</td>
+                                <td class="text-center">%{{ vendas.amex.credito_parcelado.last.bandeira.credito_2x }}</td>
+                                <td class="text-center">R$ {{ vendas.amex.credito_parcelado.total_tarifa }}</td>
+                                <td class="text-center">R$ {{ vendas.amex.credito_parcelado.total_devido }}</td>
+                                <td class="text-center">R$ {{ vendas.amex.credito_parcelado.lucro_total }}</td>
                             </tr>
                         {% endif %}
-                        {% if object_list.elo.credito_vista %}
+                        {% if vendas.elo.credito_vista %}
                             <tr>
                                 <td class="text-center"><img src="{% static 'images/elo.png' %}" width="30" height="20"> Crédito à Vista</td>
-                                <td class="text-center">{{ object_list.elo.credito_vista.count }}</td>
-                                <td class="text-center">R$ {{ object_list.elo.credito_vista.total_bruto }}</td>
-                                <td class="text-center">%{{ object_list.elo.credito_vista.last.bandeira.credito_vista }}</td>
-                                <td class="text-center">R$ {{ object_list.elo.credito_vista.total_tarifa }}</td>
-                                <td class="text-center">R$ {{ object_list.elo.credito_vista.total_devido }}</td>
-                                <td class="text-center">R$ {{ object_list.elo.credito_vista.lucro_total }}</td>
+                                <td class="text-center">{{ vendas.elo.credito_vista.count }}</td>
+                                <td class="text-center">R$ {{ vendas.elo.credito_vista.total_bruto }}</td>
+                                <td class="text-center">%{{ vendas.elo.credito_vista.last.bandeira.credito_vista }}</td>
+                                <td class="text-center">R$ {{ vendas.elo.credito_vista.total_tarifa }}</td>
+                                <td class="text-center">R$ {{ vendas.elo.credito_vista.total_devido }}</td>
+                                <td class="text-center">R$ {{ vendas.elo.credito_vista.lucro_total }}</td>
                             </tr>
                         {% endif %}
-                        {% if object_list.elo.credito_pre %}
+                        {% if vendas.elo.credito_pre %}
                             <tr>
                                 <td class="text-center"><img src="{% static 'images/elo.png' %}" width="30" height="20"> Crédito Pré-pago</td>
-                                <td class="text-center">{{ object_list.elo.credito_pre.count }}</td>
-                                <td class="text-center">R$ {{ object_list.elo.credito_pre.total_bruto }}</td>
-                                <td class="text-center">%{{ object_list.elo.credito_pre.last.bandeira.credito_pre }}</td>
-                                <td class="text-center">R$ {{ object_list.elo.credito_pre.total_tarifa }}</td>
-                                <td class="text-center">R$ {{ object_list.elo.credito_pre.total_devido }}</td>
-                                <td class="text-center">R$ {{ object_list.elo.credito_pre.lucro_total }}</td>
+                                <td class="text-center">{{ vendas.elo.credito_pre.count }}</td>
+                                <td class="text-center">R$ {{ vendas.elo.credito_pre.total_bruto }}</td>
+                                <td class="text-center">%{{ vendas.elo.credito_pre.last.bandeira.credito_pre }}</td>
+                                <td class="text-center">R$ {{ vendas.elo.credito_pre.total_tarifa }}</td>
+                                <td class="text-center">R$ {{ vendas.elo.credito_pre.total_devido }}</td>
+                                <td class="text-center">R$ {{ vendas.elo.credito_pre.lucro_total }}</td>
                             </tr>
                         {% endif %}
-                        {% if object_list.elo.credito_moeda %}
+                        {% if vendas.elo.credito_moeda %}
                             <tr>
                                 <td class="text-center"><img src="{% static 'images/elo.png' %}" width="30" height="20"> Crédito Conv. Moeda</td>
-                                <td class="text-center">{{ object_list.elo.credito_moeda.count }}</td>
-                                <td class="text-center">R$ {{ object_list.elo.credito_moeda.total_bruto }}</td>
-                                <td class="text-center">%{{ object_list.elo.credito_moeda.last.bandeira.credito_moeda }}</td>
-                                <td class="text-center">R$ {{ object_list.elo.credito_moeda.total_tarifa }}</td>
-                                <td class="text-center">R$ {{ object_list.elo.credito_moeda.total_devido }}</td>
-                                <td class="text-center">R$ {{ object_list.elo.credito_moeda.lucro_total }}</td>
+                                <td class="text-center">{{ vendas.elo.credito_moeda.count }}</td>
+                                <td class="text-center">R$ {{ vendas.elo.credito_moeda.total_bruto }}</td>
+                                <td class="text-center">%{{ vendas.elo.credito_moeda.last.bandeira.credito_moeda }}</td>
+                                <td class="text-center">R$ {{ vendas.elo.credito_moeda.total_tarifa }}</td>
+                                <td class="text-center">R$ {{ vendas.elo.credito_moeda.total_devido }}</td>
+                                <td class="text-center">R$ {{ vendas.elo.credito_moeda.lucro_total }}</td>
                             </tr>
                         {% endif %}
-                        {% if object_list.elo.credito_parcelado %}
+                        {% if vendas.elo.credito_parcelado %}
                             <tr>
                                 <td class="text-center"><img src="{% static 'images/elo.png' %}" width="30" height="20"> Crédito Parcelado</td>
-                                <td class="text-center">{{ object_list.elo.credito_parcelado.count }}</td>
-                                <td class="text-center">R$ {{ object_list.elo.credito_parcelado.total_bruto }}</td>
-                                <td class="text-center">%{{ object_list.elo.credito_parcelado.last.bandeira.credito_2x }}</td>
-                                <td class="text-center">R$ {{ object_list.elo.credito_parcelado.total_tarifa }}</td>
-                                <td class="text-center">R$ {{ object_list.elo.credito_parcelado.total_devido }}</td>
-                                <td class="text-center">R$ {{ object_list.elo.credito_parcelado.lucro_total }}</td>
+                                <td class="text-center">{{ vendas.elo.credito_parcelado.count }}</td>
+                                <td class="text-center">R$ {{ vendas.elo.credito_parcelado.total_bruto }}</td>
+                                <td class="text-center">%{{ vendas.elo.credito_parcelado.last.bandeira.credito_2x }}</td>
+                                <td class="text-center">R$ {{ vendas.elo.credito_parcelado.total_tarifa }}</td>
+                                <td class="text-center">R$ {{ vendas.elo.credito_parcelado.total_devido }}</td>
+                                <td class="text-center">R$ {{ vendas.elo.credito_parcelado.lucro_total }}</td>
                             </tr>
                         {% endif %}
-                        {% if object_list.hiper.credito_vista %}
+                        {% if vendas.hiper.credito_vista %}
                             <tr>
                                 <td class="text-center"><img src="{% static 'images/hipercard.png' %}" width="30" height="20"> Crédito à Vista</td>
-                                <td class="text-center">{{ object_list.hiper.credito_vista.count }}</td>
-                                <td class="text-center">R$ {{ object_list.hiper.credito_vista.total_bruto }}</td>
-                                <td class="text-center">%{{ object_list.hiper.credito_vista.last.bandeira.credito_vista }}</td>
-                                <td class="text-center">R$ {{ object_list.hiper.credito_vista.total_tarifa }}</td>
-                                <td class="text-center">R$ {{ object_list.hiper.credito_vista.total_devido }}</td>
-                                <td class="text-center">R$ {{ object_list.hiper.credito_vista.lucro_total }}</td>
+                                <td class="text-center">{{ vendas.hiper.credito_vista.count }}</td>
+                                <td class="text-center">R$ {{ vendas.hiper.credito_vista.total_bruto }}</td>
+                                <td class="text-center">%{{ vendas.hiper.credito_vista.last.bandeira.credito_vista }}</td>
+                                <td class="text-center">R$ {{ vendas.hiper.credito_vista.total_tarifa }}</td>
+                                <td class="text-center">R$ {{ vendas.hiper.credito_vista.total_devido }}</td>
+                                <td class="text-center">R$ {{ vendas.hiper.credito_vista.lucro_total }}</td>
                             </tr>
                         {% endif %}
-                        {% if object_list.hiper.credito_pre %}
+                        {% if vendas.hiper.credito_pre %}
                             <tr>
                                 <td class="text-center"><img src="{% static 'images/hipercard.png' %}" width="30" height="20"> Crédito Pré-pago</td>
-                                <td class="text-center">{{ object_list.hiper.credito_pre.count }}</td>
-                                <td class="text-center">R$ {{ object_list.hiper.credito_pre.total_bruto }}</td>
-                                <td class="text-center">%{{ object_list.hiper.credito_pre.last.bandeira.credito_pre }}</td>
-                                <td class="text-center">R$ {{ object_list.hiper.credito_pre.total_tarifa }}</td>
-                                <td class="text-center">R$ {{ object_list.hiper.credito_pre.total_devido }}</td>
-                                <td class="text-center">R$ {{ object_list.hiper.credito_pre.lucro_total }}</td>
+                                <td class="text-center">{{ vendas.hiper.credito_pre.count }}</td>
+                                <td class="text-center">R$ {{ vendas.hiper.credito_pre.total_bruto }}</td>
+                                <td class="text-center">%{{ vendas.hiper.credito_pre.last.bandeira.credito_pre }}</td>
+                                <td class="text-center">R$ {{ vendas.hiper.credito_pre.total_tarifa }}</td>
+                                <td class="text-center">R$ {{ vendas.hiper.credito_pre.total_devido }}</td>
+                                <td class="text-center">R$ {{ vendas.hiper.credito_pre.lucro_total }}</td>
                             </tr>
                         {% endif %}
-                        {% if object_list.hiper.credito_moeda %}
+                        {% if vendas.hiper.credito_moeda %}
                             <tr>
                                 <td class="text-center"><img src="{% static 'images/hipercard.png' %}" width="30" height="20"> Crédito Conv. Moeda</td>
-                                <td class="text-center">{{ object_list.hiper.credito_moeda.count }}</td>
-                                <td class="text-center">R$ {{ object_list.hiper.credito_moeda.total_bruto }}</td>
-                                <td class="text-center">%{{ object_list.hiper.credito_moeda.last.bandeira.credito_moeda }}</td>
-                                <td class="text-center">R$ {{ object_list.hiper.credito_moeda.total_tarifa }}</td>
-                                <td class="text-center">R$ {{ object_list.hiper.credito_moeda.total_devido }}</td>
-                                <td class="text-center">R$ {{ object_list.hiper.credito_moeda.lucro_total }}</td>
+                                <td class="text-center">{{ vendas.hiper.credito_moeda.count }}</td>
+                                <td class="text-center">R$ {{ vendas.hiper.credito_moeda.total_bruto }}</td>
+                                <td class="text-center">%{{ vendas.hiper.credito_moeda.last.bandeira.credito_moeda }}</td>
+                                <td class="text-center">R$ {{ vendas.hiper.credito_moeda.total_tarifa }}</td>
+                                <td class="text-center">R$ {{ vendas.hiper.credito_moeda.total_devido }}</td>
+                                <td class="text-center">R$ {{ vendas.hiper.credito_moeda.lucro_total }}</td>
                             </tr>
                         {% endif %}
-                        {% if object_list.hiper.credito_parcelado %}
+                        {% if vendas.hiper.credito_parcelado %}
                             <tr>
                                 <td class="text-center"><img src="{% static 'images/hipercard.png' %}" width="30" height="20"> Crédito Parcelado</td>
-                                <td class="text-center">{{ object_list.hiper.credito_parcelado.count }}</td>
-                                <td class="text-center">R$ {{ object_list.hiper.credito_parcelado.total_bruto }}</td>
-                                <td class="text-center">%{{ object_list.hiper.credito_parcelado.last.bandeira.credito_2x }}</td>
-                                <td class="text-center">R$ {{ object_list.hiper.credito_parcelado.total_tarifa }}</td>
-                                <td class="text-center">R$ {{ object_list.hiper.credito_parcelado.total_devido }}</td>
-                                <td class="text-center">R$ {{ object_list.hiper.credito_parcelado.lucro_total }}</td>
+                                <td class="text-center">{{ vendas.hiper.credito_parcelado.count }}</td>
+                                <td class="text-center">R$ {{ vendas.hiper.credito_parcelado.total_bruto }}</td>
+                                <td class="text-center">%{{ vendas.hiper.credito_parcelado.last.bandeira.credito_2x }}</td>
+                                <td class="text-center">R$ {{ vendas.hiper.credito_parcelado.total_tarifa }}</td>
+                                <td class="text-center">R$ {{ vendas.hiper.credito_parcelado.total_devido }}</td>
+                                <td class="text-center">R$ {{ vendas.hiper.credito_parcelado.lucro_total }}</td>
                             </tr>
                         {% endif %}
-                        {% if object_list.credito %}
+                        {% if vendas.credito %}
                             <tr>
                                 <td class="text-center"><b>Total</b></td>
-                                <td class="text-center">{{ object_list.credito.count }}</td>
-                                <td class="text-center">R$ {{ object_list.credito.total_bruto }}</td>
+                                <td class="text-center">{{ vendas.credito.count }}</td>
+                                <td class="text-center">R$ {{ vendas.credito.total_bruto }}</td>
                                 <td class="text-center">Variável</td>
-                                <td class="text-center">R$ {{ object_list.credito.total_tarifa }}</td>
-                                <td class="text-center">R$ {{ object_list.credito.total_devido }}</td>
-                                <td class="text-center">R$ {{ object_list.credito.lucro_total }}</td>
+                                <td class="text-center">R$ {{ vendas.credito.total_tarifa }}</td>
+                                <td class="text-center">R$ {{ vendas.credito.total_devido }}</td>
+                                <td class="text-center">R$ {{ vendas.credito.lucro_total }}</td>
                             </tr>
                         {% endif %}
-                    </tbody>
-                </table>
-                <form method="get" action="{% url 'machine:arquiva_pgto_todos' %}">
-                    {% csrf_token %}
-                    <fieldset>
-                        <input type="hidden" name="data_inicio" value="{{ inicio }}">
-                        <input type="hidden" name="data_fim" value="{{ fim }}">
-                        <input type="hidden" name="tipo" value="Crédito">
-                        <button type="submit" class="btn btn-danger btn-sm">Arquivar</button>
-                    </fieldset>
-                </form>
-            </div>
-            <br><br>
-            <h2 class="text-center">Vendas a Débito</h2>
+                        </tbody>
+                    </table>
+                    <form method="get" action="{% url 'machine:arquiva_pgto_todos' %}">
+                        {% csrf_token %}
+                        <fieldset>
+                            <input type="hidden" name="data_inicio" value="{{ inicio }}">
+                            <input type="hidden" name="data_fim" value="{{ fim }}">
+                            <input type="hidden" name="tipo" value="Crédito">
+                            <input type="hidden" name="estabelecimento" value="{{ vendas.first.estabelecimento.razao_social }}">
+                            <button type="submit" class="btn btn-danger btn-sm">Arquivar</button>
+                        </fieldset>
+                    </form>
+                </div>
+                <br><br>
+                <h2 class="text-center">{{ vendas.first.estabelecimento.razao_social }} - Vendas a Débito</h2>
+                <div class="table-responsive">
+                    <table class="table table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Forma</th>
+                                <th class="text-center">Qtde</th>
+                                <th class="text-center">Valor Bruto</th>
+                                <th class="text-center">Taxa</th>
+                                <th class="text-center">Valor Taxa (Banco)</th>
+                                <th class="text-center">Valor Devido</th>
+                                <th class="text-center">Lucro</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% if vendas.master.debito %}
+                            <tr>
+                                <td class="text-center"><img src="{% static 'images/Mastercard-Logo.png' %}" width="30" height="20"> Débito</td>
+                                <td class="text-center">{{ vendas.master.debito.count }}</td>
+                                <td class="text-center">R$ {{ vendas.master.debito.total_bruto }}</td>
+                                <td class="text-center">%{{ vendas.master.debito.last.bandeira.debito_vista }}</td>
+                                <td class="text-center">R$ {{ vendas.master.debito.total_tarifa }}</td>
+                                <td class="text-center">R$ {{ vendas.master.debito.total_devido }}</td>
+                                <td class="text-center">R$ {{ vendas.master.debito.lucro_total }}</td>
+                            </tr>
+                        {% endif %}
+                        {% if vendas.visa.debito %}
+                            <tr>
+                                <td class="text-center"><img src="{% static 'images/visa.png' %}" width="30" height="20"> Débito</td>
+                                <td class="text-center">{{ vendas.visa.debito.count }}</td>
+                                <td class="text-center">R$ {{ vendas.visa.debito.total_bruto }}</td>
+                                <td class="text-center">%{{ vendas.visa.debito.last.bandeira.debito_vista }}</td>
+                                <td class="text-center">R$ {{ vendas.visa.debito.total_tarifa }}</td>
+                                <td class="text-center">R$ {{ vendas.visa.debito.total_devido }}</td>
+                                <td class="text-center">R$ {{ vendas.visa.debito.lucro_total }}</td>
+                            </tr>
+                        {% endif %}
+                        {% if vendas.amex.debito %}
+                            <tr>
+                                <td class="text-center"><img src="{% static 'images/american.png' %}" width="30" height="20"> Débito</td>
+                                <td class="text-center">{{ vendas.amex.debito.count }}</td>
+                                <td class="text-center">R$ {{ vendas.amex.debito.total_bruto }}</td>
+                                <td class="text-center">%{{ vendas.amex.debito.last.bandeira.debito_vista }}</td>
+                                <td class="text-center">R$ {{ vendas.amex.debito.total_tarifa }}</td>
+                                <td class="text-center">R$ {{ vendas.amex.debito.total_devido }}</td>
+                                <td class="text-center">R$ {{ vendas.amex.debito.lucro_total }}</td>
+                            </tr>
+                        {% endif %}
+                        {% if vendas.elo.debito %}
+                            <tr>
+                                <td class="text-center"><img src="{% static 'images/elo.png' %}" width="30" height="20"> Débito</td>
+                                <td class="text-center">{{ vendas.elo.debito.count }}</td>
+                                <td class="text-center">R$ {{ vendas.elo.debito.total_bruto }}</td>
+                                <td class="text-center">%{{ vendas.elo.debito.last.bandeira.debito_vista }}</td>
+                                <td class="text-center">R$ {{ vendas.elo.debito.total_tarifa }}</td>
+                                <td class="text-center">R$ {{ vendas.elo.debito.total_devido }}</td>
+                                <td class="text-center">R$ {{ vendas.elo.debito.lucro_total }}</td>
+                            </tr>
+                        {% endif %}
+                        {% if vendas.hiper.debito %}
+                            <tr>
+                                <td class="text-center"><img src="{% static 'images/hipercard.png' %}" width="30" height="20"> Débito</td>
+                                <td class="text-center">{{ vendas.hiper.debito.count }}</td>
+                                <td class="text-center">R$ {{ vendas.hiper.debito.total_bruto }}</td>
+                                <td class="text-center">%{{ vendas.hiper.debito.last.bandeira.debito_vista }}</td>
+                                <td class="text-center">R$ {{ vendas.hiper.debito.total_tarifa }}</td>
+                                <td class="text-center">R$ {{ vendas.hiper.debito.total_devido }}</td>
+                                <td class="text-center">R$ {{ vendas.hiper.debito.lucro_total }}</td>
+                            </tr>
+                        {% endif %}
+                        {% if vendas.debito %}
+                            <tr>
+                                <td class="text-center"><b>Total</b></td>
+                                <td class="text-center">{{ vendas.debito.count }}</td>
+                                <td class="text-center">R$ {{ vendas.debito.total_bruto }}</td>
+                                <td class="text-center">Variável</td>
+                                <td class="text-center">R$ {{ vendas.debito.total_tarifa }}</td>
+                                <td class="text-center">R$ {{ vendas.debito.total_devido }}</td>
+                                <td class="text-center">R$ {{ vendas.debito.lucro_total }}</td>
+                            </tr>
+                        {% endif %}
+                        </tbody>
+                    </table>
+                    <form method="get" action="{% url 'machine:arquiva_pgto_todos' %}">
+                        {% csrf_token %}
+                        <fieldset>
+                            <input type="hidden" name="data_inicio" value="{{ inicio }}">
+                            <input type="hidden" name="data_fim" value="{{ fim }}">
+                            <input type="hidden" name="tipo" value="Débito">
+                            <input type="hidden" name="estabelecimento" value="{{ vendas.first.estabelecimento.razao_social }}">
+                            <button type="submit" class="btn btn-danger btn-sm">Arquivar</button>
+                        </fieldset>
+                    </form>
+                </div>
+                <br><br>
+            <h2 class="text-center">{{ vendas.first.estabelecimento.razao_social }} - Total de Vendas</h2>
             <div class="table-responsive">
                 <table class="table table-striped table-sm">
                     <thead>
                         <tr>
-                            <th class="text-center">Forma</th>
                             <th class="text-center">Qtde</th>
                             <th class="text-center">Valor Bruto</th>
-                            <th class="text-center">Taxa</th>
                             <th class="text-center">Valor Taxa (Banco)</th>
                             <th class="text-center">Valor Devido</th>
                             <th class="text-center">Lucro</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% if object_list.master.debito %}
-                            <tr>
-                                <td class="text-center"><img src="{% static 'images/Mastercard-Logo.png' %}" width="30" height="20"> Débito</td>
-                                <td class="text-center">{{ object_list.master.debito.count }}</td>
-                                <td class="text-center">R$ {{ object_list.master.debito.total_bruto }}</td>
-                                <td class="text-center">%{{ object_list.master.debito.last.bandeira.debito_vista }}</td>
-                                <td class="text-center">R$ {{ object_list.master.debito.total_tarifa }}</td>
-                                <td class="text-center">R$ {{ object_list.master.debito.total_devido }}</td>
-                                <td class="text-center">R$ {{ object_list.master.debito.lucro_total }}</td>
-                            </tr>
-                        {% endif %}
-                        {% if object_list.visa.debito %}
-                            <tr>
-                                <td class="text-center"><img src="{% static 'images/visa.png' %}" width="30" height="20"> Débito</td>
-                                <td class="text-center">{{ object_list.visa.debito.count }}</td>
-                                <td class="text-center">R$ {{ object_list.visa.debito.total_bruto }}</td>
-                                <td class="text-center">%{{ object_list.visa.debito.last.bandeira.debito_vista }}</td>
-                                <td class="text-center">R$ {{ object_list.visa.debito.total_tarifa }}</td>
-                                <td class="text-center">R$ {{ object_list.visa.debito.total_devido }}</td>
-                                <td class="text-center">R$ {{ object_list.visa.debito.lucro_total }}</td>
-                            </tr>
-                        {% endif %}
-                        {% if object_list.amex.debito %}
-                            <tr>
-                                <td class="text-center"><img src="{% static 'images/american.png' %}" width="30" height="20"> Débito</td>
-                                <td class="text-center">{{ object_list.amex.debito.count }}</td>
-                                <td class="text-center">R$ {{ object_list.amex.debito.total_bruto }}</td>
-                                <td class="text-center">%{{ object_list.amex.debito.last.bandeira.debito_vista }}</td>
-                                <td class="text-center">R$ {{ object_list.amex.debito.total_tarifa }}</td>
-                                <td class="text-center">R$ {{ object_list.amex.debito.total_devido }}</td>
-                                <td class="text-center">R$ {{ object_list.amex.debito.lucro_total }}</td>
-                            </tr>
-                        {% endif %}
-                        {% if object_list.elo.debito %}
-                            <tr>
-                                <td class="text-center"><img src="{% static 'images/elo.png' %}" width="30" height="20"> Débito</td>
-                                <td class="text-center">{{ object_list.elo.debito.count }}</td>
-                                <td class="text-center">R$ {{ object_list.elo.debito.total_bruto }}</td>
-                                <td class="text-center">%{{ object_list.elo.debito.last.bandeira.debito_vista }}</td>
-                                <td class="text-center">R$ {{ object_list.elo.debito.total_tarifa }}</td>
-                                <td class="text-center">R$ {{ object_list.elo.debito.total_devido }}</td>
-                                <td class="text-center">R$ {{ object_list.elo.debito.lucro_total }}</td>
-                            </tr>
-                        {% endif %}
-                        {% if object_list.hiper.debito %}
-                            <tr>
-                                <td class="text-center"><img src="{% static 'images/hipercard.png' %}" width="30" height="20"> Débito</td>
-                                <td class="text-center">{{ object_list.hiper.debito.count }}</td>
-                                <td class="text-center">R$ {{ object_list.hiper.debito.total_bruto }}</td>
-                                <td class="text-center">%{{ object_list.hiper.debito.last.bandeira.debito_vista }}</td>
-                                <td class="text-center">R$ {{ object_list.hiper.debito.total_tarifa }}</td>
-                                <td class="text-center">R$ {{ object_list.hiper.debito.total_devido }}</td>
-                                <td class="text-center">R$ {{ object_list.hiper.debito.lucro_total }}</td>
-                            </tr>
-                        {% endif %}
-                        {% if object_list.debito %}
-                            <tr>
-                                <td class="text-center"><b>Total</b></td>
-                                <td class="text-center">{{ object_list.debito.count }}</td>
-                                <td class="text-center">R$ {{ object_list.debito.total_bruto }}</td>
-                                <td class="text-center">Variável</td>
-                                <td class="text-center">R$ {{ object_list.debito.total_tarifa }}</td>
-                                <td class="text-center">R$ {{ object_list.debito.total_devido }}</td>
-                                <td class="text-center">R$ {{ object_list.debito.lucro_total }}</td>
-                            </tr>
-                        {% endif %}
+                        <tr>
+                            <td class="text-center">{{ vendas.count }}</td>
+                            <td class="text-center">R$ {{ vendas.total_bruto }}</td>
+                            <td class="text-center">R$ {{ vendas.total_tarifa }}</td>
+                            <td class="text-center">R$ {{ vendas.total_devido }}</td>
+                            <td class="text-center">R$ {{ vendas.lucro_total }}</td>
+                        </tr>
                     </tbody>
                 </table>
-                <form method="get" action="{% url 'machine:arquiva_pgto_todos' %}">
-                    {% csrf_token %}
-                    <fieldset>
-                        <input type="hidden" name="data_inicio" value="{{ inicio }}">
-                        <input type="hidden" name="data_fim" value="{{ fim }}">
-                        <input type="hidden" name="tipo" value="Débito">
-                        <button type="submit" class="btn btn-danger btn-sm">Arquivar</button>
-                    </fieldset>
-                </form>
             </div>
+            {% endfor %}
             <h2 class="text-center">Todas as Vendas do Período</h2>
             <div class="table-responsive">
                 <table class="table table-striped table-sm">
@@ -508,64 +535,6 @@ Dashboard
                             <td class="text-center">R$ {{ object_list.total_tarifa }}</td>
                             <td class="text-center">R$ {{ object_list.total_devido }}</td>
                             <td class="text-center">R$ {{ object_list.lucro_total }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <h2 class="text-center">Vendas no Período</h2>
-            <br>
-            <br>
-            <div class="table-responsive">
-                <table class="table table-striped table-sm">
-                    <thead>
-                        <tr>
-                            <th class="text-center">Data</th>
-                            <th class="text-center">Bandeira</th>
-                            <th class="text-center">Forma</th>
-                            <th class="text-center">Taxa</th>
-                            <th class="text-center">Valor Bruto</th>
-                            <th class="text-center">Valor Taxa</th>
-                            <th class="text-center">Valor Cobrado</th>
-                            <th class="text-center">Lucro</th>
-                            <th class="text-center">Valor Devido</th>
-                            <th class="text-center">Valor em conta</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for venda in object_list %}
-                        <tr>
-                            <td class="text-center">{{ venda.data_venda.day }}/{{ venda.data_venda.month }}/{{ venda.data_venda.year }}</td>
-                            <td class="text-center"><img src="{{ venda.bandeira.logo.url }}" width="30" height="20"></td>
-                            <td class="text-center">{{ venda.tipo }}</td>
-                            <td class="text-center">{{ venda.taxa }}</td>
-                            <td class="text-center">{{ venda.valor_bruto }}</td>
-                            <td class="text-center">R${{ venda.valor_tarifa }}</td>
-                            <td class="text-center">R${{ venda.valor_cobranca }}</td>
-                            <td class="text-center">R${{ venda.lucro }}</td>
-                            <td class="text-center">R${{ venda.valor_devido }}</td>
-                            {% if venda.em_conta %}
-                            <td class="text-center">
-                                <img src="{% static 'images/dinheiro.png' %}" width="30" height="20">
-                            </td>
-                            {% else %}
-                            <td class="text-center">
-                                {{ venda.previsao_pgto.day }}/{{ venda.previsao_pgto.month }}/{{ venda.previsao_pgto.year }}
-                            </td>
-                            {% endif %}
-
-                        </tr>
-                        {% endfor %}
-                        <tr>
-                            <td class="text-center"><b>Total</b></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td class="text-center">{{ object_list.total_bruto }}</td>
-                            <td class="text-center">{{ object_list.total_tarifa }}</td>
-                            <td class="text-center">{{ object_list.total_cobranca }}</td>
-                            <td class="text-center">{{ object_list.lucro_total }}</td>
-                            <td class="text-center">{{ object_list.total_devido }}</td>
-
                         </tr>
                     </tbody>
                 </table>

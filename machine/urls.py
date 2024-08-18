@@ -5,7 +5,6 @@ from .views import (confirma_pgto,
                     arquiva_pgto,
                     arquiva_pgto_todos,
                     Dashboardpendentes,
-                    Dashboardprocessados,
                     Dashboardcontestados,
                     cancela_pgto,
                     Readestabelecimento,
@@ -18,8 +17,7 @@ from .views import (confirma_pgto,
                     Updatecontestado,
                     AcessoNegado,
                     create_dados,
-                    ajusta_contestados,
-                    ajusta_lucro)
+                    ajusta_contestados)
 
 
 app_name = 'machine'
@@ -27,7 +25,6 @@ app_name = 'machine'
 urlpatterns = [
     path('login', auth_view.LoginView.as_view(template_name='login.html'), name='login'),
     path('logout', auth_view.LogoutView.as_view(template_name='login.html'), name='logout'),
-    path('processados', Dashboardprocessados.as_view(), name='dashboardprocessados'),
     path('contestados', Dashboardcontestados.as_view(), name='dashboardcontestados'),
     path('pendentes', Dashboardpendentes.as_view(), name='dashboardpendentes'),
     path('pendentes/pesquisa', PesquisaPendentes.as_view(), name='pesquisapendentes'),
@@ -46,5 +43,4 @@ urlpatterns = [
     re_path(r'^arquiva_pgto_todos/$', arquiva_pgto_todos, name='arquiva_pgto_todos'),
     path('arquiva_pgto', arquiva_pgto, name='arquiva_pgto'),
     re_path(r'^cancela_pgto/$', cancela_pgto, name='cancela_pgto'),
-    re_path(r'^ajusta_lucro/$', ajusta_lucro, name='ajusta_lucro'),
 ]

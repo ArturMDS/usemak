@@ -46,6 +46,7 @@ def inserir_dados(request, d_records, pk):
         usuario_logado = request.user
         vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado)
         numero = decimal.Decimal(dado['Valor bruto'])
+        numero1 = decimal.Decimal(str(dado['Taxa/tarifa']).replace('-', ''))
         data_v = str(dado['Data da venda'] + ' ' + dado['Hora da venda'])
         if not vendas.filter(cod_venda=dado['Código da venda']):
             if 'édito' in dado['Forma de pagamento']:
@@ -57,7 +58,7 @@ def inserir_dados(request, d_records, pk):
                               previsao_pgto=pd.to_datetime(dado['Data prevista do pagamento'], format='%d/%m/%Y'),
                               valor_bruto=calculo_valor_bruto(numero),
                               taxa=estabelecimento.taxa_credito,
-                              valor_tarifa=calculo_valor_tarifa(numero, bandeira.credito_vista),
+                              valor_tarifa=calculo_valor_descontado(numero1),
                               valor_cobranca=calculo_valor_cobranca(numero, estabelecimento.taxa_credito),
                               valor_devido=calculo_valor_devido(numero, estabelecimento.taxa_credito),
                               lucro=calculo_lucro(numero, estabelecimento.taxa_credito, bandeira.credito_vista),
@@ -95,7 +96,7 @@ def inserir_dados(request, d_records, pk):
                               previsao_pgto=pd.to_datetime(dado['Data prevista do pagamento'], format='%d/%m/%Y'),
                               valor_bruto=calculo_valor_bruto(numero),
                               taxa=estabelecimento.taxa_credito,
-                              valor_tarifa=calculo_valor_tarifa(numero, taxa),
+                              valor_tarifa=calculo_valor_descontado(numero1),
                               valor_cobranca=calculo_valor_cobranca(numero, estabelecimento.taxa_credito),
                               valor_devido=calculo_valor_devido(numero, estabelecimento.taxa_credito),
                               lucro=calculo_lucro(numero, estabelecimento.taxa_credito, taxa),
@@ -110,7 +111,7 @@ def inserir_dados(request, d_records, pk):
                               previsao_pgto=pd.to_datetime(dado['Data prevista do pagamento'], format='%d/%m/%Y'),
                               valor_bruto=calculo_valor_bruto(numero),
                               taxa=estabelecimento.taxa_credito,
-                              valor_tarifa=calculo_valor_tarifa(numero, bandeira.credito_pre),
+                              valor_tarifa=calculo_valor_descontado(numero1),
                               valor_cobranca=calculo_valor_cobranca(numero, estabelecimento.taxa_credito),
                               valor_devido=calculo_valor_devido(numero, estabelecimento.taxa_credito),
                               lucro=calculo_lucro(numero, estabelecimento.taxa_credito, bandeira.credito_pre),
@@ -125,7 +126,7 @@ def inserir_dados(request, d_records, pk):
                               previsao_pgto=pd.to_datetime(dado['Data prevista do pagamento'], format='%d/%m/%Y'),
                               valor_bruto=calculo_valor_bruto(numero),
                               taxa=estabelecimento.taxa_credito,
-                              valor_tarifa=calculo_valor_tarifa(numero, bandeira.credito_moeda),
+                              valor_tarifa=calculo_valor_descontado(numero1),
                               valor_cobranca=calculo_valor_cobranca(numero, estabelecimento.taxa_credito),
                               valor_devido=calculo_valor_devido(numero, estabelecimento.taxa_credito),
                               lucro=calculo_lucro(numero, estabelecimento.taxa_credito, bandeira.credito_moeda),
@@ -141,7 +142,7 @@ def inserir_dados(request, d_records, pk):
                               previsao_pgto=pd.to_datetime(dado['Data prevista do pagamento'], format='%d/%m/%Y'),
                               valor_bruto=calculo_valor_bruto(numero),
                               taxa=estabelecimento.taxa_debito,
-                              valor_tarifa=calculo_valor_tarifa(numero, bandeira.debito_vista),
+                              valor_tarifa=calculo_valor_descontado(numero1),
                               valor_cobranca=calculo_valor_cobranca(numero, estabelecimento.taxa_debito),
                               valor_devido=calculo_valor_devido(numero, estabelecimento.taxa_debito),
                               lucro=calculo_lucro(numero, estabelecimento.taxa_debito, bandeira.debito_vista),
@@ -156,7 +157,7 @@ def inserir_dados(request, d_records, pk):
                               previsao_pgto=pd.to_datetime(dado['Data prevista do pagamento'], format='%d/%m/%Y'),
                               valor_bruto=calculo_valor_bruto(numero),
                               taxa=estabelecimento.taxa_debito,
-                              valor_tarifa=calculo_valor_tarifa(numero, bandeira.debito_pre),
+                              valor_tarifa=calculo_valor_descontado(numero1),
                               valor_cobranca=calculo_valor_cobranca(numero, estabelecimento.taxa_debito),
                               valor_devido=calculo_valor_devido(numero, estabelecimento.taxa_debito),
                               lucro=calculo_lucro(numero, estabelecimento.taxa_debito, bandeira.debito_pre),
@@ -165,19 +166,13 @@ def inserir_dados(request, d_records, pk):
                     list_vendas.append(v)
     Venda.objects.bulk_create(list_vendas)
     for dado in d_records:
-        numero1 = decimal.Decimal(str(dado['Taxa/tarifa']).replace('-', ''))
         venda = Venda.objects.filter(cod_venda=dado['Código da venda'],
                                      valor_bruto=calculo_valor_bruto(numero))
         if venda:
             venda = Venda.objects.get(cod_venda=dado['Código da venda'],
                                       valor_bruto=calculo_valor_bruto(numero))
-            diferenca = venda.valor_tarifa - calculo_valor_descontado(numero1)
-            if venda.valor_tarifa != calculo_valor_descontado(numero1):
-                if decimal.Decimal(-0.01) <= diferenca <= decimal.Decimal(0.01):
-                    venda.valor_tarifa = calculo_valor_descontado(numero1)
-                    venda.save()
-                else:
-                    venda.contesta = True
-                    venda.valor_contestado = calculo_valor_descontado(numero1)
-                    venda.save()
+            if venda.lucro / venda.valor_bruto <= 0.01:
+                venda.lucro = decimal.Decimal(
+                    (float(venda.valor_tarifa / venda.valor_bruto) + 0.03) * float(venda.valor_bruto))
+                venda.save()
 

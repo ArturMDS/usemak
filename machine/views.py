@@ -60,8 +60,15 @@ class Dashboardpendentes(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(Dashboardpendentes, self).get_context_data(**kwargs)
         usuario_logado = self.request.user
-        vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado).pendente().order_by('data_venda')
-        context["vendas"] = vendas
+        total_vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado).pendente().order_by('data_venda')
+        querys = {}
+        num = 0
+        for estab in Estabelecimento.objects.filter(usuario=usuario_logado):
+            querys[f"vendas{num}"] = total_vendas.filter(estabelecimento=estab)
+            num += 1
+        estabelecimentos = querys.values()
+        context["total_vendas"] = total_vendas
+        context["estabelecimentos"] = estabelecimentos
         return context
 
 
@@ -72,17 +79,6 @@ class Dashboardcontestados(LoginRequiredMixin, TemplateView):
         context = super(Dashboardcontestados, self).get_context_data(**kwargs)
         usuario_logado = self.request.user
         vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado).filter(contesta=True)
-        context["vendas"] = vendas
-        return context
-
-
-class Dashboardprocessados(LoginRequiredMixin, TemplateView):
-    template_name = "dashboardprocessados.html"
-
-    def get_context_data(self, **kwargs):
-        context = super(Dashboardprocessados, self).get_context_data(**kwargs)
-        usuario_logado = self.request.user
-        vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado).processado()
         context["vendas"] = vendas
         return context
 
@@ -106,7 +102,7 @@ class PesquisaPendentes(ListView):
     template_name = "pesquisapendentes.html"
     model = Venda
 
-    def get_queryset(self):
+    def get_queryset(self, *args):
         inicio = self.request.GET.get('data_inicio')
         fim = self.request.GET.get('data_fim')
         usuario_logado = self.request.user
@@ -125,14 +121,30 @@ class PesquisaPendentes(ListView):
         context = super(PesquisaPendentes, self).get_context_data(**kwargs)
         inicio = self.request.GET.get('data_inicio')
         fim = self.request.GET.get('data_fim')
+        usuario_logado = self.request.user
+        if (len(inicio) == 10) and (len(fim) == 10):
+            data_inicio = date(year=int(inicio[6:10]), month=int(inicio[3:5]), day=int(inicio[0:2]))
+            data_fim = date(year=int(fim[6:10]), month=int(fim[3:5]), day=int(fim[0:2]))
+            total_vendas = (Venda.objects.filter(estabelecimento__usuario=usuario_logado).pendente()
+                            .filter(data_venda__range=(data_inicio, data_fim)).order_by('data_venda'))
+        else:
+            total_vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado).filter(pago=False).filter(
+                contesta=False).order_by('data_venda')
+        querys = {}
+        num = 0
+        for estab in Estabelecimento.objects.filter(usuario=usuario_logado):
+            querys[f"vendas{num}"] = total_vendas.filter(estabelecimento=estab)
+            num += 1
+        estabelecimentos = querys.values()
+        context["total_vendas"] = total_vendas
+        context["estabelecimentos"] = estabelecimentos
         if (len(inicio) == 10) and (len(fim) == 10):
             context["inicio"] = inicio
             context["fim"] = fim
-            return context
         else:
             msg = "Data inválida, digite no formato dd/mm/aaaa"
             context["msg"] = msg
-            return context
+        return context
 
 
 def arquiva_pgto(request):
@@ -148,6 +160,7 @@ def arquiva_pgto(request):
     return redirect('machine:readvendas')
 
 
+#TODO: verificar a possibilidade de encaminhar para os resultados de pesquisa
 def arquiva_pgto_todos(request):
     usuario_logado = request.user
     if request.GET.get('data_inicio') and request.GET.get('data_fim'):
@@ -156,23 +169,28 @@ def arquiva_pgto_todos(request):
         data_inicio = date(year=int(inicio[6:10]), month=int(inicio[3:5]), day=int(inicio[0:2]))
         data_fim = date(year=int(fim[6:10]), month=int(fim[3:5]), day=int(fim[0:2]))
         tipo = request.GET.get('tipo')
+        estabelecimento = request.GET.get('estabelecimento')
         if tipo == "Débito":
             vendas = (Venda.objects.filter(estabelecimento__usuario=usuario_logado).debito()
                       .pendente().filter(data_venda__gte=data_inicio)
-                      .filter(data_venda__lte=data_fim))
+                      .filter(data_venda__lte=data_fim).filter(estabelecimento__razao_social=estabelecimento))
         else:
             vendas = (Venda.objects.filter(estabelecimento__usuario=usuario_logado).credito()
-                      .pendente().filter(data_venda__gte=data_inicio).filter(data_venda__lte=data_fim))
+                      .pendente().filter(data_venda__gte=data_inicio).filter(data_venda__lte=data_fim)
+                      .filter(estabelecimento__razao_social=estabelecimento))
         for venda in vendas:
             venda.pago = True
             venda.save()
-        return redirect('machine:pesquisapendentes')
+        return redirect('machine:dashboardpendentes')
     else:
         tipo = request.GET.get('tipo')
+        estabelecimento = request.GET.get('estabelecimento')
         if tipo == "Débito":
-            vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado).debito().pendente()
+            vendas = (Venda.objects.filter(estabelecimento__usuario=usuario_logado)
+                      .filter(estabelecimento__razao_social=estabelecimento).debito().pendente())
         else:
-            vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado).credito().pendente()
+            vendas = (Venda.objects.filter(estabelecimento__usuario=usuario_logado)
+                      .filter(estabelecimento__razao_social=estabelecimento).credito().pendente())
         for venda in vendas:
             venda.pago = True
             venda.save()
@@ -189,16 +207,6 @@ def cancela_pgto(request):
         venda.pago = False
         venda.save()
     return redirect('machine:readvendas')
-
-
-def ajusta_lucro(request):
-    usuario_logado = request.user
-    vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado).filter(pago=False)
-    for venda in vendas:
-        if venda.lucro/venda.valor_bruto <= 0.01:
-            venda.lucro = decimal.Decimal((float(venda.valor_tarifa/venda.valor_bruto) + 0.03)*float(venda.valor_bruto))
-            venda.save()
-    return redirect('machine:dashboardpendentes')
 
 
 class Readestabelecimento(LoginRequiredMixin, TemplateView):
