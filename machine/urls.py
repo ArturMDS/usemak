@@ -17,7 +17,8 @@ from .views import (confirma_pgto,
                     Updatecontestado,
                     AcessoNegado,
                     create_dados,
-                    ajusta_contestados)
+                    ajusta_contestados,
+                    PesquisaPdf)
 
 
 app_name = 'machine'
@@ -28,6 +29,7 @@ urlpatterns = [
     path('contestados', Dashboardcontestados.as_view(), name='dashboardcontestados'),
     path('pendentes', Dashboardpendentes.as_view(), name='dashboardpendentes'),
     path('pendentes/pesquisa', PesquisaPendentes.as_view(), name='pesquisapendentes'),
+    path('pendentes/pesquisa/pdf', PesquisaPdf.as_view(), name='pesquisa_pdf'),
     path('read/estabelecimento', Readestabelecimento.as_view(), name='readestabelecimentos'),
     path('read/vendas', Readvendas.as_view(), name='readvendas'),
     path('create/venda', Createvenda.as_view(), name='createvenda'),

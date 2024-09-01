@@ -6,7 +6,8 @@ from django.views.generic import (CreateView, \
     UpdateView, \
     TemplateView,
     FormView,
-    ListView)
+    ListView,
+    View)
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import (Venda,
                      Estabelecimento,
@@ -18,6 +19,27 @@ from .forms import FormHomepage, CreateAtualizacaoForm
 import pandas as pd
 from datetime import datetime, timedelta, date
 from .functions import inserir_dados
+from django.http import HttpResponse
+from django.template.loader import get_template
+import xhtml2pdf.pisa as pisa
+import io
+
+
+class Render:
+    @staticmethod
+    def render(path: str, params: dict, filename: str):
+        template = get_template(path)
+        html = template.render(params)
+        response = io.BytesIO()
+        pdf = pisa.pisaDocument(
+            io.BytesIO(html.encode("UTF-8")), response)
+        if not pdf.err:
+            response = HttpResponse(
+                response.getvalue(), content_type='application/pdf')
+            response['Content-Disposition'] = 'attachment;filename=%s.pdf' % filename
+            return response
+        else:
+            return HttpResponse("Error Rendering PDF", status=400)
 
 
 class Homepage(FormView):
@@ -124,7 +146,9 @@ class PesquisaPendentes(ListView):
         usuario_logado = self.request.user
         if (len(inicio) == 10) and (len(fim) == 10):
             data_inicio = date(year=int(inicio[6:10]), month=int(inicio[3:5]), day=int(inicio[0:2]))
-            data_fim = date(year=int(fim[6:10]), month=int(fim[3:5]), day=int(fim[0:2]))
+            data_fim1 = date(year=int(fim[6:10]), month=int(fim[3:5]), day=int(fim[0:2]))
+            d = timedelta(seconds=60*60*24)
+            data_fim = data_fim1 + d
             total_vendas = (Venda.objects.filter(estabelecimento__usuario=usuario_logado).pendente()
                             .filter(data_venda__range=(data_inicio, data_fim)).order_by('data_venda'))
         else:
@@ -167,7 +191,9 @@ def arquiva_pgto_todos(request):
         inicio = request.GET.get('data_inicio')
         fim = request.GET.get('data_fim')
         data_inicio = date(year=int(inicio[6:10]), month=int(inicio[3:5]), day=int(inicio[0:2]))
-        data_fim = date(year=int(fim[6:10]), month=int(fim[3:5]), day=int(fim[0:2]))
+        data_fim1 = date(year=int(fim[6:10]), month=int(fim[3:5]), day=int(fim[0:2]))
+        d = timedelta(seconds=60 * 60 * 24)
+        data_fim = data_fim1 + d
         tipo = request.GET.get('tipo')
         estabelecimento = request.GET.get('estabelecimento')
         if tipo == "Débito":
@@ -414,4 +440,30 @@ def create_dados(request, id):
     atual.vigente = False
     atual.delete()
     return redirect('machine:createatualizacao')
+
+
+class PesquisaPdf(View):
+
+    def get(self, request, *args, **kwargs):
+        if request.GET.get('data_inicio') and request.GET.get('data_fim'):
+            inicio = request.GET.get('data_inicio')
+            fim = request.GET.get('data_fim')
+            data_inicio = date(year=int(inicio[6:10]), month=int(inicio[3:5]), day=int(inicio[0:2]))
+            data_fim1 = date(year=int(fim[6:10]), month=int(fim[3:5]), day=int(fim[0:2]))
+            d = timedelta(seconds=60 * 60 * 24)
+            data_fim = data_fim1 + d
+            estabelecimento = request.GET.get('estabelecimento')
+            usuario_logado = self.request.user
+            vendas = (Venda.objects.filter(estabelecimento__usuario=usuario_logado)
+                      .filter(estabelecimento__razao_social=estabelecimento).pendente()
+                      .filter(data_venda__range=(data_inicio, data_fim)).order_by('data_venda'))
+
+        params = {
+            'vendas': vendas,
+            'estabelecimento': estabelecimento,
+            'data_inicio': inicio,
+            'data_fim': fim,
+            'request': request,
+        }
+        return Render.render('pesquisa_pdf.html', params, f'{estabelecimento}')
 

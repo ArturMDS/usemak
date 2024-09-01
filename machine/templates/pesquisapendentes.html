@@ -515,6 +515,16 @@ Dashboard
                     </tbody>
                 </table>
             </div>
+            <form method="get" action="{% url 'machine:pesquisa_pdf' %}">
+                {% csrf_token %}
+                <fieldset>
+                    <input type="hidden" name="data_inicio" value="{{ inicio }}">
+                    <input type="hidden" name="data_fim" value="{{ fim }}">
+                    <input type="hidden" name="estabelecimento" value="{{ vendas.first.estabelecimento }}">
+                    <button type="submit" class="btn btn-warning btn-sm"><i class="bi bi-file-earmark"></i></button>
+                </fieldset>
+            </form>
+            <br><br>
             {% endfor %}
             <h2 class="text-center">Todas as Vendas do Período</h2>
             <div class="table-responsive">
