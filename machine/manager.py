@@ -30,10 +30,10 @@ class VendasQuerySet(models.QuerySet):
         return self.filter(tipo="Crédito à vista")
 
     def credito_pre(self):
-        return self.filter(tipo="Crédito Pré-pago")
+        return self.filter(tipo="Crédito pré-pago")
 
     def credito_moeda(self):
-        return self.filter(tipo="Crédito conversor moeda")
+        return self.filter(tipo="Crédito conversor de moedas")
 
     def credito_parcelado(self):
         return self.filter(tipo__icontains="Crédito parcelado loja")

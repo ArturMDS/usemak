@@ -8,7 +8,7 @@ LISTA_TIPO = (
     ("Débito pré-pago", "Débito pré-pago"),
     ("Crédito à vista", "Crédito à vista"),
     ("Crédito pré-pago", "Crédito pré-pago"),
-    ("Crédito conversor moeda", "Crédito conversor moeda"),
+    ("Crédito conversor de moedas", "Crédito conversor de moedas"),
     ("Crédito parcelado loja 2x", "Crédito parcelado loja 2x"),
     ("Crédito parcelado loja 3x", "Crédito parcelado loja 3x"),
     ("Crédito parcelado loja 4x", "Crédito parcelado loja 4x"),
