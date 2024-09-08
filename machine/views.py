@@ -1,6 +1,5 @@
 import decimal
-from django.shortcuts import render, reverse, redirect
-from django.shortcuts import reverse
+from django.shortcuts import render, reverse, redirect, resolve_url
 from django.db.models import Sum, F
 from django.views.generic import (CreateView, \
     UpdateView, \

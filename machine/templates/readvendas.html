@@ -75,7 +75,10 @@ Dashboard
             </div>
         </nav>
     </div>
-    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+    <div id="loader-wrapper">
+        <div id="loader"></div>
+    </div>
+    <main id="content" style="display: none;" role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             <h2 class="text-center">Vendas arquivadas</h2>
             <div class="btn-toolbar mb-2 mb-md-0">
@@ -144,7 +147,7 @@ Dashboard
                                                     <input type="hidden" name="dia" value="{{ venda.last.previsao_pgto.day }}">
                                                     <input type="hidden" name="mes" value="{{ venda.last.previsao_pgto.month }}">
                                                     <input type="hidden" name="ano" value="{{ venda.last.previsao_pgto.year }}">
-                                                    <button type="submit" class="btn btn-success btn-sm"><i class="bi bi-arrow-clockwise"></i></button>
+                                                    <button type="submit" class="btn btn-success btn-sm" onclick="loading()"><i class="bi bi-arrow-clockwise"></i></button>
                                                 </fieldset>
                                             </form>
                                         </div>
@@ -155,7 +158,7 @@ Dashboard
                                                     <input type="hidden" name="dia" value="{{ venda.last.previsao_pgto.day }}">
                                                     <input type="hidden" name="mes" value="{{ venda.last.previsao_pgto.month }}">
                                                     <input type="hidden" name="ano" value="{{ venda.last.previsao_pgto.year }}">
-                                                    <button type="submit" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i></button>
+                                                    <button type="submit" class="btn btn-danger btn-sm" onclick="loading()"><i class="bi bi-trash"></i></button>
                                                 </fieldset>
                                             </form>
                                         </div>

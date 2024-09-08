@@ -9,31 +9,31 @@ Dashboard
             <div class="sidebar-sticky">
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'machine:dashboardpendentes' %}">
+                        <a class="nav-link" href="{% url 'machine:dashboardpendentes' %}" onclick="loading()">
                             <span data-feather="bar-chart-2"></span>
                             Pendentes
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="{% url 'machine:dashboardcontestados' %}">
+                        <a class="nav-link active" href="{% url 'machine:dashboardcontestados' %}" onclick="loading()">
                             <span data-feather="bar-chart"></span>
                             Contestados<span class="sr-only">(current)</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'machine:readvendas' %}">
+                        <a class="nav-link" href="{% url 'machine:readvendas' %}" onclick="loading()">
                             <span data-feather="shopping-cart"></span>
                             Vendas
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'machine:readestabelecimentos' %}">
+                        <a class="nav-link" href="{% url 'machine:readestabelecimentos' %}" onclick="loading()">
                             <span data-feather="users"></span>
                             Clientes
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'machine:createatualizacao' %}">
+                        <a class="nav-link" href="{% url 'machine:createatualizacao' %}" onclick="loading()">
                             <span data-feather="layers"></span>
                             Inserir arquivo
                         </a>
@@ -75,7 +75,10 @@ Dashboard
             </div>
         </nav>
     </div>
-    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+    <div id="loader-wrapper">
+        <div id="loader"></div>
+    </div>
+    <main id="content" style="display: none;" role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
         <h2 class="text-center">{{ vendas.count }} Vendas Contestadas</h2>
         <div class="table-responsive">
             <table class="table table-striped table-sm">

@@ -3,37 +3,46 @@
 {% block titulo %}
 Dashboard
 {% endblock %}
+{% block head %}
+<style>
+    .center {
+    margin: auto;
+    width: 50%;
+    text-align: center;
+    }
+</style>
+{% endblock %}
 {% block main %}
     <div class="row">
         <nav class="col-md-2 d-none d-md-block bg-light sidebar">
             <div class="sidebar-sticky">
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link active" href="{% url 'machine:dashboardpendentes' %}">
+                        <a class="nav-link active" href="{% url 'machine:dashboardpendentes' %}" onclick="loading()">
                             <span data-feather="bar-chart-2"></span>
                             Pendentes<span class="sr-only">(current)</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'machine:dashboardcontestados' %}">
+                        <a class="nav-link" href="{% url 'machine:dashboardcontestados' %}" onclick="loading()">
                             <span data-feather="bar-chart"></span>
                             Contestados<span class="sr-only">(current)</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'machine:readvendas' %}">
+                        <a class="nav-link" href="{% url 'machine:readvendas' %}" onclick="loading()">
                             <span data-feather="shopping-cart"></span>
                             Vendas
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'machine:readestabelecimentos' %}">
+                        <a class="nav-link" href="{% url 'machine:readestabelecimentos' %}" onclick="loading()">
                             <span data-feather="users"></span>
                             Clientes
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'machine:createatualizacao' %}">
+                        <a class="nav-link" href="{% url 'machine:createatualizacao' %}" onclick="loading()">
                             <span data-feather="layers"></span>
                             Inserir arquivo
                         </a>
@@ -75,7 +84,10 @@ Dashboard
             </div>
         </nav>
     </div>
-    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+    <div id="loader-wrapper">
+        <div id="loader"></div>
+    </div>
+    <main id="content" style="display: none;" role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
         <h2 class="text-center"><img src="{% static 'images/Cielo.png' %}" width="200" height="100"></h2>
         {% if inicio and fim %}
             <h3 class="text-center">Período: de {{ inicio }} até {{ fim }}</h3>
@@ -385,16 +397,18 @@ Dashboard
                         {% endif %}
                         </tbody>
                     </table>
-                    <form method="get" action="{% url 'machine:arquiva_pgto_todos' %}">
-                        {% csrf_token %}
-                        <fieldset>
-                            <input type="hidden" name="data_inicio" value="{{ inicio }}">
-                            <input type="hidden" name="data_fim" value="{{ fim }}">
-                            <input type="hidden" name="tipo" value="Crédito">
-                            <input type="hidden" name="estabelecimento" value="{{ vendas.first.estabelecimento.razao_social }}">
-                            <button type="submit" class="btn btn-danger btn-sm">Arquivar</button>
-                        </fieldset>
-                    </form>
+                    <div class="center">
+                        <form method="get" action="{% url 'machine:arquiva_pgto_todos' %}">
+                            {% csrf_token %}
+                            <fieldset>
+                                <input type="hidden" name="data_inicio" value="{{ inicio }}">
+                                <input type="hidden" name="data_fim" value="{{ fim }}">
+                                <input type="hidden" name="tipo" value="Crédito">
+                                <input type="hidden" name="estabelecimento" value="{{ vendas.first.estabelecimento.razao_social }}">
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="loading()">Arquivar</button>
+                            </fieldset>
+                        </form>
+                    </div>
                 </div>
                 <br><br>
                 <h2 class="text-center">{{ vendas.first.estabelecimento.razao_social }} - Vendas a Débito</h2>
@@ -480,16 +494,18 @@ Dashboard
                         {% endif %}
                         </tbody>
                     </table>
-                    <form method="get" action="{% url 'machine:arquiva_pgto_todos' %}">
-                        {% csrf_token %}
-                        <fieldset>
-                            <input type="hidden" name="data_inicio" value="{{ inicio }}">
-                            <input type="hidden" name="data_fim" value="{{ fim }}">
-                            <input type="hidden" name="tipo" value="Débito">
-                            <input type="hidden" name="estabelecimento" value="{{ vendas.first.estabelecimento.razao_social }}">
-                            <button type="submit" class="btn btn-danger btn-sm">Arquivar</button>
-                        </fieldset>
-                    </form>
+                    <div class="center">
+                        <form method="get" action="{% url 'machine:arquiva_pgto_todos' %}">
+                            {% csrf_token %}
+                            <fieldset>
+                                <input type="hidden" name="data_inicio" value="{{ inicio }}">
+                                <input type="hidden" name="data_fim" value="{{ fim }}">
+                                <input type="hidden" name="tipo" value="Débito">
+                                <input type="hidden" name="estabelecimento" value="{{ vendas.first.estabelecimento.razao_social }}">
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="loading()">Arquivar</button>
+                            </fieldset>
+                        </form>
+                    </div>
                 </div>
                 <br><br>
             <h2 class="text-center">{{ vendas.first.estabelecimento.razao_social }} - Total de Vendas</h2>
@@ -515,15 +531,17 @@ Dashboard
                     </tbody>
                 </table>
             </div>
-            <form method="get" action="{% url 'machine:pesquisa_pdf' %}">
-                {% csrf_token %}
-                <fieldset>
-                    <input type="hidden" name="data_inicio" value="{{ inicio }}">
-                    <input type="hidden" name="data_fim" value="{{ fim }}">
-                    <input type="hidden" name="estabelecimento" value="{{ vendas.first.estabelecimento }}">
-                    <button type="submit" class="btn btn-warning btn-sm"><i class="bi bi-file-earmark"></i></button>
-                </fieldset>
-            </form>
+            <div class="center">
+                <form method="get" action="{% url 'machine:pesquisa_pdf' %}">
+                    {% csrf_token %}
+                    <fieldset>
+                        <input type="hidden" name="data_inicio" value="{{ inicio }}">
+                        <input type="hidden" name="data_fim" value="{{ fim }}">
+                        <input type="hidden" name="estabelecimento" value="{{ vendas.first.estabelecimento }}">
+                        <button type="submit" class="btn btn-warning btn-sm" onclick="loading()"><i class="bi bi-file-earmark"></i></button>
+                    </fieldset>
+                </form>
+            </div>
             <br><br>
             {% endfor %}
             <h2 class="text-center">Todas as Vendas do Período</h2>
@@ -553,20 +571,22 @@ Dashboard
         {% if msg %}
             <h3 class="text-center">{{ msg }}</h3>
             <br><br>
-            <form method="get" action="{% url 'machine:pesquisapendentes' %}">
-                {% csrf_token %}
-                <fieldset>
-                    <div class="form-group">
-                        <label for="dt_in">Data Inicial</label>
-                        <input type="text" class="form-control" name="data_inicio" id="dt_in" size="10" placeholder="dd/mm/aaaa">
-                    </div>
-                    <div class="form-group">
-                        <label for="dt_fm">Data Final</label>
-                        <input type="text" class="form-control" name="data_fim" id="dt_fm" size="10" placeholder="dd/mm/aaaa">
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-sm">Pesquisar</button>
-                </fieldset>
-            </form>
+            <div class="center">
+                <form method="get" action="{% url 'machine:pesquisapendentes' %}">
+                    {% csrf_token %}
+                    <fieldset>
+                        <div class="form-group">
+                            <label for="dt_in">Data Inicial</label>
+                            <input type="text" class="form-control" name="data_inicio" id="dt_in" size="10" placeholder="dd/mm/aaaa">
+                        </div>
+                        <div class="form-group">
+                            <label for="dt_fm">Data Final</label>
+                            <input type="text" class="form-control" name="data_fim" id="dt_fm" size="10" placeholder="dd/mm/aaaa">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-sm">Pesquisar</button>
+                    </fieldset>
+                </form>
+            </div>
         {% endif %}
 
     </main>
