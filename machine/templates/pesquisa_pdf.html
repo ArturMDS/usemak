@@ -60,7 +60,6 @@
                     <th>Taxa</th>
                     <th>Valor Taxa (Banco)</th>
                     <th>Valor Devido</th>
-                    <th>Lucro</th>
                 </tr>
             </thead>
             <tbody>
@@ -72,7 +71,6 @@
                     <td>%{{ vendas.master.credito_vista.last.bandeira.credito_vista }}</td>
                     <td>R$ {{ vendas.master.credito_vista.total_tarifa }}</td>
                     <td>R$ {{ vendas.master.credito_vista.total_devido }}</td>
-                    <td>R$ {{ vendas.master.credito_vista.lucro_total }}</td>
                 </tr>
             {% endif %}
             {% if vendas.master.credito_pre %}
@@ -83,7 +81,6 @@
                     <td>%{{ vendas.master.credito_pre.last.bandeira.credito_pre }}</td>
                     <td>R$ {{ vendas.master.credito_pre.total_tarifa }}</td>
                     <td>R$ {{ vendas.master.credito_pre.total_devido }}</td>
-                    <td>R$ {{ vendas.master.credito_pre.lucro_total }}</td>
                 </tr>
             {% endif %}
             {% if vendas.master.credito_moeda %}
@@ -94,7 +91,6 @@
                     <td>%{{ vendas.master.credito_moeda.last.bandeira.credito_moeda }}</td>
                     <td>R$ {{ vendas.master.credito_moeda.total_tarifa }}</td>
                     <td>R$ {{ vendas.master.credito_moeda.total_devido }}</td>
-                    <td>R$ {{ vendas.master.credito_moeda.lucro_total }}</td>
                 </tr>
             {% endif %}
             {% if vendas.master.credito_parcelado %}
@@ -105,7 +101,6 @@
                     <td>%{{ vendas.master.credito_parcelado.last.bandeira.credito_2x }}</td>
                     <td>R$ {{ vendas.master.credito_parcelado.total_tarifa }}</td>
                     <td>R$ {{ vendas.master.credito_parcelado.total_devido }}</td>
-                    <td>R$ {{ vendas.master.credito_parcelado.lucro_total }}</td>
                 </tr>
             {% endif %}
             {% if vendas.visa.credito_vista %}
@@ -116,7 +111,6 @@
                     <td>%{{ vendas.visa.credito_vista.last.bandeira.credito_vista }}</td>
                     <td>R$ {{ vendas.visa.credito_vista.total_tarifa }}</td>
                     <td>R$ {{ vendas.visa.credito_vista.total_devido }}</td>
-                    <td>R$ {{ vendas.visa.credito_vista.lucro_total }}</td>
                 </tr>
             {% endif %}
             {% if vendas.visa.credito_pre %}
@@ -127,7 +121,6 @@
                     <td>%{{ vendas.visa.credito_pre.last.bandeira.credito_pre }}</td>
                     <td>R$ {{ vendas.visa.credito_pre.total_tarifa }}</td>
                     <td>R$ {{ vendas.visa.credito_pre.total_devido }}</td>
-                    <td>R$ {{ vendas.visa.credito_pre.lucro_total }}</td>
                 </tr>
             {% endif %}
             {% if vendas.visa.credito_moeda %}
@@ -138,7 +131,6 @@
                     <td>%{{ vendas.visa.credito_moeda.last.bandeira.credito_moeda }}</td>
                     <td>R$ {{ vendas.visa.credito_moeda.total_tarifa }}</td>
                     <td>R$ {{ vendas.visa.credito_moeda.total_devido }}</td>
-                    <td>R$ {{ vendas.visa.credito_moeda.lucro_total }}</td>
                 </tr>
             {% endif %}
             {% if vendas.visa.credito_parcelado %}
@@ -149,7 +141,6 @@
                     <td>%{{ vendas.visa.credito_parcelado.last.bandeira.credito_2x }}</td>
                     <td>R$ {{ vendas.visa.credito_parcelado.total_tarifa }}</td>
                     <td>R$ {{ vendas.visa.credito_parcelado.total_devido }}</td>
-                    <td>R$ {{ vendas.visa.credito_parcelado.lucro_total }}</td>
                 </tr>
             {% endif %}
             {% if vendas.amex.credito_vista %}
@@ -160,7 +151,6 @@
                     <td>%{{ vendas.amex.credito_vista.last.bandeira.credito_vista }}</td>
                     <td>R$ {{ vendas.amex.credito_vista.total_tarifa }}</td>
                     <td>R$ {{ vendas.amex.credito_vista.total_devido }}</td>
-                    <td>R$ {{ vendas.amex.credito_vista.lucro_total }}</td>
                 </tr>
             {% endif %}
             {% if vendas.amex.credito_pre %}
@@ -171,7 +161,6 @@
                     <td>%{{ vendas.amex.credito_pre.last.bandeira.credito_pre }}</td>
                     <td>R$ {{ vendas.amex.credito_pre.total_tarifa }}</td>
                     <td>R$ {{ vendas.amex.credito_pre.total_devido }}</td>
-                    <td>R$ {{ vendas.amex.credito_pre.lucro_total }}</td>
                 </tr>
             {% endif %}
             {% if vendas.amex.credito_moeda %}
@@ -182,7 +171,6 @@
                     <td>%{{ vendas.amex.credito_moeda.last.bandeira.credito_moeda }}</td>
                     <td>R$ {{ vendas.amex.credito_moeda.total_tarifa }}</td>
                     <td>R$ {{ vendas.amex.credito_moeda.total_devido }}</td>
-                    <td>R$ {{ vendas.amex.credito_moeda.lucro_total }}</td>
                 </tr>
             {% endif %}
             {% if vendas.amex.credito_parcelado %}
@@ -193,7 +181,6 @@
                     <td>%{{ vendas.amex.credito_parcelado.last.bandeira.credito_2x }}</td>
                     <td>R$ {{ vendas.amex.credito_parcelado.total_tarifa }}</td>
                     <td>R$ {{ vendas.amex.credito_parcelado.total_devido }}</td>
-                    <td>R$ {{ vendas.amex.credito_parcelado.lucro_total }}</td>
                 </tr>
             {% endif %}
             {% if vendas.elo.credito_vista %}
@@ -204,7 +191,6 @@
                     <td>%{{ vendas.elo.credito_vista.last.bandeira.credito_vista }}</td>
                     <td>R$ {{ vendas.elo.credito_vista.total_tarifa }}</td>
                     <td>R$ {{ vendas.elo.credito_vista.total_devido }}</td>
-                    <td>R$ {{ vendas.elo.credito_vista.lucro_total }}</td>
                 </tr>
             {% endif %}
             {% if vendas.elo.credito_pre %}
@@ -215,7 +201,6 @@
                     <td>%{{ vendas.elo.credito_pre.last.bandeira.credito_pre }}</td>
                     <td>R$ {{ vendas.elo.credito_pre.total_tarifa }}</td>
                     <td>R$ {{ vendas.elo.credito_pre.total_devido }}</td>
-                    <td>R$ {{ vendas.elo.credito_pre.lucro_total }}</td>
                 </tr>
             {% endif %}
             {% if vendas.elo.credito_moeda %}
@@ -226,7 +211,6 @@
                     <td>%{{ vendas.elo.credito_moeda.last.bandeira.credito_moeda }}</td>
                     <td>R$ {{ vendas.elo.credito_moeda.total_tarifa }}</td>
                     <td>R$ {{ vendas.elo.credito_moeda.total_devido }}</td>
-                    <td>R$ {{ vendas.elo.credito_moeda.lucro_total }}</td>
                 </tr>
             {% endif %}
             {% if vendas.elo.credito_parcelado %}
@@ -237,7 +221,6 @@
                     <td>%{{ vendas.elo.credito_parcelado.last.bandeira.credito_2x }}</td>
                     <td>R$ {{ vendas.elo.credito_parcelado.total_tarifa }}</td>
                     <td>R$ {{ vendas.elo.credito_parcelado.total_devido }}</td>
-                    <td>R$ {{ vendas.elo.credito_parcelado.lucro_total }}</td>
                 </tr>
             {% endif %}
             {% if vendas.hiper.credito_vista %}
@@ -248,7 +231,6 @@
                     <td>%{{ vendas.hiper.credito_vista.last.bandeira.credito_vista }}</td>
                     <td>R$ {{ vendas.hiper.credito_vista.total_tarifa }}</td>
                     <td>R$ {{ vendas.hiper.credito_vista.total_devido }}</td>
-                    <td>R$ {{ vendas.hiper.credito_vista.lucro_total }}</td>
                 </tr>
             {% endif %}
             {% if vendas.hiper.credito_pre %}
@@ -259,7 +241,6 @@
                     <td>%{{ vendas.hiper.credito_pre.last.bandeira.credito_pre }}</td>
                     <td>R$ {{ vendas.hiper.credito_pre.total_tarifa }}</td>
                     <td>R$ {{ vendas.hiper.credito_pre.total_devido }}</td>
-                    <td>R$ {{ vendas.hiper.credito_pre.lucro_total }}</td>
                 </tr>
             {% endif %}
             {% if vendas.hiper.credito_moeda %}
@@ -270,7 +251,6 @@
                     <td>%{{ vendas.hiper.credito_moeda.last.bandeira.credito_moeda }}</td>
                     <td>R$ {{ vendas.hiper.credito_moeda.total_tarifa }}</td>
                     <td>R$ {{ vendas.hiper.credito_moeda.total_devido }}</td>
-                    <td>R$ {{ vendas.hiper.credito_moeda.lucro_total }}</td>
                 </tr>
             {% endif %}
             {% if vendas.hiper.credito_parcelado %}
@@ -281,7 +261,6 @@
                     <td>%{{ vendas.hiper.credito_parcelado.last.bandeira.credito_2x }}</td>
                     <td>R$ {{ vendas.hiper.credito_parcelado.total_tarifa }}</td>
                     <td>R$ {{ vendas.hiper.credito_parcelado.total_devido }}</td>
-                    <td>R$ {{ vendas.hiper.credito_parcelado.lucro_total }}</td>
                 </tr>
             {% endif %}
             {% if vendas.credito %}
@@ -292,7 +271,6 @@
                     <td>Variável</td>
                     <td>R$ {{ vendas.credito.total_tarifa }}</td>
                     <td>R$ {{ vendas.credito.total_devido }}</td>
-                    <td>R$ {{ vendas.credito.lucro_total }}</td>
                 </tr>
             {% endif %}
             </tbody>
@@ -310,7 +288,6 @@
                     <th>Taxa</th>
                     <th>Valor Taxa (Banco)</th>
                     <th>Valor Devido</th>
-                    <th>Lucro</th>
                 </tr>
             </thead>
             <tbody>
@@ -322,7 +299,6 @@
                     <td>%{{ vendas.master.debito.last.bandeira.debito_vista }}</td>
                     <td>R$ {{ vendas.master.debito.total_tarifa }}</td>
                     <td>R$ {{ vendas.master.debito.total_devido }}</td>
-                    <td>R$ {{ vendas.master.debito.lucro_total }}</td>
                 </tr>
             {% endif %}
             {% if vendas.visa.debito %}
@@ -333,7 +309,6 @@
                     <td>%{{ vendas.visa.debito.last.bandeira.debito_vista }}</td>
                     <td>R$ {{ vendas.visa.debito.total_tarifa }}</td>
                     <td>R$ {{ vendas.visa.debito.total_devido }}</td>
-                    <td>R$ {{ vendas.visa.debito.lucro_total }}</td>
                 </tr>
             {% endif %}
             {% if vendas.amex.debito %}
@@ -344,7 +319,6 @@
                     <td>%{{ vendas.amex.debito.last.bandeira.debito_vista }}</td>
                     <td>R$ {{ vendas.amex.debito.total_tarifa }}</td>
                     <td>R$ {{ vendas.amex.debito.total_devido }}</td>
-                    <td>R$ {{ vendas.amex.debito.lucro_total }}</td>
                 </tr>
             {% endif %}
             {% if vendas.elo.debito %}
@@ -355,7 +329,6 @@
                     <td>%{{ vendas.elo.debito.last.bandeira.debito_vista }}</td>
                     <td>R$ {{ vendas.elo.debito.total_tarifa }}</td>
                     <td>R$ {{ vendas.elo.debito.total_devido }}</td>
-                    <td>R$ {{ vendas.elo.debito.lucro_total }}</td>
                 </tr>
             {% endif %}
             {% if vendas.hiper.debito %}
@@ -366,7 +339,6 @@
                     <td>%{{ vendas.hiper.debito.last.bandeira.debito_vista }}</td>
                     <td>R$ {{ vendas.hiper.debito.total_tarifa }}</td>
                     <td>R$ {{ vendas.hiper.debito.total_devido }}</td>
-                    <td>R$ {{ vendas.hiper.debito.lucro_total }}</td>
                 </tr>
             {% endif %}
             {% if vendas.debito %}
@@ -377,7 +349,6 @@
                     <td>Variável</td>
                     <td>R$ {{ vendas.debito.total_tarifa }}</td>
                     <td>R$ {{ vendas.debito.total_devido }}</td>
-                    <td>R$ {{ vendas.debito.lucro_total }}</td>
                 </tr>
             {% endif %}
             </tbody>
@@ -393,7 +364,6 @@
                     <th>Valor Bruto</th>
                     <th>Valor Taxa (Banco)</th>
                     <th>Valor Devido</th>
-                    <th>Lucro</th>
                 </tr>
             </thead>
             <tbody>
@@ -402,7 +372,6 @@
                     <td>R$ {{ vendas.total_bruto }}</td>
                     <td>R$ {{ vendas.total_tarifa }}</td>
                     <td>R$ {{ vendas.total_devido }}</td>
-                    <td>R$ {{ vendas.lucro_total }}</td>
                 </tr>
             </tbody>
         </table>

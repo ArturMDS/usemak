@@ -124,24 +124,45 @@ class PesquisaPendentes(ListView):
     model = Venda
 
     def get_queryset(self, *args):
-        inicio = self.request.GET.get('data_inicio')
-        fim = self.request.GET.get('data_fim')
-        usuario_logado = self.request.user
-        if (len(inicio) == 10) and (len(fim) == 10):
-            data_inicio = date(year=int(inicio[6:10]), month=int(inicio[3:5]), day=int(inicio[0:2]))
-            data_fim = date(year=int(fim[6:10]), month=int(fim[3:5]), day=int(fim[0:2]))
-            object_list = (Venda.objects.filter(estabelecimento__usuario=usuario_logado).pendente()
-                           .filter(data_venda__range=(data_inicio, data_fim)).order_by('data_venda'))
-            return object_list
+        if self.request.GET.get('data_inicio'):
+            inicio = self.request.GET.get('data_inicio')
+            fim = self.request.GET.get('data_fim')
+            self.request.session['data_inicio'] = inicio
+            self.request.session['data_fim'] = fim
+            usuario_logado = self.request.user
+            if (len(inicio) == 10) and (len(fim) == 10):
+                data_inicio = date(year=int(inicio[6:10]), month=int(inicio[3:5]), day=int(inicio[0:2]))
+                data_fim = date(year=int(fim[6:10]), month=int(fim[3:5]), day=int(fim[0:2]))
+                object_list = (Venda.objects.filter(estabelecimento__usuario=usuario_logado).pendente()
+                               .filter(data_venda__range=(data_inicio, data_fim)).order_by('data_venda'))
+                return object_list
+            else:
+                object_list = Venda.objects.filter(estabelecimento__usuario=usuario_logado).filter(pago=False).filter(
+                    contesta=False).order_by('data_venda')
+                return object_list
         else:
-            object_list = Venda.objects.filter(estabelecimento__usuario=usuario_logado).filter(pago=False).filter(
-                contesta=False).order_by('data_venda')
-            return object_list
+            inicio = self.request.session.get('data_inicio')
+            fim = self.request.session.get('data_fim')
+            usuario_logado = self.request.user
+            if (len(inicio) == 10) and (len(fim) == 10):
+                data_inicio = date(year=int(inicio[6:10]), month=int(inicio[3:5]), day=int(inicio[0:2]))
+                data_fim = date(year=int(fim[6:10]), month=int(fim[3:5]), day=int(fim[0:2]))
+                object_list = (Venda.objects.filter(estabelecimento__usuario=usuario_logado).pendente()
+                               .filter(data_venda__range=(data_inicio, data_fim)).order_by('data_venda'))
+                return object_list
+            else:
+                object_list = Venda.objects.filter(estabelecimento__usuario=usuario_logado).filter(pago=False).filter(
+                    contesta=False).order_by('data_venda')
+                return object_list
 
     def get_context_data(self, **kwargs):
         context = super(PesquisaPendentes, self).get_context_data(**kwargs)
-        inicio = self.request.GET.get('data_inicio')
-        fim = self.request.GET.get('data_fim')
+        if self.request.GET.get('data_inicio'):
+            inicio = self.request.GET.get('data_inicio')
+            fim = self.request.GET.get('data_fim')
+        else:
+            inicio = self.request.session.get('data_inicio')
+            fim = self.request.session.get('data_fim')
         usuario_logado = self.request.user
         if (len(inicio) == 10) and (len(fim) == 10):
             data_inicio = date(year=int(inicio[6:10]), month=int(inicio[3:5]), day=int(inicio[0:2]))
@@ -206,7 +227,7 @@ def arquiva_pgto_todos(request):
         for venda in vendas:
             venda.pago = True
             venda.save()
-        return redirect('machine:dashboardpendentes')
+        return redirect('machine:pesquisapendentes')
     else:
         tipo = request.GET.get('tipo')
         estabelecimento = request.GET.get('estabelecimento')
@@ -219,7 +240,7 @@ def arquiva_pgto_todos(request):
         for venda in vendas:
             venda.pago = True
             venda.save()
-        return redirect('machine:dashboardpendentes')
+        return redirect('machine:pesquisapendentes')
 
 
 def cancela_pgto(request):
