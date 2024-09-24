@@ -204,7 +204,6 @@ def arquiva_pgto(request):
     return redirect('machine:readvendas')
 
 
-#TODO: verificar a possibilidade de encaminhar para os resultados de pesquisa
 def arquiva_pgto_todos(request):
     usuario_logado = request.user
     if request.GET.get('data_inicio') and request.GET.get('data_fim'):
@@ -228,6 +227,7 @@ def arquiva_pgto_todos(request):
             venda.pago = True
             venda.save()
         return redirect('machine:pesquisapendentes')
+
     else:
         tipo = request.GET.get('tipo')
         estabelecimento = request.GET.get('estabelecimento')
@@ -240,7 +240,10 @@ def arquiva_pgto_todos(request):
         for venda in vendas:
             venda.pago = True
             venda.save()
-        return redirect('machine:pesquisapendentes')
+        if request.GET.get('data_inicio'):
+            return redirect('machine:pesquisapendentes')
+        else:
+            return redirect('machine:dashboardpendentes')
 
 
 def cancela_pgto(request):
@@ -486,4 +489,11 @@ class PesquisaPdf(View):
             'request': request,
         }
         return Render.render('pesquisa_pdf.html', params, f'{estabelecimento}')
+
+
+def limpa_arquivo(request):
+    usuario_logado = request.user
+    vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado).filter(arquivado=True)
+    vendas.delete()
+    return redirect('machine:readvendas')
 

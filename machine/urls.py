@@ -18,7 +18,8 @@ from .views import (confirma_pgto,
                     AcessoNegado,
                     create_dados,
                     ajusta_contestados,
-                    PesquisaPdf)
+                    PesquisaPdf,
+                    limpa_arquivo)
 
 
 app_name = 'machine'
@@ -45,4 +46,5 @@ urlpatterns = [
     re_path(r'^arquiva_pgto_todos/$', arquiva_pgto_todos, name='arquiva_pgto_todos'),
     path('arquiva_pgto', arquiva_pgto, name='arquiva_pgto'),
     re_path(r'^cancela_pgto/$', cancela_pgto, name='cancela_pgto'),
+    re_path(r'^limpa_arquivo/$', limpa_arquivo, name='limpa_arquivo'),
 ]
