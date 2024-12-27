@@ -1,0 +1,39 @@
+.flag-icon-background{
+	background-size:contain;
+	background-position:50%;
+	background-repeat:no-repeat
+}
+
+.flag-icon{
+    background-size:contain;
+    background-position:50%;
+	background-repeat:no-repeat;
+	position:relative;
+	display:inline-block;
+	width:2.66666666em;
+	line-height:2em
+}
+
+.flag-icon:before{content:'\00a0'}
+
+.flag-icon.flag-icon-squared{width:1em}
+
+.flag-icon-amex{background-image:url("/static/images/amex.png")}
+
+.flag-icon-amex.flag-icon-squared{background-image:url("/static/images/amex.png")}
+
+.flag-icon-elo{background-image:url("/static/images/elo.png")}
+
+.flag-icon-elo.flag-icon-squared{background-image:url("/static/images/elo.png")}
+
+.flag-icon-hc{background-image:url("/static/images/hipercard.png")}
+
+.flag-icon-hc.flag-icon-squared{background-image:url("/static/images/hipercard.png")}
+
+.flag-icon-mc{background-image:url("/static/images/Mastercard-Logo.png")}
+
+.flag-icon-mc.flag-icon-squared{background-image:url("/static/images/Mastercard-Logo.png")}
+
+.flag-icon-visa{background-image:url("/static/images/visa.png")}
+
+.flag-icon-visa.flag-icon-squared{background-image:url("/static/images/visa.png")}

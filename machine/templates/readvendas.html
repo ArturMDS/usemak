@@ -1,232 +1,109 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load crispy_forms_tags %}
 {% block titulo %}
-Dashboard
+Vendas
 {% endblock %}
 {% block main %}
-    <div class="row">
-        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-            <div class="sidebar-sticky">
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'machine:dashboardpendentes' %}">
-                            <span data-feather="bar-chart-2"></span>
-                            Pendentes
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'machine:dashboardcontestados' %}">
-                            <span data-feather="bar-chart"></span>
-                            Contestados<span class="sr-only">(current)</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{% url 'machine:readvendas' %}">
-                            <span data-feather="shopping-cart"></span>
-                            Vendas<span class="sr-only">(current)</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'machine:readestabelecimentos' %}">
-                            <span data-feather="users"></span>
-                            Clientes<span class="sr-only">(current)</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'machine:createatualizacao' %}">
-                            <span data-feather="layers"></span>
-                            Inserir arquivo
-                        </a>
-                    </li>
-                    <!--<li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <span data-feather="bar-chart-2"></span>
-                            Relatórios
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <span data-feather="layers"></span>
-                            Integrações
-                        </a>
-                    </li>
-                </ul>
-
-                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-                    <span>Relatórios Salvos</span>
-                <a class="d-flex align-items-center text-muted" href="#">
-                    <span data-feather="plus-circle"></span>
-                </a>
-                </h6>
-                <ul class="nav flex-column mb-2">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <span data-feather="file-text"></span>
-                            Neste mês
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <span data-feather="file-text"></span>
-                            Último trimestre
-                        </a>
-                    </li>-->
-                </ul>
-            </div>
-        </nav>
-    </div>
+{% include 'sidebar.html' %}
+  <div class="container-fluid page-body-wrapper">
+    {% include 'topbar.html' %}
+  </div>
     <div id="loader-wrapper">
         <div id="loader"></div>
     </div>
-    <main id="content" style="display: none;" role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-        <h2 class="text-center"><img src="{% static 'images/cielo.png' %}" width="300" height="100"></h2>
-        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h2 class="text-center">Vendas arquivadas</h2>
-            <div class="btn-toolbar mb-2 mb-md-0">
-                <div class="btn-group mr-2">
-                    <a href="{% url 'machine:createvenda' %}"><button class="btn btn-outline-secondary">
-                        <span data-feather="plus"></span> Cadastrar Venda
-                    </button></a>
+    <div id="content" class="main-panel">
+      <div class="content-wrapper">
+        <div class="row">
+          <div class="col-12 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="card-title">Vendas Arquivadas</h4>
+                <div class="template-demo d-flex justify-content-between flex-nowrap">
+                  <a class="nav-link btn btn-inverse-primary btn-fw"
+                     href="{% url 'machine:createvenda' %}" role="button">
+                      <span class="mdi mdi-plus-circle"></span> Venda </a>
                 </div>
+              </div>
             </div>
-        </div>
-            <div class="table-responsive">
-                <h2 class="text-center">Resumo</h2>
-                <table class="table table-striped table-sm">
+          </div>
+          <div class="col-lg-12 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="card-title">Vendas</h4>
+                <div class="table-responsive">
+                  <table class="table table-striped">
                     <thead>
-                        <tr>
-                            <th></th>
-                            <th></th>
-                            <th class="text-center" colspan="5">Crédito</th>
-                            <th class="text-center" colspan="5">Débito</th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                        <tr>
-                            <th class="text-center">Data Recebimento</th>
-                            <th class="text-center">Qtde</th>
-                            <th class="text-center"><img src="{% static 'images/Mastercard-Logo.png' %}" width="30" height="20"></th>
-                            <th class="text-center"><img src="{% static 'images/visa.png' %}" width="30" height="20"></th>
-                            <th class="text-center"><img src="{% static 'images/american.png' %}" width="30" height="20"></th>
-                            <th class="text-center"><img src="{% static 'images/elo.png' %}" width="30" height="20"></th>
-                            <th class="text-center"><img src="{% static 'images/hipercard.png' %}" width="30" height="20"></th>
-                            <th class="text-center"><img src="{% static 'images/Mastercard-Logo.png' %}" width="30" height="20"></th>
-                            <th class="text-center"><img src="{% static 'images/visa.png' %}" width="30" height="20"></th>
-                            <th class="text-center"><img src="{% static 'images/american.png' %}" width="30" height="20"></th>
-                            <th class="text-center"><img src="{% static 'images/elo.png' %}" width="30" height="20"></th>
-                            <th class="text-center"><img src="{% static 'images/hipercard.png' %}" width="30" height="20"></th>
-                            <th class="text-center">Entrada</th>
-                            <th class="text-center">Bruto</th>
-                            <th class="text-center" style="width: 10%">Ações</th>
-                        </tr>
+                      <tr>
+                        <th>Data Rcb</th>
+                        <th>Qtde</th>
+                        <th>Crédito</th>
+                        <th>Débito</th>
+                        <th>Entrada</th>
+                        <th>Bruto</th>
+                        <th class="text-center">Ações</th>
+                      </tr>
                     </thead>
                     <tbody>
-                        {% for venda in vendas_query %}
-
-                            <tr>
-                                <td class="text-center">{{ venda.last.previsao_pgto.day }}/{{ venda.last.previsao_pgto.month }}/{{ venda.last.previsao_pgto.year }}</td>
-                                <td class="text-center">{{ venda.count }}</td>
-                                <td class="text-center">{{ venda.credito.master.entrada }}</td>
-                                <td class="text-center">{{ venda.credito.visa.entrada }}</td>
-                                <td class="text-center">{{ venda.credito.amex.entrada }}</td>
-                                <td class="text-center">{{ venda.credito.elo.entrada }}</td>
-                                <td class="text-center">{{ venda.credito.hiper.entrada }}</td>
-                                <td class="text-center">{{ venda.debito.master.entrada }}</td>
-                                <td class="text-center">{{ venda.debito.visa.entrada }}</td>
-                                <td class="text-center">{{ venda.debito.amex.entrada }}</td>
-                                <td class="text-center">{{ venda.debito.elo.entrada }}</td>
-                                <td class="text-center">{{ venda.debito.hiper.entrada }}</td>
-                                <td class="text-center">{{ venda.entrada }}</td>
-                                <td class="text-center">{{ venda.total_bruto }}</td>
-                                <td class="text-center" style="width: 10%">
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <form method="get" action="{% url 'machine:cancela_pgto' %}">
-                                                {% csrf_token %}
-                                                <fieldset>
-                                                    <input type="hidden" name="dia" value="{{ venda.last.previsao_pgto.day }}">
-                                                    <input type="hidden" name="mes" value="{{ venda.last.previsao_pgto.month }}">
-                                                    <input type="hidden" name="ano" value="{{ venda.last.previsao_pgto.year }}">
-                                                    <button type="submit" class="btn btn-success btn-sm" onclick="loading()"><i class="bi bi-arrow-clockwise"></i></button>
-                                                </fieldset>
-                                            </form>
-                                        </div>
-                                        <div class="col-6">
-                                            <form method="get" action="{% url 'machine:arquiva_pgto' %}">
-                                                {% csrf_token %}
-                                                <fieldset>
-                                                    <input type="hidden" name="dia" value="{{ venda.last.previsao_pgto.day }}">
-                                                    <input type="hidden" name="mes" value="{{ venda.last.previsao_pgto.month }}">
-                                                    <input type="hidden" name="ano" value="{{ venda.last.previsao_pgto.year }}">
-                                                    <button type="submit" class="btn btn-danger btn-sm" onclick="loading()"><i class="bi bi-trash"></i></button>
-                                                </fieldset>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                            <tr class="table-success">
-                                <td class="text-center"><b>Total</b></td>
-                                <td class="text-center">{{ vendas.count }}</td>
-                                <td class="text-center">{{ vendas.credito.master.entrada }}</td>
-                                <td class="text-center">{{ vendas.credito.visa.entrada }}</td>
-                                <td class="text-center">{{ vendas.credito.amex.entrada }}</td>
-                                <td class="text-center">{{ vendas.credito.elo.entrada }}</td>
-                                <td class="text-center">{{ vendas.credito.hiper.entrada }}</td>
-                                <td class="text-center">{{ vendas.debito.master.entrada }}</td>
-                                <td class="text-center">{{ vendas.debito.visa.entrada }}</td>
-                                <td class="text-center">{{ vendas.debito.amex.entrada }}</td>
-                                <td class="text-center">{{ vendas.debito.elo.entrada }}</td>
-                                <td class="text-center">{{ vendas.debito.hiper.entrada }}</td>
-                                <td class="text-center">{{ vendas.entrada }}</td>
-                                <td class="text-center">{{ vendas.total_bruto }}</td>
-                                <td class="text-center">---</td>
-                            </tr>
-                    </tbody>
-                </table>
-                <div class="btn-toolbar mb-2 mb-md-0">
-                <div class="btn-group mr-2">
-                    <a href="{% url 'machine:limpa_arquivo' %}"><button class="btn btn-outline-danger">
-                        Limpar arquivo
-                    </button></a>
-                </div>
-            </div>
-            </div>
-        <br><br>
-        <!--<div class="table-responsive">
-            <h2 class="text-center">Vendas arquivadas</h2>
-            <table class="table table-striped table-sm">
-                <thead>
+                    {% for venda in vendas_query %}
                     <tr>
-                        <th>Estabelecimento</th>
-                        <th>Tipo</th>
-                        <th>Cartão</th>
-                        <th>Data</th>
-                        <th>Valor Bruto</th>
-                        <th>Tarifa Banco</th>
-                        <th>Tarifa Cobrada</th>
-                        <th>Lucro</th>
-                        <th>Valor Líquido</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for venda in vendas %}
-                    <tr>
-                        <td>{{ venda.estabelecimento }}</td>
-                        <td>{{ venda.tipo }}</td>
-                        <td>{{ venda.bandeira }}</td>
-                        <td>{{ venda.data_venda.day }}/{{ venda.data_venda.month }}/{{ venda.data_venda.year }}</td>
-                        <td>{{ venda.valor_bruto }}</td>
-                        <td>{{ venda.valor_tarifa }}</td>
-                        <td>{{ venda.valor_cobranca }}</td>
-                        <td>{{ venda.lucro }}</td>
-                        <td>{{ venda.valor_devido }}</td>
+                      <td>{{ venda.last.previsao_pgto.day }}/{{ venda.last.previsao_pgto.month }}/{{ venda.last.previsao_pgto.year }}</td>
+                      <td>{{ venda.count }}</td>
+                      <td>{{ venda.credito.entrada }}</td>
+                      <td>{{ venda.debito.entrada }}</td>
+                      <td>{{ venda.entrada }}</td>
+                      <td>{{ venda.total_bruto }}</td>
+                      <td style="display: flex;">
+                        <form method="get" action="{% url 'machine:cancela_pgto' %}">
+                          {% csrf_token %}
+                          <fieldset>
+                            <input type="hidden" name="dia" value="{{ venda.last.previsao_pgto.day }}">
+                            <input type="hidden" name="mes" value="{{ venda.last.previsao_pgto.month }}">
+                            <input type="hidden" name="ano" value="{{ venda.last.previsao_pgto.year }}">
+                            <div class="template-demo d-flex justify-content-between flex-nowrap">
+                              <button type="submit" class="btn btn-inverse-primary btn-icon" onclick="loading()">
+                                <span class="mdi mdi-update"></span>
+                              </button>
+                            </div>
+                          </fieldset>
+                        </form>
+                        <form method="get" action="{% url 'machine:arquiva_pgto' %}">
+                          {% csrf_token %}
+                          <fieldset>
+                            <input type="hidden" name="dia" value="{{ venda.last.previsao_pgto.day }}">
+                            <input type="hidden" name="mes" value="{{ venda.last.previsao_pgto.month }}">
+                            <input type="hidden" name="ano" value="{{ venda.last.previsao_pgto.year }}">
+                            <div class="template-demo d-flex justify-content-between flex-nowrap">
+                              <button type="submit" class="btn btn-inverse-danger btn-icon" onclick="loading()">
+                                <span class="mdi mdi-trash-can"></span>
+                              </button>
+                            </div>
+                          </fieldset>
+                        </form>
+                      </td>
                     </tr>
                     {% endfor %}
-                </tbody>
-            </table>
-        </div>-->
-    </main>
+                    <tr>
+                      <td><b>Total</b></td>
+                      <td>{{ vendas.count }}</td>
+                      <td>{{ vendas.credito.entrada }}</td>
+                      <td>{{ vendas.debito.entrada }}</td>
+                      <td>{{ vendas.entrada }}</td>
+                      <td>{{ vendas.total_bruto }}</td>
+                      <td>---</td>
+                    </tr>
+                    </tbody>
+                  </table>
+                  <div class="center">
+                    <a href="{% url 'machine:limpa_arquivo' %}">
+                      <button type="submit" class="nav-link btn btn-inverse-danger btn-fw" onclick="loading()">Limpar Arquivo</button>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 {% endblock %}

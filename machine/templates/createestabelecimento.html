@@ -2,128 +2,73 @@
 {% load static %}
 {% load crispy_forms_tags %}
 {% block titulo %}
-Dashboard
+Estabelecimento
 {% endblock %}
 {% block main %}
-    <div class="row">
-        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-            <div class="sidebar-sticky">
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'machine:dashboardpendentes' %}" onclick="loading()">
-                            <span data-feather="bar-chart-2"></span>
-                            Pendentes
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'machine:dashboardcontestados' %}" onclick="loading()">
-                            <span data-feather="bar-chart"></span>
-                            Contestados<span class="sr-only">(current)</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'machine:readvendas' %}" onclick="loading()">
-                            <span data-feather="shopping-cart"></span>
-                            Vendas
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{% url 'machine:readestabelecimentos' %}" onclick="loading()">
-                            <span data-feather="users"></span>
-                            Clientes<span class="sr-only">(current)</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'machine:createatualizacao' %}" onclick="loading()">
-                            <span data-feather="layers"></span>
-                            Inserir arquivo
-                        </a>
-                    </li>
-                    <!--<li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <span data-feather="bar-chart-2"></span>
-                            Relatórios
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <span data-feather="layers"></span>
-                            Integrações
-                        </a>
-                    </li>
-                </ul>
-
-                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-                    <span>Relatórios Salvos</span>
-                <a class="d-flex align-items-center text-muted" href="#">
-                    <span data-feather="plus-circle"></span>
-                </a>
-                </h6>
-                <ul class="nav flex-column mb-2">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <span data-feather="file-text"></span>
-                            Neste mês
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <span data-feather="file-text"></span>
-                            Último trimestre
-                        </a>
-                    </li>-->
-                </ul>
-            </div>
-        </nav>
-    </div>
+{% include 'sidebar.html' %}
+  <div class="container-fluid page-body-wrapper">
+    {% include 'topbar.html' %}
+  </div>
     <div id="loader-wrapper">
         <div id="loader"></div>
     </div>
-    <main id="content" style="display: none;" role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-        <h2 class="text-center"><img src="{% static 'images/cielo.png' %}" width="300" height="100"></h2>
-        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <form method="post">
-                {% csrf_token %}
+    <div id="content" class="main-panel">
+      <div class="content-wrapper">
+        <div class="row">
+          <div class="col-12 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="card-title">Cadastre Novo Estabelecimento</h4>
+                <form class="forms-sample" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
                     <fieldset>
-                        <legend class="border-bottom mb-4">Cadastrar Novo Estabelecimento</legend>
-                        {{ form|crispy }}
-                        <div class="field margin_0">
-                            <a class="btn btn-outline-secondary btn-lg float-left"
-                                       href="{% url 'machine:readestabelecimentos' %}" role="button">Voltar</a>
-                            <button class="btn btn-outline-success btn-lg float-right" data-placement="left">Cadastrar</button>
+                        <div class="form-group">
+                          {{ form|crispy }}
                         </div>
+                        <a class="nav-link btn btn-inverse-primary btn-fw"
+                           href="{% url 'machine:readestabelecimentos' %}" role="button">Voltar</a>
+                        <button type="submit" class="nav-link btn btn-inverse-primary btn-fw" onclick="loading()">Cadastrar</button>
                     </fieldset>
-            </form>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-12 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Estabelecimentos</h4>
+                    <div class="table-responsive">
+                      <table class="table table-striped">
+                        <thead>
+                          <tr>
+                            <th> Nome </th>
+                            <th> Código </th>
+                            <th> Taxa de Débito </th>
+                            <th> Taxa de Crédito </th>
+                            <th> Editar </th>
+                          </tr>
+                        </thead>
+                          <tbody>
+                          {% for cliente in clientes %}
+                            <tr>
+                                <td>{{ cliente.razao_social }}</td>
+                                <td>{{ cliente.codigo }}</td>.
+                                <td>{{ cliente.taxa_debito }}</td>
+                                <td>{{ cliente.taxa_credito }}</td>
+                                <td>
+                                  <a class="nav-link btn btn-inverse-success btn-fw"
+                                  href="{% url 'machine:updateestabelecimento' cliente.id %}" role="button" onclick="loading()">Sim</a>
+                                </td>
+                            </tr>
+                          {% endfor %}
+                          </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+          </div>
         </div>
-         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h2>Estabelecimentos</h2>
-        </div>
-        <div class="table-responsive">
-            <table class="table table-striped table-sm">
-                <thead>
-                    <tr>
-                        <th>Nome</th>
-                        <th>Código</th>
-                        <th>Taxa de Débito</th>
-                        <th>Taxa de Crédito</th>
-                        <th>Editar</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for cliente in clientes %}
-                    <tr>
-                        <td>{{ cliente.razao_social }}</td>
-                        <td>{{ cliente.codigo }}</td>
-                        <td>{{ cliente.taxa_debito }}</td>
-                        <td>{{ cliente.taxa_credito }}</td>
-                        <td>
-                            <a class="btn btn-success btn-sm"
-                               href="{% url 'machine:updateestabelecimento' cliente.id %}#" role="button"><span data-feather="file-text"></span></a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </main>
+      </div>
+    </div>
+
 {% endblock %}
