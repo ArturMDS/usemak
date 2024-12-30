@@ -8834,7 +8834,7 @@ pre {
   font-size: 0.875rem;
   font-weight: 400;
   line-height: 1;
-  color: #495057;
+  color: #ebeef2;
   background-color: #2A3038;
   background-clip: padding-box;
   border: 1px solid #2c2e33;
@@ -8857,12 +8857,12 @@ pre {
   .tt-query:-moz-focusring,
   .tt-hint:-moz-focusring {
     color: transparent;
-    text-shadow: 0 0 0 #495057; }
+    text-shadow: 0 0 0 #ebeef2; }
   .form-control:focus, .asColorPicker-input:focus, .dataTables_wrapper select:focus, .jsgrid .jsgrid-table .jsgrid-filter-row input:focus[type=text],
   .jsgrid .jsgrid-table .jsgrid-filter-row select:focus, .jsgrid .jsgrid-table .jsgrid-filter-row input:focus[type=number], .select2-container--default .select2-selection--single:focus, .select2-container--default .select2-selection--single .select2-search__field:focus, .typeahead:focus,
   .tt-query:focus,
   .tt-hint:focus {
-    color: #495057;
+    color: #ebeef2;
     background-color: #fff;
     border-color: #80bdff;
     outline: 0;
@@ -8871,7 +8871,7 @@ pre {
   .jsgrid .jsgrid-table .jsgrid-filter-row select::placeholder, .jsgrid .jsgrid-table .jsgrid-filter-row input[type=number]::placeholder, .select2-container--default .select2-selection--single::placeholder, .select2-container--default .select2-selection--single .select2-search__field::placeholder, .typeahead::placeholder,
   .tt-query::placeholder,
   .tt-hint::placeholder {
-    color: #4b5564;
+    color: #ebeef2;
     opacity: 1; }
   .form-control:disabled, .asColorPicker-input:disabled, .dataTables_wrapper select:disabled, .jsgrid .jsgrid-table .jsgrid-filter-row input:disabled[type=text],
   .jsgrid .jsgrid-table .jsgrid-filter-row select:disabled, .jsgrid .jsgrid-table .jsgrid-filter-row input:disabled[type=number], .select2-container--default .select2-selection--single:disabled, .select2-container--default .select2-selection--single .select2-search__field:disabled, .typeahead:disabled,
@@ -8919,7 +8919,7 @@ select.form-control:focus::-ms-value, select.asColorPicker-input:focus::-ms-valu
 .jsgrid .jsgrid-table .jsgrid-filter-row select:focus::-ms-value, .select2-container--default select.select2-selection--single:focus::-ms-value, .select2-container--default .select2-selection--single select.select2-search__field:focus::-ms-value, select.typeahead:focus::-ms-value,
 select.tt-query:focus::-ms-value,
 select.tt-hint:focus::-ms-value {
-  color: #495057;
+  color: #ebeef2;
   background-color: #2A3038; }
 
 .form-control-file,
@@ -8953,7 +8953,7 @@ select.tt-hint:focus::-ms-value {
   margin-bottom: 0;
   font-size: 0.875rem;
   line-height: 1;
-  color: #212529;
+  color: #ebeef2;
   background-color: transparent;
   border: solid transparent;
   border-width: 1px 0; }

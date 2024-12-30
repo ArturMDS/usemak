@@ -10,6 +10,14 @@ Pendentes
     width: 50%;
     text-align: center;
     }
+
+    #dt_in {
+      color: white;
+    }
+
+    #dt_fm {
+      color: white;
+    }
 </style>
 {% endblock %}
 {% block main %}
@@ -38,7 +46,7 @@ Pendentes
                                 <input type="text" class="form-control" name="data_inicio" id="dt_in" size="10" placeholder="dd/mm/aaaa">
                             </div>
                             <div class="input-group-prepend">
-                                <div class="input-group-text">Até</div>
+                                <div class="input-group-text" style="color: white;">Até</div>
                                 <label class="sr-only" for="dt_fm">Data Final</label>
                                 <input type="text" class="form-control" name="data_fim" id="dt_fm" size="10" placeholder="dd/mm/aaaa">
                             </div>
