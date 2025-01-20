@@ -434,6 +434,22 @@ class Updateestabelecimento(LoginRequiredMixin, UpdateView):
         return reverse('machine:readestabelecimentos')
 
 
+class UpdateUsuario(LoginRequiredMixin, UpdateView):
+    template_name = "updateusuario.html"
+    model = Usuario
+    fields = ['username', 'email']
+
+    def get_context_data(self, **kwargs):
+        context = super(UpdateUsuario, self).get_context_data(**kwargs)
+        usuario_logado = self.request.user
+        clientes = self.request.user.estabelecimento.filter(usuario=usuario_logado)
+        context['clientes'] = clientes
+        return context
+
+    def get_success_url(self):
+        return reverse('machine:dashboardpendentes')
+
+
 def create_dados(request, id):
     atual = Atualizacao.objects.get(id=id)
     if str(atual.arquivo)[-3:] == "csv":

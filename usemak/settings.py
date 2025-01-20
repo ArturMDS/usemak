@@ -150,6 +150,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = 'homepage'
 
+LOGOUT_REDIRECT_URL = 'machine:login'
+
 LOGIN_URL = 'machine:login'
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
