@@ -22,7 +22,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-xfi=6@6(=^*3n=pqpw0nq=piasyf)w#kua34kn-@p(q@pw0pk+'
+TOKEN_CSRF = os.getenv('TOKEN_CSRF')
+if TOKEN_CSRF:
+    SECRET_KEY = TOKEN_CSRF
+    CSRF_TRUSTED_ORIGINS = ['https://usemak-10c1f1b1535b.herokuapp.com']
+else:
+    SECRET_KEY = 'django-insecure-xfi=6@6(=^*3n=pqpw0nq=piasyf)w#kua34kn-@p(q@pw0pk+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
