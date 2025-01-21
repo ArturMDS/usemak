@@ -22,6 +22,43 @@ Pendentes
     </div>
     <div id="content" class="main-panel">
       <div class="content-wrapper">
+        {% if messages %}
+        <div class="row">
+          <div class="col-12 grid-margin stretch-card">
+            {% for message in messages %}
+              <div class="alert alert-{% if message.tags %}{{ message.tags }}{% endif %}" role="alert">
+                {{ message }}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <p class="card-description"> Insira o período desejado no formato <code>dd/mm/aaaa</code></p>
+                <form class="form-inline" method="get" action="{% url 'machine:pesquisapendentes' %}">
+                    {% csrf_token %}
+                    <fieldset>
+                        <div class="input-group mb-2 mr-sm-2">
+                            <div class="input-group-prepend">
+                                <label class="sr-only" for="dt_in">Data Inicial</label>
+                                <input type="text" class="form-control" name="data_inicio" id="dt_in" size="10" placeholder="dd/mm/aaaa">
+                            </div>
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">Até</div>
+                                <label class="sr-only" for="dt_fm">Data Final</label>
+                                <input type="text" class="form-control" name="data_fim" id="dt_fm" size="10" placeholder="dd/mm/aaaa">
+                            </div>
+                            <button type="submit" class="nav-link ml-1 btn btn-inverse-primary btn-fw" onclick="loading()">Pesquisar</button>
+                        </div>
+                    </fieldset>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
         {% if inicio and fim %}
         <div class="row">
           <div class="col-12 grid-margin stretch-card">
@@ -661,36 +698,6 @@ Pendentes
                   </div>
                 </div>
               </div>
-        </div>
-        {% endif %}
-        {% if msg %}
-          <div class="row">
-          <div class="col-12 grid-margin stretch-card">
-            <div class="card">
-              <div class="card-body">
-                <h4 class="card-title">{{ msg }}</h4>
-                <p class="card-description"> Insira o período desejado no formato <code>dd/mm/aaaa</code></p>
-                <form class="form-inline" method="get" action="{% url 'machine:pesquisapendentes' %}">
-                    {% csrf_token %}
-                    <fieldset>
-                        <div class="input-group mb-2 mr-sm-2">
-                            <div class="input-group-prepend">
-                                <label class="sr-only" for="dt_in">Data Inicial</label>
-                                <input type="text" class="form-control" name="data_inicio" id="dt_in" size="10" placeholder="dd/mm/aaaa">
-                            </div>
-                            <div class="input-group-prepend">
-                                <div class="input-group-text">Até</div>
-                                <label class="sr-only" for="dt_fm">Data Final</label>
-                                <input type="text" class="form-control" name="data_fim" id="dt_fm" size="10" placeholder="dd/mm/aaaa">
-                            </div>
-                            &nbsp
-                            <button type="submit" class="nav-link btn btn-inverse-primary btn-fw" onclick="loading()">Pesquisar</button>
-                        </div>
-                    </fieldset>
-                </form>
-              </div>
-            </div>
-          </div>
         </div>
         {% endif %}
       </div>

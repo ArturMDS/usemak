@@ -2,95 +2,43 @@
 {% load static %}
 {% load crispy_forms_tags %}
 {% block titulo %}
-Dashboard
+Estabelecimento
 {% endblock %}
 {% block main %}
-    <div class="row">
-        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-            <div class="sidebar-sticky">
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'machine:dashboardpendentes' %}">
-                            <span data-feather="bar-chart-2"></span>
-                            Pendentes
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'machine:dashboardcontestados' %}">
-                            <span data-feather="bar-chart"></span>
-                            Contestados<span class="sr-only">(current)</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{% url 'machine:readvendas' %}">
-                            <span data-feather="shopping-cart"></span>
-                            Vendas<span class="sr-only">(current)</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'machine:readestabelecimentos' %}">
-                            <span data-feather="users"></span>
-                            Clientes
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'machine:createatualizacao' %}">
-                            <span data-feather="layers"></span>
-                            Inserir arquivo
-                        </a>
-                    </li>
-                    <!--<li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <span data-feather="bar-chart-2"></span>
-                            Relatórios
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <span data-feather="layers"></span>
-                            Integrações
-                        </a>
-                    </li>
-                </ul>
-
-                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-                    <span>Relatórios Salvos</span>
-                <a class="d-flex align-items-center text-muted" href="#">
-                    <span data-feather="plus-circle"></span>
-                </a>
-                </h6>
-                <ul class="nav flex-column mb-2">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <span data-feather="file-text"></span>
-                            Neste mês
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <span data-feather="file-text"></span>
-                            Último trimestre
-                        </a>
-                    </li>-->
-                </ul>
-            </div>
-        </nav>
+{% include 'sidebar.html' %}
+  <div class="container-fluid page-body-wrapper">
+    {% include 'topbar.html' %}
+  </div>
+    <div id="loader-wrapper">
+        <div id="loader"></div>
     </div>
-    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <form method="post">
-                {% csrf_token %}
+    <div id="content" class="main-panel">
+      <div class="content-wrapper">
+        <div class="row">
+          <div class="col-12 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="card-title">Cadastre Nova Venda</h4>
+                  <form method="post">
+                    {% csrf_token %}
                     <fieldset>
-                        <legend class="border-bottom mb-4">Cadastrar Nova Venda</legend>
-                        {{ form|crispy }}
-                        <div class="field margin_0">
-                            <a class="btn btn-outline-secondary btn-lg float-left"
-                                       href="{% url 'machine:readvendas' %}" role="button">Voltar</a>
-                            <button class="btn btn-outline-success btn-lg float-right" data-placement="left">Cadastrar</button>
+                      <legend class="border-bottom mb-4">Cadastrar Nova Venda</legend>
+                      {{ form|crispy }}
+                      <div class="row">
+                        <div class="col-6 col-sm-3">
+                          <a class="nav-link btn btn-inverse-primary btn-fw"
+                                   href="{% url 'machine:readvendas' %}" role="button">Voltar</a>
                         </div>
+                        <div class="col-6 col-sm-3">
+                          <button class="nav-link ml-5 btn btn-inverse-primary btn-fw" data-placement="left">Cadastrar</button>
+                        </div>
+                      </div>
                     </fieldset>
-            </form>
+                  </form>
+              </div>
+            </div>
+          </div>
         </div>
-
-    </main>
+      </div>
+    </div>
 {% endblock %}

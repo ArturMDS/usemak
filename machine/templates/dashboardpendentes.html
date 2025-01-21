@@ -33,6 +33,17 @@ Pendentes
       <div class="content-wrapper">
         <div class="row">
           <div class="col-12 grid-margin stretch-card">
+            {% if messages %}
+              {% for message in messages %}
+                <div class="alert alert-{% if message.tags %}{{ message.tags }}{% endif %}" role="alert">
+                  {{ message }}
+                </div>
+              {% endfor %}
+            {% endif %}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 grid-margin stretch-card">
             <div class="card">
               <div class="card-body">
                 <h4 class="card-title">Pesquisar período específico</h4>
@@ -50,8 +61,7 @@ Pendentes
                                 <label class="sr-only" for="dt_fm">Data Final</label>
                                 <input type="text" class="form-control" name="data_fim" id="dt_fm" size="10" placeholder="dd/mm/aaaa">
                             </div>
-                            &nbsp
-                            <button type="submit" class="nav-link btn btn-inverse-primary btn-fw" onclick="loading()">Pesquisar</button>
+                            <button type="submit" class="nav-link ml-1 btn btn-inverse-primary btn-fw" onclick="loading()">Pesquisar</button>
                         </div>
                     </fieldset>
                 </form>

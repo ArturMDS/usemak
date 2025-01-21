@@ -16,6 +16,17 @@ Vendas
       <div class="content-wrapper">
         <div class="row">
           <div class="col-12 grid-margin stretch-card">
+            {% if messages %}
+              {% for message in messages %}
+                <div class="alert alert-{% if message.tags %}{{ message.tags }}{% endif %}" role="alert">
+                  {{ message }}
+                </div>
+              {% endfor %}
+            {% endif %}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 grid-margin stretch-card">
             <div class="card">
               <div class="card-body">
                 <h4 class="card-title">Vendas Arquivadas</h4>
@@ -94,10 +105,12 @@ Vendas
                     </tr>
                     </tbody>
                   </table>
-                  <div class="center">
-                    <a href="{% url 'machine:limpa_arquivo' %}">
-                      <button type="submit" class="nav-link btn btn-inverse-danger btn-fw" onclick="loading()">Limpar Arquivo</button>
-                    </a>
+                  <div class="justify-content-center">
+
+                      <a href="{% url 'machine:limpa_arquivo' %}">
+                        <button type="submit" class="nav-link mt-2 btn btn-inverse-danger btn-fw" onclick="loading()">Limpar Arquivo</button>
+                      </a>
+
                   </div>
                 </div>
               </div>

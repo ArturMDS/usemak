@@ -1,6 +1,7 @@
 import decimal
 from django.shortcuts import render, reverse, redirect, resolve_url
 from django.db.models import Sum, F
+from django.contrib import messages
 from django.views.generic import (CreateView, \
     UpdateView, \
     TemplateView,
@@ -8,6 +9,7 @@ from django.views.generic import (CreateView, \
     ListView,
     View)
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from .models import (Venda,
                      Estabelecimento,
                      Usuario,
@@ -187,8 +189,7 @@ class PesquisaPendentes(ListView):
             context["inicio"] = inicio
             context["fim"] = fim
         else:
-            msg = "Data inválida, digite no formato dd/mm/aaaa"
-            context["msg"] = msg
+            messages.warning(self.request, "Data inválida, digite no formato dd/mm/aaaa")
         return context
 
 
@@ -202,6 +203,7 @@ def arquiva_pgto(request):
     for venda in vendas:
         venda.arquivado = True
         venda.save()
+    messages.success(request, "Vendas arquivadas com sucesso!")
     return redirect('machine:readvendas')
 
 
@@ -227,8 +229,8 @@ def arquiva_pgto_todos(request):
         for venda in vendas:
             venda.pago = True
             venda.save()
+        messages.success(request, f"Vendas do {estabelecimento} arquivadas com sucesso!")
         return redirect('machine:pesquisapendentes')
-
     else:
         tipo = request.GET.get('tipo')
         estabelecimento = request.GET.get('estabelecimento')
@@ -241,6 +243,7 @@ def arquiva_pgto_todos(request):
         for venda in vendas:
             venda.pago = True
             venda.save()
+        messages.success(request, f"Vendas do {estabelecimento} arquivadas com sucesso!")
         if request.GET.get('data_inicio'):
             return redirect('machine:pesquisapendentes')
         else:
@@ -256,6 +259,7 @@ def cancela_pgto(request):
     for venda in vendas:
         venda.pago = False
         venda.save()
+    messages.success(request, "Vendas desarquivadas, consulte os Pendentes!")
     return redirect('machine:readvendas')
 
 
@@ -286,10 +290,11 @@ class Readvendas(LoginRequiredMixin, TemplateView):
         return context
 
 
-class Createestabelecimento(LoginRequiredMixin, CreateView):
+class Createestabelecimento(SuccessMessageMixin, LoginRequiredMixin, CreateView):
     template_name = "createestabelecimento.html"
     model = Estabelecimento
     fields = ['razao_social', 'codigo', 'taxa_debito', 'taxa_credito']
+    success_message = "%(razao_social)s criado com sucesso!"
 
     def get_context_data(self, **kwargs):
         context = super(Createestabelecimento, self).get_context_data(**kwargs)
@@ -308,13 +313,14 @@ class Createestabelecimento(LoginRequiredMixin, CreateView):
         return reverse('machine:createestabelecimento')
 
 
-class Createvenda(LoginRequiredMixin, CreateView):
+class Createvenda(SuccessMessageMixin, LoginRequiredMixin, CreateView):
     template_name = "createvenda.html"
     model = Venda
     fields = ['estabelecimento', 'tipo',
               'bandeira', 'data_venda',
               'previsao_pgto', 'valor_bruto',
               'nr_maquina', 'cod_venda']
+    success_message = "Venda criada com sucesso!"
 
     def form_valid(self, form):
         if form.instance.tipo == "Débito à vista":
@@ -389,6 +395,14 @@ class Createatualizacao(LoginRequiredMixin, CreateView):
         return context
 
     def get_success_url(self):
+        atual = Atualizacao.objects.last()
+        if str(atual.arquivo)[-4:] == "xlsx":
+            messages.success(self.request, "Arquivo no formato correto e salvo com sucesso!")
+        elif str(atual.arquivo)[-3:] == "xls":
+            messages.success(self.request, "Arquivo no formato correto e salvo com sucesso!")
+        else:
+            messages.warning(self.request, "Arquivo no formato incorreto, NÃO SALVO!")
+            atual.delete()
         return reverse('machine:createatualizacao')
 
 
@@ -434,10 +448,11 @@ class Updateestabelecimento(LoginRequiredMixin, UpdateView):
         return reverse('machine:readestabelecimentos')
 
 
-class UpdateUsuario(LoginRequiredMixin, UpdateView):
+class UpdateUsuario(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
     template_name = "updateusuario.html"
     model = Usuario
     fields = ['username', 'email']
+    success_message = "%(username)s atualizado com sucesso!"
 
     def get_context_data(self, **kwargs):
         context = super(UpdateUsuario, self).get_context_data(**kwargs)
@@ -452,29 +467,42 @@ class UpdateUsuario(LoginRequiredMixin, UpdateView):
 
 def create_dados(request, id):
     atual = Atualizacao.objects.get(id=id)
-    if str(atual.arquivo)[-3:] == "csv":
-        dataframe = pd.read_csv(atual.arquivo)
-    else:
+    try:
         dataframe = pd.read_excel(atual.arquivo)
-    num = 0
-    m = 0
-    list = []
-    while num == 0:
-        for dado in dataframe.iloc[m]:
-            if "Hora" in str(dado):
-                num = 1
-        list.append(m)
-        m += 1
-    list.pop(list[-1])
-    dataframe = dataframe.drop(list, axis=0)
-    dataframe.columns = dataframe.loc[8]
-    dataframe = dataframe.drop([8], axis=0)
-    d_records = dataframe.to_dict("records")
-    pk = atual.estabelecimento.id
-    inserir_dados(request, d_records, pk)
-    atual.vigente = False
-    atual.delete()
-    return redirect('machine:createatualizacao')
+    except:
+        messages.warning(request, "Não foi possível abrir o arquivo")
+    else:
+        num = 0
+        m = 0
+        list = []
+        try:
+            while num == 0:
+                for dado in dataframe.iloc[m]:
+                    if "Hora" in str(dado):
+                        num = 1
+                list.append(m)
+                m += 1
+            list.pop(list[-1])
+        except:
+            messages.warning(request, "Não foi possível ler a coluna do arquivo")
+            return redirect('machine:createatualizacao')
+        else:
+            dataframe = dataframe.drop(list, axis=0)
+            dataframe.columns = dataframe.loc[8]
+            dataframe = dataframe.drop([8], axis=0)
+            d_records = dataframe.to_dict("records")
+            pk = atual.estabelecimento.id
+            try:
+                inserir_dados(request, d_records, pk)
+            except:
+                messages.warning(request, "Não foi possível inserir dados no banco de dados")
+                return redirect('machine:createatualizacao')
+            else:
+                atual.vigente = False
+                atual.delete()
+                messages.success(request, "Banco de dados atualizado com sucesso!")
+    finally:
+        return redirect('machine:createatualizacao')
 
 
 class PesquisaPdf(View):
@@ -507,5 +535,6 @@ def limpa_arquivo(request):
     usuario_logado = request.user
     vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado).filter(arquivado=True)
     vendas.delete()
+    messages.success(request, f"Todas as vendas do arquivo foram deletadas com sucesso!")
     return redirect('machine:readvendas')
 

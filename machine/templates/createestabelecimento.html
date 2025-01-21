@@ -16,6 +16,17 @@ Estabelecimento
       <div class="content-wrapper">
         <div class="row">
           <div class="col-12 grid-margin stretch-card">
+            {% if messages %}
+              {% for message in messages %}
+                <div class="alert alert-{% if message.tags %}{{ message.tags }}{% endif %}" role="alert">
+                  {{ message }}
+                </div>
+              {% endfor %}
+            {% endif %}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 grid-margin stretch-card">
             <div class="card">
               <div class="card-body">
                 <h4 class="card-title">Cadastre Novo Estabelecimento</h4>
@@ -25,9 +36,15 @@ Estabelecimento
                         <div class="form-group">
                           {{ form|crispy }}
                         </div>
-                        <a class="nav-link btn btn-inverse-primary btn-fw"
-                           href="{% url 'machine:readestabelecimentos' %}" role="button">Voltar</a>
-                        <button type="submit" class="nav-link btn btn-inverse-primary btn-fw" onclick="loading()">Cadastrar</button>
+                        <div class="row">
+                          <div class="col-6 col-sm-3">
+                            <a class="nav-link btn btn-inverse-primary btn-fw"
+                               href="{% url 'machine:readestabelecimentos' %}" role="button">Voltar</a>
+                          </div>
+                          <div class="col-6 col-sm-3">
+                            <button type="submit" class="nav-link btn btn-inverse-primary btn-fw" onclick="loading()">Cadastrar</button>
+                          </div>
+                        </div>
                     </fieldset>
                 </form>
               </div>
