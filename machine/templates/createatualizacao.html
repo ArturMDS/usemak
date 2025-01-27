@@ -10,6 +10,7 @@ Atualizações
       color: white;
     }
   </style>
+
 {% endblock %}
 {% block main %}
 {% include 'sidebar.html' %}
@@ -38,20 +39,20 @@ Atualizações
               <div class="card-body">
                 <h4 class="card-title">Cadastre atualização</h4>
                 <form class="forms-sample" method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <fieldset>
-                        <div class="form-group">
-                          {{ form|crispy }}
-                        </div>
-                        <button type="submit" class="nav-link btn btn-inverse-primary btn-fw" onclick="loading()">Cadastrar</button>
-                    </fieldset>
+                  {% csrf_token %}
+                  <fieldset>
+                    <div class="form-group">
+                      {{ form|crispy }}
+                    </div>
+                    <button type="submit" class="nav-link btn btn-inverse-primary btn-fw" onclick="loading()">Cadastrar</button>
+                  </fieldset>
                 </form>
               </div>
             </div>
           </div>
         </div>
         <div class="row">
-          <div class="col-lg-12 grid-margin stretch-card">
+          <div class="col-12 grid-margin stretch-card">
             <div class="card">
               <div class="card-body">
                 <h4 class="card-title">Atualizações</h4>
@@ -67,12 +68,12 @@ Atualizações
                       <tbody>
                       {% for vigente in vigentes %}
                         <tr>
-                            <td>{{ vigente.nome }}</td>
-                            <td>{{ vigente.estabelecimento }}</td>
-                            <td>
-                              <a class="nav-link btn btn-inverse-success btn-fw"
-                              href="{% url 'machine:create_dados' vigente.id %}" role="button" onclick="loading()">Sim</a>
-                            </td>
+                          <td>{{ vigente.nome }}</td>
+                          <td>{{ vigente.estabelecimento }}</td>
+                          <td>
+                            <a class="nav-link btn btn-inverse-success btn-fw"
+                            href="{% url 'machine:create_dados' vigente.id %}" role="button" onclick="loading()">Sim</a>
+                          </td>
                         </tr>
                       {% endfor %}
                       </tbody>

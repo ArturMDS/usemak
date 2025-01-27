@@ -201,6 +201,7 @@ Pendentes
                       <table class="table table-striped">
                         <thead>
                           <tr>
+                            <th> Bandeira </th>
                             <th> Forma </th>
                             <th> Quantidade </th>
                             <th> Valor Bruto </th>
@@ -213,9 +214,10 @@ Pendentes
                         <tbody>
                           {% if vendas.master.credito_vista %}
                           <tr>
-                            <td class="py-1">
-                              <img src="{% static 'images/Mastercard-Logo.png' %}" alt="image" />Crédito à vista
+                            <td>
+                              <span class="flag-icon flag-icon-amex"></span>
                             </td>
+                            <td>Crédito à vista</td>
                             <td> {{ vendas.master.credito_vista.count }} </td>
                             <td> R$ {{ vendas.master.credito_vista.total_bruto }} </td>
                             <td> %{{ vendas.master.credito_vista.last.bandeira.credito_vista }} </td>
@@ -226,9 +228,10 @@ Pendentes
                           {% endif %}
                           {% if vendas.master.credito_pre %}
                           <tr>
-                            <td class="py-1">
-                              <img src="{% static 'images/Mastercard-Logo.png' %}" alt="image" />Crédito Pré-pago
+                            <td>
+                              <span class="flag-icon flag-icon-mc"></span>
                             </td>
+                            <td>Crédito Pré-pago</td>
                             <td> {{ vendas.master.credito_pre.count }} </td>
                             <td> R$ {{ vendas.master.credito_pre.total_bruto }} </td>
                             <td> %{{ vendas.master.credito_pre.last.bandeira.credito_vista }} </td>
@@ -239,9 +242,10 @@ Pendentes
                           {% endif %}
                           {% if vendas.master.credito_moeda %}
                           <tr>
-                            <td class="py-1">
-                              <img src="{% static 'images/Mastercard-Logo.png' %}" alt="image" />Crédito Conv. Moeda
+                            <td>
+                              <span class="flag-icon flag-icon-mc"></span>
                             </td>
+                            <td>Crédito Conv. Moeda</td>
                             <td> {{ vendas.master.credito_moeda.count }} </td>
                             <td> R$ {{ vendas.master.credito_moeda.total_bruto }} </td>
                             <td> %{{ vendas.master.credito_moeda.last.bandeira.credito_vista }} </td>
@@ -252,9 +256,10 @@ Pendentes
                           {% endif %}
                           {% if vendas.master.credito_parcelado %}
                           <tr>
-                            <td class="py-1">
-                              <img src="{% static 'images/Mastercard-Logo.png' %}" alt="image" />Crédito Parcelado
+                            <td>
+                              <span class="flag-icon flag-icon-mc"></span>
                             </td>
+                            <td>Crédito Parcelado</td>
                             <td> {{ vendas.master.credito_parcelado.count }} </td>
                             <td> R$ {{ vendas.master.credito_parcelado.total_bruto }} </td>
                             <td> %{{ vendas.master.credito_parcelado.last.bandeira.credito_vista }} </td>
@@ -265,9 +270,10 @@ Pendentes
                           {% endif %}
                           {% if vendas.visa.credito_vista %}
                           <tr>
-                            <td class="py-1">
-                              <img src="{% static 'images/visa.png' %}" alt="image" />Crédito à vista
+                            <td>
+                              <span class="flag-icon flag-icon-visa"></span>
                             </td>
+                            <td>Crédito à vista</td>
                             <td> {{ vendas.visa.credito_vista.count }} </td>
                             <td> R$ {{ vendas.visa.credito_vista.total_bruto }} </td>
                             <td> %{{ vendas.visa.credito_vista.last.bandeira.credito_vista }} </td>
@@ -278,9 +284,10 @@ Pendentes
                           {% endif %}
                           {% if vendas.visa.credito_pre %}
                           <tr>
-                            <td class="py-1">
-                              <img src="{% static 'images/visa.png' %}" alt="image" />Crédito Pré-pago
+                            <td>
+                              <span class="flag-icon flag-icon-visa"></span>
                             </td>
+                            <td>Crédito Pré-pago</td>
                             <td> {{ vendas.visa.credito_pre.count }} </td>
                             <td> R$ {{ vendas.visa.credito_pre.total_bruto }} </td>
                             <td> %{{ vendas.visa.credito_pre.last.bandeira.credito_vista }} </td>
@@ -291,9 +298,10 @@ Pendentes
                           {% endif %}
                           {% if vendas.visa.credito_moeda %}
                           <tr>
-                            <td class="py-1">
-                              <img src="{% static 'images/visa.png' %}" alt="image" />Crédito Conv. Moeda
+                            <td>
+                              <span class="flag-icon flag-icon-visa"></span>
                             </td>
+                            <td>Crédito Conv. Moeda</td>
                             <td> {{ vendas.visa.credito_moeda.count }} </td>
                             <td> R$ {{ vendas.visa.credito_moeda.total_bruto }} </td>
                             <td> %{{ vendas.visa.credito_moeda.last.bandeira.credito_vista }} </td>
@@ -304,9 +312,10 @@ Pendentes
                           {% endif %}
                           {% if vendas.visa.credito_parcelado %}
                           <tr>
-                            <td class="py-1">
-                              <img src="{% static 'images/visa.png' %}" alt="image" />Crédito Parcelado
+                            <td>
+                              <span class="flag-icon flag-icon-visa"></span>
                             </td>
+                            <td>Crédito Parcelado</td>
                             <td> {{ vendas.visa.credito_parcelado.count }} </td>
                             <td> R$ {{ vendas.visa.credito_parcelado.total_bruto }} </td>
                             <td> %{{ vendas.visa.credito_parcelado.last.bandeira.credito_vista }} </td>
@@ -315,171 +324,184 @@ Pendentes
                             <td> R$ {{ vendas.visa.credito_parcelado.lucro_total }} </td>
                           </tr>
                           {% endif %}
-                            {% if vendas.amex.credito_vista %}
-                                <tr>
-                                    <td class="py-1">
-                                      <img src="{% static 'images/american.png' %}" alt="image" />Crédito à vista
-                                    </td>
-                                    <td> {{ vendas.amex.credito_vista.count }} </td>
-                                    <td> R$ {{ vendas.amex.credito_vista.total_bruto }} </td>
-                                    <td> % {{ vendas.amex.credito_vista.last.bandeira.credito_vista }} </td>
-                                    <td> R$ {{ vendas.amex.credito_vista.total_tarifa }} </td>
-                                    <td> R$ {{ vendas.amex.credito_vista.total_devido }} </td>
-                                    <td> R$ {{ vendas.amex.credito_vista.lucro_total }} </td>
-                                </tr>
-                            {% endif %}
-                            {% if vendas.amex.credito_pre %}
-                                <tr>
-                                    <td class="py-1">
-                                      <img src="{% static 'images/american.png' %}" alt="image" />Crédito Pré-pago
-                                    </td>
-                                    <td> {{ vendas.amex.credito_pre.count }} </td>
-                                    <td> R$ {{ ovendas.amex.credito_pre.total_bruto }} </td>
-                                    <td> % {{ vendas.amex.credito_pre.last.bandeira.credito_pre }} </td>
-                                    <td> R$ {{ vendas.amex.credito_pre.total_tarifa }} </td>
-                                    <td> R$ {{ vendas.amex.credito_pre.total_devido }} </td>
-                                    <td> R$ {{ vendas.amex.credito_pre.lucro_total }} </td>
-                                </tr>
+                          {% if vendas.amex.credito_vista %}
+                            <tr>
+                              <td>
+                                <span class="flag-icon flag-icon-visa"></span>
+                              </td>
+                              <td>Crédito à vista</td>
+                              <td> {{ vendas.amex.credito_vista.count }} </td>
+                              <td> R$ {{ vendas.amex.credito_vista.total_bruto }} </td>
+                              <td> % {{ vendas.amex.credito_vista.last.bandeira.credito_vista }} </td>
+                              <td> R$ {{ vendas.amex.credito_vista.total_tarifa }} </td>
+                              <td> R$ {{ vendas.amex.credito_vista.total_devido }} </td>
+                              <td> R$ {{ vendas.amex.credito_vista.lucro_total }} </td>
+                            </tr>
+                          {% endif %}
+                          {% if vendas.amex.credito_pre %}
+                            <tr>
+                              <td>
+                                <span class="flag-icon flag-icon-amex"></span>
+                              </td>
+                              <td>Crédito Pré-pago</td>
+                              <td> {{ vendas.amex.credito_pre.count }} </td>
+                              <td> R$ {{ ovendas.amex.credito_pre.total_bruto }} </td>
+                              <td> % {{ vendas.amex.credito_pre.last.bandeira.credito_pre }} </td>
+                              <td> R$ {{ vendas.amex.credito_pre.total_tarifa }} </td>
+                              <td> R$ {{ vendas.amex.credito_pre.total_devido }} </td>
+                              <td> R$ {{ vendas.amex.credito_pre.lucro_total }} </td>
+                            </tr>
                             {% endif %}
                             {% if vendas.amex.credito_moeda %}
-                                <tr>
-                                    <td class="py-1">
-                                      <img src="{% static 'images/american.png' %}" alt="image" />Crédito Conv. Moeda
-                                    </td>
-                                    <td> {{ vendas.amex.credito_moeda.count }} </td>
-                                    <td> R$ {{ vendas.amex.credito_moeda.total_bruto }} </td>
-                                    <td> % {{ vendas.amex.credito_moeda.last.bandeira.credito_moeda }} </td>
-                                    <td> R$ {{ vendas.amex.credito_moeda.total_tarifa }} </td>
-                                    <td> R$ {{ vendas.amex.credito_moeda.total_devido }} </td>
-                                    <td> R$ {{ vendas.amex.credito_moeda.lucro_total }} </td>
-                                </tr>
+                            <tr>
+                              <td>
+                                <span class="flag-icon flag-icon-amex"></span>
+                              </td>
+                              <td>Crédito Conv. Moeda</td>
+                              <td> {{ vendas.amex.credito_moeda.count }} </td>
+                              <td> R$ {{ vendas.amex.credito_moeda.total_bruto }} </td>
+                              <td> % {{ vendas.amex.credito_moeda.last.bandeira.credito_moeda }} </td>
+                              <td> R$ {{ vendas.amex.credito_moeda.total_tarifa }} </td>
+                              <td> R$ {{ vendas.amex.credito_moeda.total_devido }} </td>
+                              <td> R$ {{ vendas.amex.credito_moeda.lucro_total }} </td>
+                            </tr>
                             {% endif %}
                             {% if vendas.amex.credito_parcelado %}
-                                <tr>
-                                    <td class="py-1">
-                                      <img src="{% static 'images/american.png' %}" alt="image" />Crédito Parcelado
-                                    </td>
-                                    <td> {{ vendas.amex.credito_parcelado.count }} </td>
-                                    <td> R$ {{ vendas.amex.credito_parcelado.total_bruto }} </td>
-                                    <td> % {{ vendas.amex.credito_parcelado.last.bandeira.credito_2x }} </td>
-                                    <td> R$ {{ vendas.amex.credito_parcelado.total_tarifa }} </td>
-                                    <td> R$ {{ vendas.amex.credito_parcelado.total_devido }} </td>
-                                    <td> R$ {{ vendas.amex.credito_parcelado.lucro_total }} </td>
-                                </tr>
+                            <tr>
+                              <td>
+                                <span class="flag-icon flag-icon-amex"></span>
+                              </td>
+                              <td>Crédito Parcelado</td>
+                              <td> {{ vendas.amex.credito_parcelado.count }} </td>
+                              <td> R$ {{ vendas.amex.credito_parcelado.total_bruto }} </td>
+                              <td> % {{ vendas.amex.credito_parcelado.last.bandeira.credito_2x }} </td>
+                              <td> R$ {{ vendas.amex.credito_parcelado.total_tarifa }} </td>
+                              <td> R$ {{ vendas.amex.credito_parcelado.total_devido }} </td>
+                              <td> R$ {{ vendas.amex.credito_parcelado.lucro_total }} </td>
+                            </tr>
                             {% endif %}
                             {% if vendas.elo.credito_vista %}
-                                <tr>
-                                    <td class="py-1">
-                                      <img src="{% static 'images/elo.png' %}" alt="image" />Crédito à Vista
-                                    </td>
-                                    <td> {{ vendas.elo.credito_vista.count }} </td>
-                                    <td> R$ {{ vendas.elo.credito_vista.total_bruto }} </td>
-                                    <td> % {{ vendas.elo.credito_vista.last.bandeira.credito_vista }} </td>
-                                    <td> R$ {{ vendas.elo.credito_vista.total_tarifa }} </td>
-                                    <td> R$ {{ vendas.elo.credito_vista.total_devido }} </td>
-                                    <td> R$ {{ vendas.elo.credito_vista.lucro_total }} </td>
-                                </tr>
+                            <tr>
+                              <td>
+                                <span class="flag-icon flag-icon-elo"></span>
+                              </td>
+                              <td>Crédito à Vista</td>
+                              <td> {{ vendas.elo.credito_vista.count }} </td>
+                              <td> R$ {{ vendas.elo.credito_vista.total_bruto }} </td>
+                              <td> % {{ vendas.elo.credito_vista.last.bandeira.credito_vista }} </td>
+                              <td> R$ {{ vendas.elo.credito_vista.total_tarifa }} </td>
+                              <td> R$ {{ vendas.elo.credito_vista.total_devido }} </td>
+                              <td> R$ {{ vendas.elo.credito_vista.lucro_total }} </td>
+                            </tr>
                             {% endif %}
                             {% if vendas.elo.credito_pre %}
-                                <tr>
-                                    <td class="py-1">
-                                      <img src="{% static 'images/elo.png' %}" alt="image" />Crédito Pré-pago
-                                    </td>
-                                    <td> {{ vendas.elo.credito_pre.count }} </td>
-                                    <td> R$ {{ vendas.elo.credito_pre.total_bruto }} </td>
-                                    <td> %{{ vendas.elo.credito_pre.last.bandeira.credito_pre }} </td>
-                                    <td> R$ {{ vendas.elo.credito_pre.total_tarifa }} </td>
-                                    <td> R$ {{ vendas.elo.credito_pre.total_devido }} </td>
-                                    <td> R$ {{ vendas.elo.credito_pre.lucro_total }} </td>
-                                </tr>
+                            <tr>
+                              <td>
+                                <span class="flag-icon flag-icon-elo"></span>
+                              </td>
+                              <td>Crédito Pré-pago</td>
+                              <td> {{ vendas.elo.credito_pre.count }} </td>
+                              <td> R$ {{ vendas.elo.credito_pre.total_bruto }} </td>
+                              <td> %{{ vendas.elo.credito_pre.last.bandeira.credito_pre }} </td>
+                              <td> R$ {{ vendas.elo.credito_pre.total_tarifa }} </td>
+                              <td> R$ {{ vendas.elo.credito_pre.total_devido }} </td>
+                              <td> R$ {{ vendas.elo.credito_pre.lucro_total }} </td>
+                            </tr>
                             {% endif %}
                             {% if vendas.elo.credito_moeda %}
-                                <tr>
-                                    <td class="py-1">
-                                      <img src="{% static 'images/elo.png' %}" alt="image" />Crédito Conv. Moeda
-                                    </td>
-                                    <td> {{ vendas.elo.credito_moeda.count }} </td>
-                                    <td> R$ {{ vendas.elo.credito_moeda.total_bruto }} </td>
-                                    <td> % {{ vendas.elo.credito_moeda.last.bandeira.credito_moeda }} </td>
-                                    <td> R$ {{ vendas.elo.credito_moeda.total_tarifa }} </td>
-                                    <td> R$ {{ vendas.elo.credito_moeda.total_devido }} </td>
-                                    <td> R$ {{ vendas.elo.credito_moeda.lucro_total }} </td>
-                                </tr>
+                            <tr>
+                              <td>
+                                <span class="flag-icon flag-icon-elo"></span>
+                              </td>
+                              <td>Crédito Conv. Moeda</td>
+                              <td> {{ vendas.elo.credito_moeda.count }} </td>
+                              <td> R$ {{ vendas.elo.credito_moeda.total_bruto }} </td>
+                              <td> % {{ vendas.elo.credito_moeda.last.bandeira.credito_moeda }} </td>
+                              <td> R$ {{ vendas.elo.credito_moeda.total_tarifa }} </td>
+                              <td> R$ {{ vendas.elo.credito_moeda.total_devido }} </td>
+                              <td> R$ {{ vendas.elo.credito_moeda.lucro_total }} </td>
+                            </tr>
                             {% endif %}
                             {% if vendas.elo.credito_parcelado %}
-                                <tr>
-                                    <td class="py-1">
-                                      <img src="{% static 'images/elo.png' %}" alt="image" />Crédito Parcelado
-                                    </td>
-                                    <td> {{ vendas.elo.credito_parcelado.count }} </td>
-                                    <td> R$ {{ vendas.elo.credito_parcelado.total_bruto }} </td>
-                                    <td> % {{ vendas.elo.credito_parcelado.last.bandeira.credito_2x }} </td>
-                                    <td> R$ {{ vendas.elo.credito_parcelado.total_tarifa }} </td>
-                                    <td> R$ {{ vendas.elo.credito_parcelado.total_devido }} </td>
-                                    <td> R$ {{ vendas.elo.credito_parcelado.lucro_total }} </td>
-                                </tr>
+                            <tr>
+                              <td>
+                                <span class="flag-icon flag-icon-elo"></span>
+                              </td>
+                              <td>Crédito Parcelado</td>
+                              <td> {{ vendas.elo.credito_parcelado.count }} </td>
+                              <td> R$ {{ vendas.elo.credito_parcelado.total_bruto }} </td>
+                              <td> % {{ vendas.elo.credito_parcelado.last.bandeira.credito_2x }} </td>
+                              <td> R$ {{ vendas.elo.credito_parcelado.total_tarifa }} </td>
+                              <td> R$ {{ vendas.elo.credito_parcelado.total_devido }} </td>
+                              <td> R$ {{ vendas.elo.credito_parcelado.lucro_total }} </td>
+                            </tr>
                             {% endif %}
                             {% if vendas.hiper.credito_vista %}
-                                <tr>
-                                    <td class="py-1">
-                                      <img src="{% static 'images/hipercard.png' %}" alt="image" />Crédito à Vista
-                                    </td>
-                                    <td> {{ vendas.hiper.credito_vista.count }} </td>
-                                    <td> R$ {{ vendas.hiper.credito_vista.total_bruto }} </td>
-                                    <td> % {{ vendas.hiper.credito_vista.last.bandeira.credito_vista }} </td>
-                                    <td> R$ {{ vendas.hiper.credito_vista.total_tarifa }} </td>
-                                    <td> R$ {{ vendas.hiper.credito_vista.total_devido }} </td>
-                                    <td> R$ {{ vendas.hiper.credito_vista.lucro_total }} </td>
-                                </tr>
+                            <tr>
+                              <td>
+                                <span class="flag-icon flag-icon-hc"></span>
+                              </td>
+                              <td>Crédito à Vista</td>
+                              <td> {{ vendas.hiper.credito_vista.count }} </td>
+                              <td> R$ {{ vendas.hiper.credito_vista.total_bruto }} </td>
+                              <td> % {{ vendas.hiper.credito_vista.last.bandeira.credito_vista }} </td>
+                              <td> R$ {{ vendas.hiper.credito_vista.total_tarifa }} </td>
+                              <td> R$ {{ vendas.hiper.credito_vista.total_devido }} </td>
+                              <td> R$ {{ vendas.hiper.credito_vista.lucro_total }} </td>
+                            </tr>
                             {% endif %}
                             {% if vendas.hiper.credito_pre %}
-                                <tr>
-                                    <td class="py-1">
-                                      <img src="{% static 'images/hipercard.png' %}" alt="image" />Crédito Pré-pago
-                                    </td>
-                                    <td> {{ vendas.hiper.credito_pre.count }} </td>
-                                    <td> R$ {{ vendas.hiper.credito_pre.total_bruto }} </td>
-                                    <td> % {{ vendas.hiper.credito_pre.last.bandeira.credito_pre }} </td>
-                                    <td> R$ {{ vendas.hiper.credito_pre.total_tarifa }} </td>
-                                    <td> R$ {{ vendas.hiper.credito_pre.total_devido }} </td>
-                                    <td> R$ {{ vendas.hiper.credito_pre.lucro_total }} </td>
-                                </tr>
+                            <tr>
+                              <td>
+                                <span class="flag-icon flag-icon-hc"></span>
+                              </td>
+                              <td>Crédito Pré-pago</td>
+                              <td> {{ vendas.hiper.credito_pre.count }} </td>
+                              <td> R$ {{ vendas.hiper.credito_pre.total_bruto }} </td>
+                              <td> % {{ vendas.hiper.credito_pre.last.bandeira.credito_pre }} </td>
+                              <td> R$ {{ vendas.hiper.credito_pre.total_tarifa }} </td>
+                              <td> R$ {{ vendas.hiper.credito_pre.total_devido }} </td>
+                              <td> R$ {{ vendas.hiper.credito_pre.lucro_total }} </td>
+                            </tr>
                             {% endif %}
                             {% if vendas.hiper.credito_moeda %}
-                                <tr>
-                                    <td class="py-1">
-                                      <img src="{% static 'images/hipercard.png' %}" alt="image" />Crédito Conv. Moeda
-                                    </td>
-                                    <td>{{ vendas.hiper.credito_moeda.count }}</td>
-                                    <td>R$ {{ vendas.hiper.credito_moeda.total_bruto }}</td>
-                                    <td>%{{ vendas.hiper.credito_moeda.last.bandeira.credito_moeda }}</td>
-                                    <td>R$ {{ vendas.hiper.credito_moeda.total_tarifa }}</td>
-                                    <td>R$ {{ vendas.hiper.credito_moeda.total_devido }}</td>
-                                    <td>R$ {{ vendas.hiper.credito_moeda.lucro_total }}</td>
-                                </tr>
+                            <tr>
+                              <td>
+                                <span class="flag-icon flag-icon-hc"></span>
+                              </td>
+                              <td>Crédito Conv. Moeda</td>
+                              <td>{{ vendas.hiper.credito_moeda.count }}</td>
+                              <td>R$ {{ vendas.hiper.credito_moeda.total_bruto }}</td>
+                              <td>%{{ vendas.hiper.credito_moeda.last.bandeira.credito_moeda }}</td>
+                              <td>R$ {{ vendas.hiper.credito_moeda.total_tarifa }}</td>
+                              <td>R$ {{ vendas.hiper.credito_moeda.total_devido }}</td>
+                              <td>R$ {{ vendas.hiper.credito_moeda.lucro_total }}</td>
+                            </tr>
                             {% endif %}
                             {% if vendas.hiper.credito_parcelado %}
-                                <tr>
-                                    <td class="py-1">
-                                      <img src="{% static 'images/hipercard.png' %}" alt="image" />Crédito Parcelado
-                                    </td>
-                                    <td>{{ vendas.hiper.credito_parcelado.count }}</td>
-                                    <td>R$ {{ vendas.hiper.credito_parcelado.total_bruto }}</td>
-                                    <td>%{{ vendas.hiper.credito_parcelado.last.bandeira.credito_2x }}</td>
-                                    <td>R$ {{ vendas.hiper.credito_parcelado.total_tarifa }}</td>
-                                    <td>R$ {{ vendas.hiper.credito_parcelado.total_devido }}</td>
-                                    <td>R$ {{ vendas.hiper.credito_parcelado.lucro_total }}</td>
-                                </tr>
+                              <tr>
+                                <td>
+                                <span class="flag-icon flag-icon-hc"></span>
+                              </td>
+                              <td>Crédito Parcelado</td>
+                                <td>{{ vendas.hiper.credito_parcelado.count }}</td>
+                                <td>R$ {{ vendas.hiper.credito_parcelado.total_bruto }}</td>
+                                <td>%{{ vendas.hiper.credito_parcelado.last.bandeira.credito_2x }}</td>
+                                <td>R$ {{ vendas.hiper.credito_parcelado.total_tarifa }}</td>
+                                <td>R$ {{ vendas.hiper.credito_parcelado.total_devido }}</td>
+                                <td>R$ {{ vendas.hiper.credito_parcelado.lucro_total }}</td>
+                              </tr>
                             {% endif %}
                             {% if vendas.credito %}
                                 <tr>
-                                    <td><b>Total</b></td>
-                                    <td>{{ vendas.credito.count }}</td>
-                                    <td>R$ {{ vendas.credito.total_bruto }}</td>
-                                    <td>Variável</td>
-                                    <td>R$ {{ vendas.credito.total_tarifa }}</td>
-                                    <td>R$ {{ vendas.credito.total_devido }}</td>
-                                    <td>R$ {{ vendas.credito.lucro_total }}</td>
+                                  <td><b>---</b></td>
+                                  <td><b>Total</b></td>
+                                  <td>{{ vendas.credito.count }}</td>
+                                  <td>R$ {{ vendas.credito.total_bruto }}</td>
+                                  <td>Variável</td>
+                                  <td>R$ {{ vendas.credito.total_tarifa }}</td>
+                                  <td>R$ {{ vendas.credito.total_devido }}</td>
+                                  <td>R$ {{ vendas.credito.lucro_total }}</td>
                                 </tr>
                             {% endif %}
                         </tbody>
@@ -513,6 +535,7 @@ Pendentes
                       <table class="table table-striped">
                         <thead>
                           <tr>
+                            <th> Bandeira </th>
                             <th> Forma </th>
                             <th> Quantidade </th>
                             <th> Valor Bruto </th>
@@ -524,80 +547,86 @@ Pendentes
                         </thead>
                         <tbody>
                         {% if vendas.master.debito %}
-                            <tr>
-                                <td class="py-1">
-                                  <img src="{% static 'images/Mastercard-Logo.png' %}" alt="image" />Débito
-                                </td>
-                                <td>{{ vendas.master.debito.count }}</td>
-                                <td>R$ {{ vendas.master.debito.total_bruto }}</td>
-                                <td>%{{ vendas.master.debito.last.bandeira.debito_vista }}</td>
-                                <td>R$ {{ vendas.master.debito.total_tarifa }}</td>
-                                <td>R$ {{ vendas.master.debito.total_devido }}</td>
-                                <td>R$ {{ vendas.master.debito.lucro_total }}</td>
-                            </tr>
+                        <tr>
+                          <td>
+                            <span class="flag-icon flag-icon-mc"></span>
+                          </td>
+                          <td>Débito</td>
+                          <td>{{ vendas.master.debito.count }}</td>
+                          <td>R$ {{ vendas.master.debito.total_bruto }}</td>
+                          <td>%{{ vendas.master.debito.last.bandeira.debito_vista }}</td>
+                          <td>R$ {{ vendas.master.debito.total_tarifa }}</td>
+                          <td>R$ {{ vendas.master.debito.total_devido }}</td>
+                          <td>R$ {{ vendas.master.debito.lucro_total }}</td>
+                        </tr>
                         {% endif %}
                         {% if vendas.visa.debito %}
-                            <tr>
-                                <td class="py-1">
-                                  <img src="{% static 'images/visa.png' %}" alt="image" />Débito
-                                </td>
-                                <td>{{ vendas.visa.debito.count }}</td>
-                                <td>R$ {{ vendas.visa.debito.total_bruto }}</td>
-                                <td>%{{ vendas.visa.debito.last.bandeira.debito_vista }}</td>
-                                <td>R$ {{ vendas.visa.debito.total_tarifa }}</td>
-                                <td>R$ {{ vendas.visa.debito.total_devido }}</td>
-                                <td>R$ {{ vendas.visa.debito.lucro_total }}</td>
-                            </tr>
+                        <tr>
+                          <td>
+                            <span class="flag-icon flag-icon-visa"></span>
+                          </td>
+                          <td>Débito</td>
+                          <td>{{ vendas.visa.debito.count }}</td>
+                          <td>R$ {{ vendas.visa.debito.total_bruto }}</td>
+                          <td>%{{ vendas.visa.debito.last.bandeira.debito_vista }}</td>
+                          <td>R$ {{ vendas.visa.debito.total_tarifa }}</td>
+                          <td>R$ {{ vendas.visa.debito.total_devido }}</td>
+                          <td>R$ {{ vendas.visa.debito.lucro_total }}</td>
+                        </tr>
                         {% endif %}
                         {% if vendas.amex.debito %}
-                            <tr>
-                                <td class="py-1">
-                                  <img src="{% static 'images/american.png' %}" alt="image" />Débito
-                                </td>
-                                <td>{{ vendas.amex.debito.count }}</td>
-                                <td>R$ {{ vendas.amex.debito.total_bruto }}</td>
-                                <td>%{{ vendas.amex.debito.last.bandeira.debito_vista }}</td>
-                                <td>R$ {{ vendas.amex.debito.total_tarifa }}</td>
-                                <td>R$ {{ vendas.amex.debito.total_devido }}</td>
-                                <td>R$ {{ vendas.amex.debito.lucro_total }}</td>
-                            </tr>
+                        <tr>
+                          <td>
+                            <span class="flag-icon flag-icon-amex"></span>
+                          </td>
+                          <td>Débito</td>
+                          <td>{{ vendas.amex.debito.count }}</td>
+                          <td>R$ {{ vendas.amex.debito.total_bruto }}</td>
+                          <td>%{{ vendas.amex.debito.last.bandeira.debito_vista }}</td>
+                          <td>R$ {{ vendas.amex.debito.total_tarifa }}</td>
+                          <td>R$ {{ vendas.amex.debito.total_devido }}</td>
+                          <td>R$ {{ vendas.amex.debito.lucro_total }}</td>
+                        </tr>
                         {% endif %}
                         {% if vendas.elo.debito %}
-                            <tr>
-                                <td class="py-1">
-                                  <img src="{% static 'images/elo.png' %}" alt="image" />Débito
-                                </td>
-                                <td>{{ vendas.elo.debito.count }}</td>
-                                <td>R$ {{ vendas.elo.debito.total_bruto }}</td>
-                                <td>%{{ vendas.elo.debito.last.bandeira.debito_vista }}</td>
-                                <td>R$ {{ vendas.elo.debito.total_tarifa }}</td>
-                                <td>R$ {{ vendas.elo.debito.total_devido }}</td>
-                                <td>R$ {{ vendas.elo.debito.lucro_total }}</td>
-                            </tr>
+                        <tr>
+                          <td>
+                            <span class="flag-icon flag-icon-elo"></span>
+                          </td>
+                          <td>Débito</td>
+                          <td>{{ vendas.elo.debito.count }}</td>
+                          <td>R$ {{ vendas.elo.debito.total_bruto }}</td>
+                          <td>%{{ vendas.elo.debito.last.bandeira.debito_vista }}</td>
+                          <td>R$ {{ vendas.elo.debito.total_tarifa }}</td>
+                          <td>R$ {{ vendas.elo.debito.total_devido }}</td>
+                          <td>R$ {{ vendas.elo.debito.lucro_total }}</td>
+                        </tr>
                         {% endif %}
                         {% if vendas.hiper.debito %}
-                            <tr>
-                                <td class="py-1">
-                                  <img src="{% static 'images/hipercard.png' %}" alt="image" />Débito
-                                </td>
-                                <td>{{ vendas.hiper.debito.count }}</td>
-                                <td>R$ {{ vendas.hiper.debito.total_bruto }}</td>
-                                <td>%{{ vendas.hiper.debito.last.bandeira.debito_vista }}</td>
-                                <td>R$ {{ vendas.hiper.debito.total_tarifa }}</td>
-                                <td>R$ {{ vendas.hiper.debito.total_devido }}</td>
-                                <td>R$ {{ vendas.hiper.debito.lucro_total }}</td>
-                            </tr>
+                        <tr>
+                          <td>
+                            <span class="flag-icon flag-icon-hc"></span>
+                          </td>
+                          <td>Débito</td>
+                          <td>{{ vendas.hiper.debito.count }}</td>
+                          <td>R$ {{ vendas.hiper.debito.total_bruto }}</td>
+                          <td>%{{ vendas.hiper.debito.last.bandeira.debito_vista }}</td>
+                          <td>R$ {{ vendas.hiper.debito.total_tarifa }}</td>
+                          <td>R$ {{ vendas.hiper.debito.total_devido }}</td>
+                          <td>R$ {{ vendas.hiper.debito.lucro_total }}</td>
+                        </tr>
                         {% endif %}
                         {% if vendas.debito %}
-                            <tr>
-                                <td><b>Total</b></td>
-                                <td>{{ vendas.debito.count }}</td>
-                                <td>R$ {{ vendas.debito.total_bruto }}</td>
-                                <td>Variável</td>
-                                <td>R$ {{ vendas.debito.total_tarifa }}</td>
-                                <td>R$ {{ vendas.debito.total_devido }}</td>
-                                <td>R$ {{ vendas.debito.lucro_total }}</td>
-                            </tr>
+                        <tr>
+                          <td><b>---</b></td>
+                          <td><b>Total</b></td>
+                          <td>{{ vendas.debito.count }}</td>
+                          <td>R$ {{ vendas.debito.total_bruto }}</td>
+                          <td>Variável</td>
+                          <td>R$ {{ vendas.debito.total_tarifa }}</td>
+                          <td>R$ {{ vendas.debito.total_devido }}</td>
+                          <td>R$ {{ vendas.debito.lucro_total }}</td>
+                        </tr>
                         {% endif %}
                         </tbody>
                       </table>
