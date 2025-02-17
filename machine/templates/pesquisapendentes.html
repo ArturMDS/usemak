@@ -677,16 +677,30 @@ Pendentes
                         </tbody>
                       </table>
                       <br>
-                      <div class="center">
-                        <form method="get" action="{% url 'machine:pesquisa_pdf' %}">
-                            {% csrf_token %}
-                            <fieldset>
-                                <input type="hidden" name="data_inicio" value="{{ inicio }}">
-                                <input type="hidden" name="data_fim" value="{{ fim }}">
-                                <input type="hidden" name="estabelecimento" value="{{ vendas.first.estabelecimento }}">
-                                <button type="submit" class="btn btn-inverse-warning btn-icon"><i class="mdi mdi-file-pdf-box"></i></button>
-                            </fieldset>
-                        </form>
+                      <div class="center" style="display: flex; justify-content: center;">
+                        <div class="row">
+                          <form method="get" action="{% url 'machine:pesquisa_pdf' %}">
+                              {% csrf_token %}
+                              <fieldset>
+                                  <input type="hidden" name="data_inicio" value="{{ inicio }}">
+                                  <input type="hidden" name="data_fim" value="{{ fim }}">
+                                  <input type="hidden" name="estabelecimento" value="{{ vendas.first.estabelecimento }}">
+                                  <button type="submit" class="nav-link btn btn-inverse-warning btn-fw">Relatório</button>
+                              </fieldset>
+                          </form>
+                        </div>
+                        <div class="row ml-5">
+                          <form method="get" action="{% url 'machine:pesquisa_detalhada_pdf' %}">
+                              {% csrf_token %}
+                              <fieldset>
+                                  <input type="hidden" name="data_inicio" value="{{ inicio }}">
+                                  <input type="hidden" name="data_fim" value="{{ fim }}">
+                                  <input type="hidden" name="estabelecimento" value="{{ vendas.first.estabelecimento }}">
+                                  <input type="hidden" name="operadora" value="{{ operadora }}">
+                                  <button type="submit" class="nav-link btn btn-inverse-warning btn-fw">Relatório Detalhado</button>
+                              </fieldset>
+                          </form>
+                        </div>
                       </div>
                     </div>
                   </div>

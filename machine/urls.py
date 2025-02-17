@@ -20,6 +20,7 @@ from .views import (confirma_pgto,
                     create_dados,
                     ajusta_contestados,
                     PesquisaPdf,
+                    PesquisaDetalhadaPdf,
                     limpa_arquivo)
 
 
@@ -36,6 +37,7 @@ urlpatterns = [
     path('pendentes', Dashboardpendentes.as_view(), name='dashboardpendentes'),
     path('pendentes/pesquisa', PesquisaPendentes.as_view(), name='pesquisapendentes'),
     path('pendentes/pesquisa/pdf', PesquisaPdf.as_view(), name='pesquisa_pdf'),
+    path('pendentes/pesquisa_detalhada/pdf', PesquisaDetalhadaPdf.as_view(), name='pesquisa_detalhada_pdf'),
     path('read/estabelecimento', Readestabelecimento.as_view(), name='readestabelecimentos'),
     path('read/vendas', Readvendas.as_view(), name='readvendas'),
     path('create/venda', Createvenda.as_view(), name='createvenda'),

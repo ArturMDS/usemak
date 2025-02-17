@@ -100,7 +100,7 @@ class Venda(models.Model):
     objects = VendasManager()
 
     def __str__(self):
-        return str(self.data_venda) + " - " + self.nr_maquina + " - " + str(self.valor_bruto)
+        return str(self.data_venda) + " - " + str(self.tipo) + " - " + str(self.valor_bruto)
 
 
 class Atualizacao(models.Model):

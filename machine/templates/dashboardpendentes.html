@@ -51,16 +51,23 @@ Pendentes
                 <form class="form-inline" method="get" action="{% url 'machine:pesquisapendentes' %}">
                     {% csrf_token %}
                     <fieldset>
-                        <div class="input-group mb-2 mr-sm-2">
-                            <div class="input-group-prepend">
+                        <div class="form-group">
+                            <div class="form-group">
                                 <label class="sr-only" for="dt_in">Data Inicial</label>
                                 <input type="text" class="form-control" name="data_inicio" id="dt_in" size="10" placeholder="dd/mm/aaaa">
                             </div>
-                            <div class="input-group-prepend">
-                                <div class="input-group-text" style="color: white;">Até</div>
+                            <div class="form-group">
+                                <div class="input-group-text ml-2">Até</div>
                                 <label class="sr-only" for="dt_fm">Data Final</label>
-                                <input type="text" class="form-control" name="data_fim" id="dt_fm" size="10" placeholder="dd/mm/aaaa">
+                                <input type="text" class="form-control ml-2" name="data_fim" id="dt_fm" size="10" placeholder="dd/mm/aaaa">
                             </div>
+                            <div class="form-group ml-2">
+                                <select class="form-control" name="operadora" id="op">
+                                    {% for operadora in operadoras %}
+                                        <option>{{ operadora.nome }}</option>
+                                    {% endfor %}
+                                </select>
+                              </div>
                             <button type="submit" class="nav-link ml-1 btn btn-inverse-primary btn-fw" onclick="loading()">Pesquisar</button>
                         </div>
                     </fieldset>

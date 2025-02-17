@@ -19,7 +19,7 @@ from .models import (Venda,
 from .forms import FormHomepage, CreateAtualizacaoForm
 import pandas as pd
 from datetime import datetime, timedelta, date
-from .functions import inserir_dados
+from .functions import inserir_dados_cielo, inserir_dados_cpay
 from django.http import HttpResponse
 from django.template.loader import get_template
 import xhtml2pdf.pisa as pisa
@@ -89,10 +89,12 @@ class Dashboardpendentes(TemplateView):
         for estab in Estabelecimento.objects.filter(usuario=usuario_logado):
             querys[f"vendas{num}"] = total_vendas.filter(estabelecimento=estab)
             num += 1
+        operadoras = Operadora.objects.all()
         estabelecimentos = querys.values()
         context["usuario_logado"] = usuario_logado
         context["total_vendas"] = total_vendas
         context["estabelecimentos"] = estabelecimentos
+        context["operadoras"] = operadoras
         return context
 
 
@@ -133,29 +135,33 @@ class PesquisaPendentes(ListView):
             self.request.session['data_inicio'] = inicio
             self.request.session['data_fim'] = fim
             usuario_logado = self.request.user
+            operadora = self.request.GET.get('operadora')
             if (len(inicio) == 10) and (len(fim) == 10):
                 data_inicio = date(year=int(inicio[6:10]), month=int(inicio[3:5]), day=int(inicio[0:2]))
                 data_fim = date(year=int(fim[6:10]), month=int(fim[3:5]), day=int(fim[0:2]))
                 object_list = (Venda.objects.filter(estabelecimento__usuario=usuario_logado).pendente()
-                               .filter(data_venda__range=(data_inicio, data_fim)).order_by('data_venda'))
+                               .filter(data_venda__range=(data_inicio, data_fim))
+                               .filter(bandeira__operadora__nome=operadora).order_by('data_venda'))
                 return object_list
             else:
                 object_list = Venda.objects.filter(estabelecimento__usuario=usuario_logado).filter(pago=False).filter(
-                    contesta=False).order_by('data_venda')
+                    contesta=False).filter(bandeira__operadora__nome=operadora).order_by('data_venda')
                 return object_list
         else:
             inicio = self.request.session.get('data_inicio')
             fim = self.request.session.get('data_fim')
+            operadora = self.request.GET.get('operadora')
             usuario_logado = self.request.user
             if (len(inicio) == 10) and (len(fim) == 10):
                 data_inicio = date(year=int(inicio[6:10]), month=int(inicio[3:5]), day=int(inicio[0:2]))
                 data_fim = date(year=int(fim[6:10]), month=int(fim[3:5]), day=int(fim[0:2]))
                 object_list = (Venda.objects.filter(estabelecimento__usuario=usuario_logado).pendente()
-                               .filter(data_venda__range=(data_inicio, data_fim)).order_by('data_venda'))
+                               .filter(data_venda__range=(data_inicio, data_fim))
+                               .filter(bandeira__operadora__nome=operadora).order_by('data_venda'))
                 return object_list
             else:
                 object_list = Venda.objects.filter(estabelecimento__usuario=usuario_logado).filter(pago=False).filter(
-                    contesta=False).order_by('data_venda')
+                    contesta=False).filter(bandeira__operadora__nome=operadora).order_by('data_venda')
                 return object_list
 
     def get_context_data(self, **kwargs):
@@ -167,16 +173,19 @@ class PesquisaPendentes(ListView):
             inicio = self.request.session.get('data_inicio')
             fim = self.request.session.get('data_fim')
         usuario_logado = self.request.user
+        operadora = self.request.GET.get('operadora')
         if (len(inicio) == 10) and (len(fim) == 10):
             data_inicio = date(year=int(inicio[6:10]), month=int(inicio[3:5]), day=int(inicio[0:2]))
             data_fim1 = date(year=int(fim[6:10]), month=int(fim[3:5]), day=int(fim[0:2]))
             d = timedelta(seconds=60*60*24)
             data_fim = data_fim1 + d
             total_vendas = (Venda.objects.filter(estabelecimento__usuario=usuario_logado).pendente()
-                            .filter(data_venda__range=(data_inicio, data_fim)).order_by('data_venda'))
+                            .filter(data_venda__range=(data_inicio, data_fim))
+                            .filter(bandeira__operadora__nome=operadora).order_by('data_venda'))
         else:
-            total_vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado).filter(pago=False).filter(
-                contesta=False).order_by('data_venda')
+            total_vendas = (Venda.objects.filter(estabelecimento__usuario=usuario_logado)
+                            .filter(bandeira__operadora__nome=operadora)
+                            .filter(pago=False).filter(contesta=False).order_by('data_venda'))
         querys = {}
         num = 0
         for estab in Estabelecimento.objects.filter(usuario=usuario_logado):
@@ -184,6 +193,7 @@ class PesquisaPendentes(ListView):
             num += 1
         estabelecimentos = querys.values()
         context["total_vendas"] = total_vendas
+        context["operadora"] = operadora
         context["estabelecimentos"] = estabelecimentos
         if (len(inicio) == 10) and (len(fim) == 10):
             context["inicio"] = inicio
@@ -474,6 +484,7 @@ def create_dados(request, id):
     else:
         num = 0
         m = 0
+        operadora = ''
         list = []
         try:
             while num == 0:
@@ -483,24 +494,53 @@ def create_dados(request, id):
                 list.append(m)
                 m += 1
             list.pop(list[-1])
+            num = 0
+            while num == 0:
+                for dado in dataframe.iloc[m]:
+                    if "C6Pay" in str(dado):
+                        num = 1
+                        operadora = 'C6Pay'
+                    elif "Cielo" in str(dado):
+                        num = 1
+                        operadora = 'Cielo'
+                m += 1
         except:
             messages.warning(request, "Não foi possível ler a coluna do arquivo")
             return redirect('machine:createatualizacao')
         else:
-            dataframe = dataframe.drop(list, axis=0)
-            dataframe.columns = dataframe.loc[8]
-            dataframe = dataframe.drop([8], axis=0)
-            d_records = dataframe.to_dict("records")
-            pk = atual.estabelecimento.id
-            try:
-                inserir_dados(request, d_records, pk)
-            except:
-                messages.warning(request, "Não foi possível inserir dados no banco de dados")
-                return redirect('machine:createatualizacao')
-            else:
-                atual.vigente = False
-                atual.delete()
-                messages.success(request, "Banco de dados atualizado com sucesso!")
+            if operadora == 'Cielo':
+                dataframe = dataframe.drop(list, axis=0)
+                dataframe.columns = dataframe.loc[8]
+                dataframe = dataframe.drop([8], axis=0)
+                d_records = dataframe.to_dict("records")
+                pk = atual.estabelecimento.id
+                try:
+                    inserir_dados_cielo(request, d_records, pk, operadora)
+                except:
+                    messages.warning(request, "Não foi possível inserir dados no banco de dados")
+                    return redirect('machine:createatualizacao')
+                else:
+                    atual.vigente = False
+                    atual.delete()
+                    messages.success(request, "Banco de dados atualizado com sucesso!")
+            elif operadora == 'C6Pay':
+                dataframe = dataframe.drop(list, axis=0)
+                dataframe.columns = dataframe.loc[2]
+                dataframe = dataframe.drop([2], axis=0)
+                dataframe = dataframe[dataframe['Status da venda'] != 'Recusada']
+                dataframe = dataframe[dataframe['Status da venda'] != 'Devolvida']
+                dataframe = dataframe[dataframe['Tipo de operação'] != 'Pix']
+                d_records = dataframe.to_dict("records")
+                pk = atual.estabelecimento.id
+                try:
+                    inserir_dados_cpay(request, d_records, pk, operadora)
+                except:
+                    messages.warning(request, "Não foi possível inserir dados no banco de dados")
+                    return redirect('machine:createatualizacao')
+                else:
+                    atual.vigente = False
+                    atual.delete()
+                    messages.success(request, "Banco de dados atualizado com sucesso!")
     finally:
         return redirect('machine:createatualizacao')
 
@@ -529,6 +569,39 @@ class PesquisaPdf(View):
             'request': request,
         }
         return Render.render('pesquisa_pdf.html', params, f'{estabelecimento}')
+
+
+class PesquisaDetalhadaPdf(View):
+
+    def get(self, request, *args, **kwargs):
+        if request.GET.get('data_inicio') and request.GET.get('data_fim'):
+            inicio = request.GET.get('data_inicio')
+            fim = request.GET.get('data_fim')
+            data_inicio = date(year=int(inicio[6:10]), month=int(inicio[3:5]), day=int(inicio[0:2]))
+            data_fim1 = date(year=int(fim[6:10]), month=int(fim[3:5]), day=int(fim[0:2]))
+            d = timedelta(seconds=60 * 60 * 24)
+            data_fim = data_fim1 + d
+            vendas_dia = []
+            usuario_logado = self.request.user
+            operadora = request.GET.get('operadora')
+            estabelecimento = request.GET.get('estabelecimento')
+            num = data_fim.day - data_inicio.day
+            while num != 0:
+                dia = data_fim.day - num
+                data = date(year=int(inicio[6:10]), month=int(inicio[3:5]), day=dia)
+                vendas_dia.append(Venda.objects.filter(estabelecimento__usuario=usuario_logado)
+                                  .filter(estabelecimento__razao_social=estabelecimento)
+                                  .filter(bandeira__operadora__nome=operadora).pendente()
+                                  .filter(data_venda__date=data))
+                num -= 1
+        params = {
+            'vendas_dia': vendas_dia,
+            'estabelecimento': estabelecimento,
+            'data_inicio': inicio,
+            'data_fim': fim,
+            'request': request,
+        }
+        return Render.render('pesquisa_detalhada_pdf.html', params, f'{estabelecimento}')
 
 
 def limpa_arquivo(request):
