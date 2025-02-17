@@ -568,7 +568,9 @@ class PesquisaPdf(View):
             'data_fim': fim,
             'request': request,
         }
-        return Render.render('pesquisa_pdf.html', params, f'{estabelecimento}')
+        return Render.render('pesquisa_pdf.html',
+                             params,
+                             f'{estabelecimento} - {data_inicio.strftime("%d-%m")} a {data_fim1.strftime("%d-%m")}')
 
 
 class PesquisaDetalhadaPdf(View):
@@ -601,7 +603,9 @@ class PesquisaDetalhadaPdf(View):
             'data_fim': fim,
             'request': request,
         }
-        return Render.render('pesquisa_detalhada_pdf.html', params, f'{estabelecimento}')
+        return Render.render('pesquisa_detalhada_pdf.html',
+                             params,
+                             f'{estabelecimento} - Detalhado {data_inicio.strftime("%d-%m")} a {data_fim1.strftime("%d-%m")}')
 
 
 def limpa_arquivo(request):

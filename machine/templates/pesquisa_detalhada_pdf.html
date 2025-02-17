@@ -51,414 +51,419 @@
 {% block main %}
     <h1>Vendas do {{ estabelecimento.upper }}</h1>
     {% for vendas in vendas_dia %}
-        <br><br>
-        <h2>Vendas a Crédito do dia {{ vendas.first.data_venda.day }}/{{ vendas.first.data_venda.month }}</h2>
-        <div class="table-responsive">
-            <table class="table table-striped table-sm">
-                <thead>
-                    <tr>
-                        <th>Data</th>
-                        <th>Horário</th>
-                        <th>Valor</th>
-                        <th>Bandeira</th>
-                        <th>Tipo</th>
-                        <th>Valor Taxa (Banco)</th>
-                        <th>Valor Devido</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {% if vendas.master.credito_vista %}
-                    {% for venda in vendas.master.credito_vista %}
+        {% if vendas %}
+            <br><br>
+            <h2>Vendas a Crédito do dia {{ vendas.first.data_venda|date:"d/m/Y" }}</h2>
+            <div class="table-responsive">
+                <table class="table table-striped table-sm">
+                    <thead>
                         <tr>
-                            <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
-                            <td>{{ venda.data_venda.time|date:"H:i" }}</td>
-                            <td>R$ {{ venda.valor_bruto }}</td>
-                            <td>{{ venda.bandeira.nome }}</td>
-                            <td>{{ venda.tipo }}</td>
-                            <td>R$ {{ venda.valor_tarifa }}</td>
-                            <td>R$ {{ venda.valor_devido }}</td>
+                            <th>Data</th>
+                            <th>Horário</th>
+                            <th>Valor</th>
+                            <th>Bandeira</th>
+                            <th>Tipo</th>
+                            <th>Valor Taxa (Banco)</th>
+                            <th>Valor Devido</th>
                         </tr>
-                    {% endfor %}
-                {% endif %}
-                {% if vendas.master.credito_pre %}
-                    {% for venda in vendas.master.credito_pre %}
+                    </thead>
+                    <tbody>
+                    {% if vendas.master.credito_vista %}
+                        {% for venda in vendas.master.credito_vista %}
+                            <tr>
+                                <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
+                                <td>{{ venda.data_venda.time|date:"H:i" }}</td>
+                                <td>R$ {{ venda.valor_bruto }}</td>
+                                <td>{{ venda.bandeira.nome }}</td>
+                                <td>{{ venda.tipo }}</td>
+                                <td>R$ {{ venda.valor_tarifa }}</td>
+                                <td>R$ {{ venda.valor_devido }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                    {% if vendas.master.credito_pre %}
+                        {% for venda in vendas.master.credito_pre %}
+                            <tr>
+                                <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
+                                <td>{{ venda.data_venda.time|date:"H:i" }}</td>
+                                <td>R$ {{ venda.valor_bruto }}</td>
+                                <td>{{ venda.bandeira.nome }}</td>
+                                <td>{{ venda.tipo }}</td>
+                                <td>R$ {{ venda.valor_tarifa }}</td>
+                                <td>R$ {{ venda.valor_devido }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                    {% if vendas.master.credito_moeda %}
+                        {% for venda in vendas.master.credito_moeda %}
+                            <tr>
+                                <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
+                                <td>{{ venda.data_venda.time|date:"H:i" }}</td>
+                                <td>R$ {{ venda.valor_bruto }}</td>
+                                <td>{{ venda.bandeira.nome }}</td>
+                                <td>{{ venda.tipo }}</td>
+                                <td>R$ {{ venda.valor_tarifa }}</td>
+                                <td>R$ {{ venda.valor_devido }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                    {% if vendas.master.credito_parcelado %}
+                        {% for venda in vendas.master.credito_parcelado %}
+                            <tr>
+                                <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
+                                <td>{{ venda.data_venda.time|date:"H:i" }}</td>
+                                <td>R$ {{ venda.valor_bruto }}</td>
+                                <td>{{ venda.bandeira.nome }}</td>
+                                <td>{{ venda.tipo }}</td>
+                                <td>R$ {{ venda.valor_tarifa }}</td>
+                                <td>R$ {{ venda.valor_devido }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                    {% if vendas.visa.credito_vista %}
+                        {% for venda in vendas.visa.credito_vista %}
+                            <tr>
+                                <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
+                                <td>{{ venda.data_venda.time|date:"H:i" }}</td>
+                                <td>R$ {{ venda.valor_bruto }}</td>
+                                <td>{{ venda.bandeira.nome }}</td>
+                                <td>{{ venda.tipo }}</td>
+                                <td>R$ {{ venda.valor_tarifa }}</td>
+                                <td>R$ {{ venda.valor_devido }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                    {% if vendas.visa.credito_pre %}
+                        {% for venda in vendas.visa.credito_pre %}
+                            <tr>
+                                <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
+                                <td>{{ venda.data_venda.time|date:"H:i" }}</td>
+                                <td>R$ {{ venda.valor_bruto }}</td>
+                                <td>{{ venda.bandeira.nome }}</td>
+                                <td>{{ venda.tipo }}</td>
+                                <td>R$ {{ venda.valor_tarifa }}</td>
+                                <td>R$ {{ venda.valor_devido }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                    {% if vendas.visa.credito_moeda %}
+                        {% for venda in vendas.visa.credito_moeda %}
+                            <tr>
+                                <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
+                                <td>{{ venda.data_venda.time|date:"H:i" }}</td>
+                                <td>R$ {{ venda.valor_bruto }}</td>
+                                <td>{{ venda.bandeira.nome }}</td>
+                                <td>{{ venda.tipo }}</td>
+                                <td>R$ {{ venda.valor_tarifa }}</td>
+                                <td>R$ {{ venda.valor_devido }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                    {% if vendas.visa.credito_parcelado %}
+                        {% for venda in vendas.visa.credito_parcelado %}
+                            <tr>
+                                <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
+                                <td>{{ venda.data_venda.time|date:"H:i" }}</td>
+                                <td>R$ {{ venda.valor_bruto }}</td>
+                                <td>{{ venda.bandeira.nome }}</td>
+                                <td>{{ venda.tipo }}</td>
+                                <td>R$ {{ venda.valor_tarifa }}</td>
+                                <td>R$ {{ venda.valor_devido }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                    {% if vendas.amex.credito_vista %}
+                        {% for venda in vendas.amex.credito_vista %}
+                            <tr>
+                                <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
+                                <td>{{ venda.data_venda.time|date:"H:i" }}</td>
+                                <td>R$ {{ venda.valor_bruto }}</td>
+                                <td>{{ venda.bandeira.nome }}</td>
+                                <td>{{ venda.tipo }}</td>
+                                <td>R$ {{ venda.valor_tarifa }}</td>
+                                <td>R$ {{ venda.valor_devido }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                    {% if vendas.amex.credito_pre %}
+                        {% for venda in vendas.amex.credito_pre %}
+                            <tr>
+                                <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
+                                <td>{{ venda.data_venda.time|date:"H:i" }}</td>
+                                <td>R$ {{ venda.valor_bruto }}</td>
+                                <td>{{ venda.bandeira.nome }}</td>
+                                <td>{{ venda.tipo }}</td>
+                                <td>R$ {{ venda.valor_tarifa }}</td>
+                                <td>R$ {{ venda.valor_devido }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                    {% if vendas.amex.credito_moeda %}
+                        {% for venda in vendas.amex.credito_moeda %}
+                            <tr>
+                                <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
+                                <td>{{ venda.data_venda.time|date:"H:i" }}</td>
+                                <td>R$ {{ venda.valor_bruto }}</td>
+                                <td>{{ venda.bandeira.nome }}</td>
+                                <td>{{ venda.tipo }}</td>
+                                <td>R$ {{ venda.valor_tarifa }}</td>
+                                <td>R$ {{ venda.valor_devido }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                    {% if vendas.amex.credito_parcelado %}
+                        {% for venda in vendas.amex.credito_parcelado %}
+                            <tr>
+                                <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
+                                <td>{{ venda.data_venda.time|date:"H:i" }}</td>
+                                <td>R$ {{ venda.valor_bruto }}</td>
+                                <td>{{ venda.bandeira.nome }}</td>
+                                <td>{{ venda.tipo }}</td>
+                                <td>R$ {{ venda.valor_tarifa }}</td>
+                                <td>R$ {{ venda.valor_devido }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                    {% if vendas.elo.credito_vista %}
+                        {% for venda in vendas.elo.credito_vista %}
+                            <tr>
+                                <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
+                                <td>{{ venda.data_venda.time|date:"H:i" }}</td>
+                                <td>R$ {{ venda.valor_bruto }}</td>
+                                <td>{{ venda.bandeira.nome }}</td>
+                                <td>{{ venda.tipo }}</td>
+                                <td>R$ {{ venda.valor_tarifa }}</td>
+                                <td>R$ {{ venda.valor_devido }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                    {% if vendas.elo.credito_pre %}
+                        {% for venda in vendas.elo.credito_pre %}
+                            <tr>
+                                <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
+                                <td>{{ venda.data_venda.time|date:"H:i" }}</td>
+                                <td>R$ {{ venda.valor_bruto }}</td>
+                                <td>{{ venda.bandeira.nome }}</td>
+                                <td>{{ venda.tipo }}</td>
+                                <td>R$ {{ venda.valor_tarifa }}</td>
+                                <td>R$ {{ venda.valor_devido }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                    {% if vendas.elo.credito_moeda %}
+                        {% for venda in vendas.elo.credito_moeda %}
+                            <tr>
+                                <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
+                                <td>{{ venda.data_venda.time|date:"H:i" }}</td>
+                                <td>R$ {{ venda.valor_bruto }}</td>
+                                <td>{{ venda.bandeira.nome }}</td>
+                                <td>{{ venda.tipo }}</td>
+                                <td>R$ {{ venda.valor_tarifa }}</td>
+                                <td>R$ {{ venda.valor_devido }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                    {% if vendas.elo.credito_parcelado %}
+                        {% for venda in vendas.elo.credito_parcelado %}
+                            <tr>
+                                <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
+                                <td>{{ venda.data_venda.time|date:"H:i" }}</td>
+                                <td>R$ {{ venda.valor_bruto }}</td>
+                                <td>{{ venda.bandeira.nome }}</td>
+                                <td>{{ venda.tipo }}</td>
+                                <td>R$ {{ venda.valor_tarifa }}</td>
+                                <td>R$ {{ venda.valor_devido }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                    {% if vendas.hiper.credito_vista %}
+                        {% for venda in vendas.hiper.credito_vista %}
+                            <tr>
+                                <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
+                                <td>{{ venda.data_venda.time|date:"H:i" }}</td>
+                                <td>R$ {{ venda.valor_bruto }}</td>
+                                <td>{{ venda.bandeira.nome }}</td>
+                                <td>{{ venda.tipo }}</td>
+                                <td>R$ {{ venda.valor_tarifa }}</td>
+                                <td>R$ {{ venda.valor_devido }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                    {% if vendas.hiper.credito_pre %}
+                        {% for venda in vendas.hiper.credito_pre %}
+                            <tr>
+                                <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
+                                <td>{{ venda.data_venda.time|date:"H:i" }}</td>
+                                <td>R$ {{ venda.valor_bruto }}</td>
+                                <td>{{ venda.bandeira.nome }}</td>
+                                <td>{{ venda.tipo }}</td>
+                                <td>R$ {{ venda.valor_tarifa }}</td>
+                                <td>R$ {{ venda.valor_devido }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                    {% if vendas.hiper.credito_moeda %}
+                        {% for venda in vendas.hiper.credito_moeda %}
+                            <tr>
+                                <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
+                                <td>{{ venda.data_venda.time|date:"H:i" }}</td>
+                                <td>R$ {{ venda.valor_bruto }}</td>
+                                <td>{{ venda.bandeira.nome }}</td>
+                                <td>{{ venda.tipo }}</td>
+                                <td>R$ {{ venda.valor_tarifa }}</td>
+                                <td>R$ {{ venda.valor_devido }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                    {% if vendas.hiper.credito_parcelado %}
+                        {% for venda in vendas.hiper.credito_parcelado %}
+                            <tr>
+                                <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
+                                <td>{{ venda.data_venda.time|date:"H:i" }}</td>
+                                <td>R$ {{ venda.valor_bruto }}</td>
+                                <td>{{ venda.bandeira.nome }}</td>
+                                <td>{{ venda.tipo }}</td>
+                                <td>R$ {{ venda.valor_tarifa }}</td>
+                                <td>R$ {{ venda.valor_devido }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                    {% if vendas.credito %}
                         <tr>
-                            <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
-                            <td>{{ venda.data_venda.time|date:"H:i" }}</td>
-                            <td>R$ {{ venda.valor_bruto }}</td>
-                            <td>{{ venda.bandeira.nome }}</td>
-                            <td>{{ venda.tipo }}</td>
-                            <td>R$ {{ venda.valor_tarifa }}</td>
-                            <td>R$ {{ venda.valor_devido }}</td>
+                            <td>------</td>
+                            <td><b>Total</b></td>
+                            <td>R$ {{ vendas.credito.total_bruto }}</td>
+                            <td>Qtde Vendas</td>
+                            <td>{{ vendas.credito.count }}</td>
+                            <td>R$ {{ vendas.credito.total_tarifa }}</td>
+                            <td>R$ {{ vendas.credito.total_devido }}</td>
                         </tr>
-                    {% endfor %}
-                {% endif %}
-                {% if vendas.master.credito_moeda %}
-                    {% for venda in vendas.master.credito_moeda %}
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
+            <br><br>
+            <h2 class="text-center">Vendas a Débito do dia {{ vendas.first.data_venda|date:"d/m/Y" }}</h2>
+            <div class="table-responsive">
+                <table class="table table-striped table-sm">
+                    <thead>
                         <tr>
-                            <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
-                            <td>{{ venda.data_venda.time|date:"H:i" }}</td>
-                            <td>R$ {{ venda.valor_bruto }}</td>
-                            <td>{{ venda.bandeira.nome }}</td>
-                            <td>{{ venda.tipo }}</td>
-                            <td>R$ {{ venda.valor_tarifa }}</td>
-                            <td>R$ {{ venda.valor_devido }}</td>
+                            <th>Data</th>
+                            <th>Horário</th>
+                            <th>Valor</th>
+                            <th>Bandeira</th>
+                            <th>Tipo</th>
+                            <th>Valor Taxa (Banco)</th>
+                            <th>Valor Devido</th>
                         </tr>
-                    {% endfor %}
-                {% endif %}
-                {% if vendas.master.credito_parcelado %}
-                    {% for venda in vendas.master.credito_parcelado %}
+                    </thead>
+                    <tbody>
+                    {% if vendas.master.debito %}
+                        {% for venda in vendas.master.debito %}
+                            <tr>
+                                <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
+                                <td>{{ venda.data_venda.time|date:"H:i" }}</td>
+                                <td>R$ {{ venda.valor_bruto }}</td>
+                                <td>{{ venda.bandeira.nome }}</td>
+                                <td>{{ venda.tipo }}</td>
+                                <td>R$ {{ venda.valor_tarifa }}</td>
+                                <td>R$ {{ venda.valor_devido }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                    {% if vendas.visa.debito %}
+                        {% for venda in vendas.visa.debito %}
+                            <tr>
+                                <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
+                                <td>{{ venda.data_venda.time|date:"H:i" }}</td>
+                                <td>R$ {{ venda.valor_bruto }}</td>
+                                <td>{{ venda.bandeira.nome }}</td>
+                                <td>{{ venda.tipo }}</td>
+                                <td>R$ {{ venda.valor_tarifa }}</td>
+                                <td>R$ {{ venda.valor_devido }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                    {% if vendas.amex.debito %}
+                        {% for venda in vendas.amex.debito %}
+                            <tr>
+                                <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
+                                <td>{{ venda.data_venda.time|date:"H:i" }}</td>
+                                <td>R$ {{ venda.valor_bruto }}</td>
+                                <td>{{ venda.bandeira.nome }}</td>
+                                <td>{{ venda.tipo }}</td>
+                                <td>R$ {{ venda.valor_tarifa }}</td>
+                                <td>R$ {{ venda.valor_devido }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                    {% if vendas.elo.debito %}
+                        {% for venda in vendas.elo.debito %}
+                            <tr>
+                                <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
+                                <td>{{ venda.data_venda.time|date:"H:i" }}</td>
+                                <td>R$ {{ venda.valor_bruto }}</td>
+                                <td>{{ venda.bandeira.nome }}</td>
+                                <td>{{ venda.tipo }}</td>
+                                <td>R$ {{ venda.valor_tarifa }}</td>
+                                <td>R$ {{ venda.valor_devido }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                    {% if vendas.hiper.debito %}
+                        {% for venda in vendas.hiper.debito %}
+                            <tr>
+                                <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
+                                <td>{{ venda.data_venda.time|date:"H:i" }}</td>
+                                <td>R$ {{ venda.valor_bruto }}</td>
+                                <td>{{ venda.bandeira.nome }}</td>
+                                <td>{{ venda.tipo }}</td>
+                                <td>R$ {{ venda.valor_tarifa }}</td>
+                                <td>R$ {{ venda.valor_devido }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                    {% if vendas.debito %}
                         <tr>
-                            <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
-                            <td>{{ venda.data_venda.time|date:"H:i" }}</td>
-                            <td>R$ {{ venda.valor_bruto }}</td>
-                            <td>{{ venda.bandeira.nome }}</td>
-                            <td>{{ venda.tipo }}</td>
-                            <td>R$ {{ venda.valor_tarifa }}</td>
-                            <td>R$ {{ venda.valor_devido }}</td>
+                            <td>------</td>
+                            <td><b>Total</b></td>
+                            <td>R$ {{ vendas.debito.total_bruto }}</td>
+                            <td>Qtde Vendas</td>
+                            <td>{{ vendas.debito.count }}</td>
+                            <td>R$ {{ vendas.debito.total_tarifa }}</td>
+                            <td>R$ {{ vendas.debito.total_devido }}</td>
                         </tr>
-                    {% endfor %}
-                {% endif %}
-                {% if vendas.visa.credito_vista %}
-                    {% for venda in vendas.visa.credito_vista %}
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
+            <br><br>
+            <h2 class="text-center">Total de Vendas do dia {{ vendas.first.data_venda|date:"d/m/Y" }}</h2>
+            <div class="table-responsive">
+                <table class="table table-striped table-sm">
+                    <thead>
                         <tr>
-                            <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
-                            <td>{{ venda.data_venda.time|date:"H:i" }}</td>
-                            <td>R$ {{ venda.valor_bruto }}</td>
-                            <td>{{ venda.bandeira.nome }}</td>
-                            <td>{{ venda.tipo }}</td>
-                            <td>R$ {{ venda.valor_tarifa }}</td>
-                            <td>R$ {{ venda.valor_devido }}</td>
+                            <th>Qtde</th>
+                            <th>Valor Bruto</th>
+                            <th>Valor Taxa (Banco)</th>
+                            <th>Valor Devido</th>
                         </tr>
-                    {% endfor %}
-                {% endif %}
-                {% if vendas.visa.credito_pre %}
-                    {% for venda in vendas.visa.credito_pre %}
+                    </thead>
+                    <tbody>
                         <tr>
-                            <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
-                            <td>{{ venda.data_venda.time|date:"H:i" }}</td>
-                            <td>R$ {{ venda.valor_bruto }}</td>
-                            <td>{{ venda.bandeira.nome }}</td>
-                            <td>{{ venda.tipo }}</td>
-                            <td>R$ {{ venda.valor_tarifa }}</td>
-                            <td>R$ {{ venda.valor_devido }}</td>
+                            <td>{{ vendas.count }}</td>
+                            <td>R$ {{ vendas.total_bruto }}</td>
+                            <td>R$ {{ vendas.total_tarifa }}</td>
+                            <td>R$ {{ vendas.total_devido }}</td>
                         </tr>
-                    {% endfor %}
-                {% endif %}
-                {% if vendas.visa.credito_moeda %}
-                    {% for venda in vendas.visa.credito_moeda %}
-                        <tr>
-                            <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
-                            <td>{{ venda.data_venda.time|date:"H:i" }}</td>
-                            <td>R$ {{ venda.valor_bruto }}</td>
-                            <td>{{ venda.bandeira.nome }}</td>
-                            <td>{{ venda.tipo }}</td>
-                            <td>R$ {{ venda.valor_tarifa }}</td>
-                            <td>R$ {{ venda.valor_devido }}</td>
-                        </tr>
-                    {% endfor %}
-                {% endif %}
-                {% if vendas.visa.credito_parcelado %}
-                    {% for venda in vendas.visa.credito_parcelado %}
-                        <tr>
-                            <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
-                            <td>{{ venda.data_venda.time|date:"H:i" }}</td>
-                            <td>R$ {{ venda.valor_bruto }}</td>
-                            <td>{{ venda.bandeira.nome }}</td>
-                            <td>{{ venda.tipo }}</td>
-                            <td>R$ {{ venda.valor_tarifa }}</td>
-                            <td>R$ {{ venda.valor_devido }}</td>
-                        </tr>
-                    {% endfor %}
-                {% endif %}
-                {% if vendas.amex.credito_vista %}
-                    {% for venda in vendas.amex.credito_vista %}
-                        <tr>
-                            <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
-                            <td>{{ venda.data_venda.time|date:"H:i" }}</td>
-                            <td>R$ {{ venda.valor_bruto }}</td>
-                            <td>{{ venda.bandeira.nome }}</td>
-                            <td>{{ venda.tipo }}</td>
-                            <td>R$ {{ venda.valor_tarifa }}</td>
-                            <td>R$ {{ venda.valor_devido }}</td>
-                        </tr>
-                    {% endfor %}
-                {% endif %}
-                {% if vendas.amex.credito_pre %}
-                    {% for venda in vendas.amex.credito_pre %}
-                        <tr>
-                            <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
-                            <td>{{ venda.data_venda.time|date:"H:i" }}</td>
-                            <td>R$ {{ venda.valor_bruto }}</td>
-                            <td>{{ venda.bandeira.nome }}</td>
-                            <td>{{ venda.tipo }}</td>
-                            <td>R$ {{ venda.valor_tarifa }}</td>
-                            <td>R$ {{ venda.valor_devido }}</td>
-                        </tr>
-                    {% endfor %}
-                {% endif %}
-                {% if vendas.amex.credito_moeda %}
-                    {% for venda in vendas.amex.credito_moeda %}
-                        <tr>
-                            <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
-                            <td>{{ venda.data_venda.time|date:"H:i" }}</td>
-                            <td>R$ {{ venda.valor_bruto }}</td>
-                            <td>{{ venda.bandeira.nome }}</td>
-                            <td>{{ venda.tipo }}</td>
-                            <td>R$ {{ venda.valor_tarifa }}</td>
-                            <td>R$ {{ venda.valor_devido }}</td>
-                        </tr>
-                    {% endfor %}
-                {% endif %}
-                {% if vendas.amex.credito_parcelado %}
-                    {% for venda in vendas.amex.credito_parcelado %}
-                        <tr>
-                            <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
-                            <td>{{ venda.data_venda.time|date:"H:i" }}</td>
-                            <td>R$ {{ venda.valor_bruto }}</td>
-                            <td>{{ venda.bandeira.nome }}</td>
-                            <td>{{ venda.tipo }}</td>
-                            <td>R$ {{ venda.valor_tarifa }}</td>
-                            <td>R$ {{ venda.valor_devido }}</td>
-                        </tr>
-                    {% endfor %}
-                {% endif %}
-                {% if vendas.elo.credito_vista %}
-                    {% for venda in vendas.elo.credito_vista %}
-                        <tr>
-                            <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
-                            <td>{{ venda.data_venda.time|date:"H:i" }}</td>
-                            <td>R$ {{ venda.valor_bruto }}</td>
-                            <td>{{ venda.bandeira.nome }}</td>
-                            <td>{{ venda.tipo }}</td>
-                            <td>R$ {{ venda.valor_tarifa }}</td>
-                            <td>R$ {{ venda.valor_devido }}</td>
-                        </tr>
-                    {% endfor %}
-                {% endif %}
-                {% if vendas.elo.credito_pre %}
-                    {% for venda in vendas.elo.credito_pre %}
-                        <tr>
-                            <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
-                            <td>{{ venda.data_venda.time|date:"H:i" }}</td>
-                            <td>R$ {{ venda.valor_bruto }}</td>
-                            <td>{{ venda.bandeira.nome }}</td>
-                            <td>{{ venda.tipo }}</td>
-                            <td>R$ {{ venda.valor_tarifa }}</td>
-                            <td>R$ {{ venda.valor_devido }}</td>
-                        </tr>
-                    {% endfor %}
-                {% endif %}
-                {% if vendas.elo.credito_moeda %}
-                    {% for venda in vendas.elo.credito_moeda %}
-                        <tr>
-                            <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
-                            <td>{{ venda.data_venda.time|date:"H:i" }}</td>
-                            <td>R$ {{ venda.valor_bruto }}</td>
-                            <td>{{ venda.bandeira.nome }}</td>
-                            <td>{{ venda.tipo }}</td>
-                            <td>R$ {{ venda.valor_tarifa }}</td>
-                            <td>R$ {{ venda.valor_devido }}</td>
-                        </tr>
-                    {% endfor %}
-                {% endif %}
-                {% if vendas.elo.credito_parcelado %}
-                    {% for venda in vendas.elo.credito_parcelado %}
-                        <tr>
-                            <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
-                            <td>{{ venda.data_venda.time|date:"H:i" }}</td>
-                            <td>R$ {{ venda.valor_bruto }}</td>
-                            <td>{{ venda.bandeira.nome }}</td>
-                            <td>{{ venda.tipo }}</td>
-                            <td>R$ {{ venda.valor_tarifa }}</td>
-                            <td>R$ {{ venda.valor_devido }}</td>
-                        </tr>
-                    {% endfor %}
-                {% endif %}
-                {% if vendas.hiper.credito_vista %}
-                    {% for venda in vendas.hiper.credito_vista %}
-                        <tr>
-                            <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
-                            <td>{{ venda.data_venda.time|date:"H:i" }}</td>
-                            <td>R$ {{ venda.valor_bruto }}</td>
-                            <td>{{ venda.bandeira.nome }}</td>
-                            <td>{{ venda.tipo }}</td>
-                            <td>R$ {{ venda.valor_tarifa }}</td>
-                            <td>R$ {{ venda.valor_devido }}</td>
-                        </tr>
-                    {% endfor %}
-                {% endif %}
-                {% if vendas.hiper.credito_pre %}
-                    {% for venda in vendas.hiper.credito_pre %}
-                        <tr>
-                            <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
-                            <td>{{ venda.data_venda.time|date:"H:i" }}</td>
-                            <td>R$ {{ venda.valor_bruto }}</td>
-                            <td>{{ venda.bandeira.nome }}</td>
-                            <td>{{ venda.tipo }}</td>
-                            <td>R$ {{ venda.valor_tarifa }}</td>
-                            <td>R$ {{ venda.valor_devido }}</td>
-                        </tr>
-                    {% endfor %}
-                {% endif %}
-                {% if vendas.hiper.credito_moeda %}
-                    {% for venda in vendas.hiper.credito_moeda %}
-                        <tr>
-                            <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
-                            <td>{{ venda.data_venda.time|date:"H:i" }}</td>
-                            <td>R$ {{ venda.valor_bruto }}</td>
-                            <td>{{ venda.bandeira.nome }}</td>
-                            <td>{{ venda.tipo }}</td>
-                            <td>R$ {{ venda.valor_tarifa }}</td>
-                            <td>R$ {{ venda.valor_devido }}</td>
-                        </tr>
-                    {% endfor %}
-                {% endif %}
-                {% if vendas.hiper.credito_parcelado %}
-                    {% for venda in vendas.hiper.credito_parcelado %}
-                        <tr>
-                            <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
-                            <td>{{ venda.data_venda.time|date:"H:i" }}</td>
-                            <td>R$ {{ venda.valor_bruto }}</td>
-                            <td>{{ venda.bandeira.nome }}</td>
-                            <td>{{ venda.tipo }}</td>
-                            <td>R$ {{ venda.valor_tarifa }}</td>
-                            <td>R$ {{ venda.valor_devido }}</td>
-                        </tr>
-                    {% endfor %}
-                {% endif %}
-                {% if vendas.credito %}
-                    <tr>
-                        <td>------</td>
-                        <td><b>Total</b></td>
-                        <td>R$ {{ vendas.credito.total_bruto }}</td>
-                        <td>Qtde Vendas</td>
-                        <td>{{ vendas.credito.count }}</td>
-                        <td>R$ {{ vendas.credito.total_tarifa }}</td>
-                        <td>R$ {{ vendas.credito.total_devido }}</td>
-                    </tr>
-                {% endif %}
-                </tbody>
-            </table>
-        </div>
-        <br><br>
-        <h2 class="text-center">Vendas a Débito do dia {{ vendas.first.data_venda.day }}/{{ vendas.first.data_venda.month }}</h2>
-        <div class="table-responsive">
-            <table class="table table-striped table-sm">
-                <thead>
-                    <tr>
-                        <th>Data</th>
-                        <th>Horário</th>
-                        <th>Valor</th>
-                        <th>Bandeira</th>
-                        <th>Tipo</th>
-                        <th>Valor Taxa (Banco)</th>
-                        <th>Valor Devido</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {% if vendas.master.debito %}
-                    {% for venda in vendas.master.debito %}
-                        <tr>
-                            <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
-                            <td>{{ venda.data_venda.time|date:"H:i" }}</td>
-                            <td>R$ {{ venda.valor_bruto }}</td>
-                            <td>{{ venda.bandeira.nome }}</td>
-                            <td>{{ venda.tipo }}</td>
-                            <td>R$ {{ venda.valor_tarifa }}</td>
-                            <td>R$ {{ venda.valor_devido }}</td>
-                        </tr>
-                    {% endfor %}
-                {% endif %}
-                {% if vendas.visa.debito %}
-                    {% for venda in vendas.visa.debito %}
-                        <tr>
-                            <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
-                            <td>{{ venda.data_venda.time|date:"H:i" }}</td>
-                            <td>R$ {{ venda.valor_bruto }}</td>
-                            <td>{{ venda.bandeira.nome }}</td>
-                            <td>{{ venda.tipo }}</td>
-                            <td>R$ {{ venda.valor_tarifa }}</td>
-                            <td>R$ {{ venda.valor_devido }}</td>
-                        </tr>
-                    {% endfor %}
-                {% endif %}
-                {% if vendas.amex.debito %}
-                    {% for venda in vendas.amex.debito %}
-                        <tr>
-                            <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
-                            <td>{{ venda.data_venda.time|date:"H:i" }}</td>
-                            <td>R$ {{ venda.valor_bruto }}</td>
-                            <td>{{ venda.bandeira.nome }}</td>
-                            <td>{{ venda.tipo }}</td>
-                            <td>R$ {{ venda.valor_tarifa }}</td>
-                            <td>R$ {{ venda.valor_devido }}</td>
-                        </tr>
-                    {% endfor %}
-                {% endif %}
-                {% if vendas.elo.debito %}
-                    {% for venda in vendas.elo.debito %}
-                        <tr>
-                            <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
-                            <td>{{ venda.data_venda.time|date:"H:i" }}</td>
-                            <td>R$ {{ venda.valor_bruto }}</td>
-                            <td>{{ venda.bandeira.nome }}</td>
-                            <td>{{ venda.tipo }}</td>
-                            <td>R$ {{ venda.valor_tarifa }}</td>
-                            <td>R$ {{ venda.valor_devido }}</td>
-                        </tr>
-                    {% endfor %}
-                {% endif %}
-                {% if vendas.hiper.debito %}
-                    {% for venda in vendas.hiper.debito %}
-                        <tr>
-                            <td>{{ venda.data_venda.date|date:"d/m/Y" }}</td>
-                            <td>{{ venda.data_venda.time|date:"H:i" }}</td>
-                            <td>R$ {{ venda.valor_bruto }}</td>
-                            <td>{{ venda.bandeira.nome }}</td>
-                            <td>{{ venda.tipo }}</td>
-                            <td>R$ {{ venda.valor_tarifa }}</td>
-                            <td>R$ {{ venda.valor_devido }}</td>
-                        </tr>
-                    {% endfor %}
-                {% endif %}
-                {% if vendas.debito %}
-                    <tr>
-                        <td>------</td>
-                        <td><b>Total</b></td>
-                        <td>R$ {{ vendas.debito.total_bruto }}</td>
-                        <td>Qtde Vendas</td>
-                        <td>{{ vendas.debito.count }}</td>
-                        <td>R$ {{ vendas.debito.total_tarifa }}</td>
-                        <td>R$ {{ vendas.debito.total_devido }}</td>
-                    </tr>
-                {% endif %}
-                </tbody>
-            </table>
-        </div>
-        <br><br>
-        <h2 class="text-center">Total de Vendas do dia {{ vendas.first.data_venda.day }}/{{ vendas.first.data_venda.month }}</h2>
-        <div class="table-responsive">
-            <table class="table table-striped table-sm">
-                <thead>
-                    <tr>
-                        <th>Qtde</th>
-                        <th>Valor Bruto</th>
-                        <th>Valor Taxa (Banco)</th>
-                        <th>Valor Devido</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>{{ vendas.count }}</td>
-                        <td>R$ {{ vendas.total_bruto }}</td>
-                        <td>R$ {{ vendas.total_tarifa }}</td>
-                        <td>R$ {{ vendas.total_devido }}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+                    </tbody>
+                </table>
+            </div>
         <P id="QuebraAqui">
+        {% else %}
+            <br>
+        {% endif %}
+
     {% endfor %}
 {% endblock %}
 
