@@ -527,23 +527,29 @@ def create_dados(request, id):
                     atual.delete()
                     messages.success(request, "Banco de dados atualizado com sucesso!")
             elif operadora == 'C6Pay':
-                dataframe = dataframe.drop(list, axis=0)
-                dataframe.columns = dataframe.loc[2]
-                dataframe = dataframe.drop([2], axis=0)
-                dataframe = dataframe[dataframe['Status da venda'] != 'Recusada']
-                dataframe = dataframe[dataframe['Status da venda'] != 'Devolvida']
-                dataframe = dataframe[dataframe['Tipo de operação'] != 'Pix']
-                d_records = dataframe.to_dict("records")
-                pk = atual.estabelecimento.id
+                # TODO: olhar
                 try:
-                    inserir_dados_cpay(request, d_records, pk, operadora)
+                    dataframe = dataframe.drop(list, axis=0)
+                    dataframe.columns = dataframe.loc[2]
+                    dataframe = dataframe.drop([2], axis=0)
+                    dataframe = dataframe[dataframe['Status da venda'] != 'Recusada']
+                    dataframe = dataframe[dataframe['Status da venda'] != 'Devolvida']
+                    dataframe = dataframe[dataframe['Tipo de operação'] != 'Pix']
                 except:
-                    messages.warning(request, "Não foi possível inserir dados no banco de dados")
+                    messages.warning(request, "Erro no ajuste do dataframe")
                     return redirect('machine:createatualizacao')
                 else:
-                    atual.vigente = False
-                    atual.delete()
-                    messages.success(request, "Banco de dados atualizado com sucesso!")
+                    d_records = dataframe.to_dict("records")
+                    pk = atual.estabelecimento.id
+                    try:
+                        inserir_dados_cpay(request, d_records, pk, operadora)
+                    except:
+                        messages.warning(request, "Não foi possível inserir dados no banco de dados")
+                        return redirect('machine:createatualizacao')
+                    else:
+                        atual.vigente = False
+                        atual.delete()
+                        messages.success(request, "Banco de dados atualizado com sucesso!")
     finally:
         return redirect('machine:createatualizacao')
 
@@ -560,8 +566,10 @@ class PesquisaPdf(View):
             data_fim = data_fim1 + d
             estabelecimento = request.GET.get('estabelecimento')
             usuario_logado = self.request.user
+            operadora = request.GET.get('operadora')
             vendas = (Venda.objects.filter(estabelecimento__usuario=usuario_logado)
-                      .filter(estabelecimento__razao_social=estabelecimento).pendente()
+                      .filter(estabelecimento__razao_social=estabelecimento)
+                      .filter(bandeira__operadora__nome=operadora).pendente()
                       .filter(data_venda__range=(data_inicio, data_fim)).order_by('data_venda'))
 
         params = {
