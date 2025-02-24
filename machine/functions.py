@@ -168,7 +168,7 @@ def inserir_dados_cielo(request, d_records, pk, operadora):
                     list_vendas.append(v)
     Venda.objects.bulk_create(list_vendas)
     for dado in d_records:
-        numero = decimal.Decimal(dado['Valor da venda'])
+        numero = decimal.Decimal(dado['Valor bruto'])
         venda = Venda.objects.filter(cod_venda=dado['Código da venda'],
                                      valor_bruto=calculo_valor_bruto(numero))
         if venda:
@@ -176,7 +176,10 @@ def inserir_dados_cielo(request, d_records, pk, operadora):
                                       valor_bruto=calculo_valor_bruto(numero))
             if venda.lucro / venda.valor_bruto <= 0.01:
                 venda.lucro = decimal.Decimal(
-                    (float(venda.valor_tarifa / venda.valor_bruto) + 0.03) * float(venda.valor_bruto))
+                    (float(venda.lucro / venda.valor_bruto) + 0.03) * float(venda.valor_bruto))
+                venda.valor_cobranca = venda.lucro + venda.valor_tarifa
+                venda.valor_devido = venda.valor_bruto - venda.valor_cobranca
+                venda.taxa = 0
                 venda.save()
 
 

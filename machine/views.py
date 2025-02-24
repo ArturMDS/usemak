@@ -495,14 +495,17 @@ def create_dados(request, id):
                 m += 1
             list.pop(list[-1])
             num = 0
+            m = 0
             while num == 0:
                 for dado in dataframe.iloc[m]:
                     if "C6Pay" in str(dado):
                         num = 1
                         operadora = 'C6Pay'
+                        break
                     elif "Cielo" in str(dado):
                         num = 1
                         operadora = 'Cielo'
+                        break
                 m += 1
         except:
             messages.warning(request, "Não foi possível ler a coluna do arquivo")
