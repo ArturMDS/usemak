@@ -187,8 +187,11 @@ def inserir_dados_cpay(request, d_records, pk, operadora):
     #TODO: procurar erro
     print("SITUAÇÃO: inserindo dados")
     op = Operadora.objects.get(nome=operadora)
+    print(f"{op.nome}")
     estabelecimento = Estabelecimento.objects.get(id=pk)
+    print(f"{estabelecimento.razao_social}")
     h = timedelta(seconds=10800)
+    print(f"{h}")
     list_vendas = []
     print("SITUAÇÃO: término inserindo dados")
     for dado in d_records:
