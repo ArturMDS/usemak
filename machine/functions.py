@@ -186,12 +186,13 @@ def inserir_dados_cielo(request, d_records, pk, operadora):
 def inserir_dados_cpay(request, d_records, pk, operadora):
     #TODO: procurar erro
     print("SITUAÇÃO: inserindo dados")
+    print(f"SITUAÇÃO: {operadora}")
     op = Operadora.objects.get(nome=operadora)
-    print(f"{op.nome}")
+    print(f"SITUAÇÃO: {op.nome}")
     estabelecimento = Estabelecimento.objects.get(id=pk)
-    print(f"{estabelecimento.razao_social}")
+    print(f"SITUAÇÃO: {estabelecimento.razao_social}")
     h = timedelta(seconds=10800)
-    print(f"{h}")
+    print(f"SITUAÇÃO: {h}")
     list_vendas = []
     print("SITUAÇÃO: término inserindo dados")
     for dado in d_records:
