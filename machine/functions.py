@@ -184,19 +184,25 @@ def inserir_dados_cielo(request, d_records, pk, operadora):
 
 
 def inserir_dados_cpay(request, d_records, pk, operadora):
+    #TODO: procurar erro
+    print("SITUAÇÃO: inserindo dados")
     op = Operadora.objects.get(nome=operadora)
     estabelecimento = Estabelecimento.objects.get(id=pk)
     h = timedelta(seconds=10800)
     list_vendas = []
+    print("SITUAÇÃO: término inserindo dados")
     for dado in d_records:
+        print(f"SITUAÇÃO: cadastrando {dado['Valor da venda']}")
         bandeira = Bandeira.objects.get(nome=str(dado['Bandeira do cartão']), operadora=op)
         usuario_logado = request.user
         vendas = Venda.objects.filter(estabelecimento__usuario=usuario_logado)
         numero = decimal.Decimal(dado['Valor da venda'])
         data_v = str(dado['Data da venda'])
+        print(f"SITUAÇÃO: {dado['Valor da venda']} valores iniciais cadastrados")
         if not vendas.filter(cod_venda=dado['Código da venda']):
             if 'édito' in dado['Tipo de operação']:
                 if str(dado['Parcelas']) == "1.0":
+                    print(f"SITUAÇÃO: {dado['Valor da venda']} operação crédito vista")
                     taxa = bandeira.credito_vista
                     v = Venda(estabelecimento=estabelecimento,
                               tipo="Crédito à vista",
@@ -213,6 +219,7 @@ def inserir_dados_cpay(request, d_records, pk, operadora):
                               cod_venda=dado['Código da venda'])
                     list_vendas.append(v)
                 elif str(dado['Parcelas']) == "2.0":
+                    print(f"SITUAÇÃO: {dado['Valor da venda']} operação crédito parcelado")
                     taxa = bandeira.credito_2x
                     v = Venda(estabelecimento=estabelecimento,
                               tipo="Crédito parcelado loja 2x",
@@ -230,6 +237,7 @@ def inserir_dados_cpay(request, d_records, pk, operadora):
                     list_vendas.append(v)
             else:
                 if dado['Tipo de operação'] == "Débito":
+                    print(f"SITUAÇÃO: {dado['Valor da venda']} operação débito")
                     taxa = bandeira.debito_vista
                     v = Venda(estabelecimento=estabelecimento,
                               tipo="Débito à vista",
@@ -246,6 +254,7 @@ def inserir_dados_cpay(request, d_records, pk, operadora):
                               cod_venda=dado['Código da venda'])
                     list_vendas.append(v)
     Venda.objects.bulk_create(list_vendas)
+    print(f"SITUAÇÃO: valores salvos")
     for dado in d_records:
         numero = decimal.Decimal(dado['Valor da venda'])
         venda = Venda.objects.filter(cod_venda=dado['Código da venda'],

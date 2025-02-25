@@ -527,7 +527,6 @@ def create_dados(request, id):
                     atual.delete()
                     messages.success(request, "Banco de dados atualizado com sucesso!")
             elif operadora == 'C6Pay':
-                # TODO: olhar
                 try:
                     dataframe = dataframe.drop(list, axis=0)
                     dataframe.columns = dataframe.loc[2]
@@ -573,6 +572,7 @@ class PesquisaPdf(View):
                       .filter(data_venda__range=(data_inicio, data_fim)).order_by('data_venda'))
 
         params = {
+            'operadora': operadora,
             'vendas': vendas,
             'estabelecimento': estabelecimento,
             'data_inicio': inicio,
@@ -581,7 +581,7 @@ class PesquisaPdf(View):
         }
         return Render.render('pesquisa_pdf.html',
                              params,
-                             f'{estabelecimento} - {data_inicio.strftime("%d-%m")} a {data_fim1.strftime("%d-%m")}')
+                             f'{operadora} - {estabelecimento} - {data_inicio.strftime("%d-%m")} a {data_fim1.strftime("%d-%m")}')
 
 
 class PesquisaDetalhadaPdf(View):
@@ -608,6 +608,7 @@ class PesquisaDetalhadaPdf(View):
                                   .filter(data_venda__date=data))
                 num -= 1
         params = {
+            'operadora': operadora,
             'vendas_dia': vendas_dia,
             'estabelecimento': estabelecimento,
             'data_inicio': inicio,
@@ -616,7 +617,7 @@ class PesquisaDetalhadaPdf(View):
         }
         return Render.render('pesquisa_detalhada_pdf.html',
                              params,
-                             f'{estabelecimento} - Detalhado {data_inicio.strftime("%d-%m")} a {data_fim1.strftime("%d-%m")}')
+                             f'{operadora} - {estabelecimento} - Detalhado {data_inicio.strftime("%d-%m")} a {data_fim1.strftime("%d-%m")}')
 
 
 def limpa_arquivo(request):

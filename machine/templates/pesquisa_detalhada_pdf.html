@@ -49,6 +49,7 @@
     </style>
 {% endblock %}
 {% block main %}
+    <h1>{{ operadora.upper }}</h1>
     <h1>Vendas do {{ estabelecimento.upper }}</h1>
     {% for vendas in vendas_dia %}
         {% if vendas %}
