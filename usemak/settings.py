@@ -160,6 +160,8 @@ if DATABASE_URL:
     AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
     AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
     AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME")
+    EMAIL_HOST = os.getenv("EMAIL_HOST")
+    EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 
     AWS_S3_FILE_OVERWRITE = False
     AWS_DEFAULT_ACL = None
@@ -167,10 +169,8 @@ if DATABASE_URL:
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'carturrsf@gmail.com'  # Seu endereço de e-mail do Gmail
-EMAIL_HOST_PASSWORD = 'appzfhmxvcdnjuaz'  # Sua senha do Gmail ou senha de app
 DEFAULT_FROM_EMAIL = 'carturrsf@gmail.com'
 
