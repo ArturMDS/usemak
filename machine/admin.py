@@ -7,12 +7,6 @@ from .models import (Estabelecimento,
                      Operadora,
                      Atualizacao)
 
-"""campos = list(UserAdmin.fieldsets)
-campos.append(
-    ('Outros', {'fields': ('valor', )})
-)
-UserAdmin.fieldsets = tuple(campos)"""
-
 admin.site.register(Usuario, UserAdmin)
 admin.site.register(Estabelecimento)
 admin.site.register(Venda)

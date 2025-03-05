@@ -45,10 +45,10 @@
     </style>
 {% endblock %}
 {% block main %}
-    <br><br>
+    <br>
     <h1>{{ operadora.upper }}</h1>
     <h1>Período: de {{ data_inicio }} até {{ data_fim }}</h1>
-    <br><br>
+    <br>
     <h2>{{ estabelecimento }} - Vendas a Crédito</h2>
     <div class="table-responsive">
         <table class="table table-striped table-sm">
@@ -264,7 +264,7 @@
                 </tr>
             {% endif %}
             {% if vendas.credito %}
-                <tr>
+                <tr style="background-color: #95e19f;">
                     <td><b>Total</b></td>
                     <td>{{ vendas.credito.count }}</td>
                     <td>R$ {{ vendas.credito.total_bruto }}</td>
@@ -342,7 +342,7 @@
                 </tr>
             {% endif %}
             {% if vendas.debito %}
-                <tr>
+                <tr style="background-color: #95e19f;">
                     <td><b>Total</b></td>
                     <td>{{ vendas.debito.count }}</td>
                     <td>R$ {{ vendas.debito.total_bruto }}</td>

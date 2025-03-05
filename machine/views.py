@@ -17,6 +17,8 @@ from .models import (Venda,
                      Operadora,
                      Atualizacao)
 from .forms import FormHomepage, CreateAtualizacaoForm
+from django.core.mail import send_mail
+from django.conf import settings
 import pandas as pd
 from datetime import datetime, timedelta, date
 from .functions import inserir_dados_cielo, inserir_dados_cpay
@@ -24,6 +26,7 @@ from django.http import HttpResponse
 from django.template.loader import get_template
 import xhtml2pdf.pisa as pisa
 import io
+import random
 
 
 class Render:
@@ -481,76 +484,75 @@ def create_dados(request, id):
         dataframe = pd.read_excel(atual.arquivo)
     except:
         messages.warning(request, "Não foi possível abrir o arquivo")
-    else:
+        return redirect('machine:createatualizacao')
+    num = 0
+    m = 0
+    operadora = ''
+    list = []
+    try:
+        while num == 0:
+            for dado in dataframe.iloc[m]:
+                if "Hora" in str(dado):
+                    num = 1
+            list.append(m)
+            m += 1
+        list.pop(list[-1])
         num = 0
         m = 0
-        operadora = ''
-        list = []
-        try:
-            while num == 0:
-                for dado in dataframe.iloc[m]:
-                    if "Hora" in str(dado):
-                        num = 1
-                list.append(m)
-                m += 1
-            list.pop(list[-1])
-            num = 0
-            m = 0
-            while num == 0:
-                for dado in dataframe.iloc[m]:
-                    if "C6Pay" in str(dado):
-                        num = 1
-                        operadora = 'C6Pay'
-                        break
-                    elif "Cielo" in str(dado):
-                        num = 1
-                        operadora = 'Cielo'
-                        break
-                m += 1
-        except:
-            messages.warning(request, "Não foi possível ler a coluna do arquivo")
-            return redirect('machine:createatualizacao')
-        else:
-            if operadora == 'Cielo':
-                dataframe = dataframe.drop(list, axis=0)
-                dataframe.columns = dataframe.loc[8]
-                dataframe = dataframe.drop([8], axis=0)
-                d_records = dataframe.to_dict("records")
-                pk = atual.estabelecimento.id
-                try:
-                    inserir_dados_cielo(request, d_records, pk, operadora)
-                except:
-                    messages.warning(request, "Não foi possível inserir dados no banco de dados")
-                    return redirect('machine:createatualizacao')
-                else:
-                    atual.vigente = False
-                    atual.delete()
-                    messages.success(request, "Banco de dados atualizado com sucesso!")
-            elif operadora == 'C6Pay':
-                try:
-                    dataframe = dataframe.drop(list, axis=0)
-                    dataframe.columns = dataframe.loc[2]
-                    dataframe = dataframe.drop([2], axis=0)
-                    dataframe = dataframe[dataframe['Status da venda'] != 'Recusada']
-                    dataframe = dataframe[dataframe['Status da venda'] != 'Devolvida']
-                    dataframe = dataframe[dataframe['Tipo de operação'] != 'Pix']
-                except:
-                    messages.warning(request, "Erro no ajuste do dataframe")
-                    return redirect('machine:createatualizacao')
-                else:
-                    d_records = dataframe.to_dict("records")
-                    pk = atual.estabelecimento.id
-                    try:
-                        inserir_dados_cpay(request, d_records, pk, operadora)
-                    except:
-                        messages.warning(request, "Não foi possível inserir dados no banco de dados")
-                        return redirect('machine:createatualizacao')
-                    else:
-                        atual.vigente = False
-                        atual.delete()
-                        messages.success(request, "Banco de dados atualizado com sucesso!")
-    finally:
+        while num == 0:
+            for dado in dataframe.iloc[m]:
+                if "C6Pay" in str(dado):
+                    num = 1
+                    operadora = 'C6Pay'
+                    break
+                elif "Cielo" in str(dado):
+                    num = 1
+                    operadora = 'Cielo'
+                    break
+            m += 1
+    except:
+        messages.warning(request, "Erro na leitura do arquivo")
         return redirect('machine:createatualizacao')
+    if operadora == 'Cielo':
+        try:
+            dataframe = dataframe.drop(list, axis=0)
+            dataframe.columns = dataframe.loc[8]
+            dataframe = dataframe.drop([8], axis=0)
+            d_records = dataframe.to_dict("records")
+            pk = atual.estabelecimento.id
+        except:
+            messages.warning(request, "Erro na formatação do dataframe")
+            return redirect('machine:createatualizacao')
+        try:
+            inserir_dados_cielo(request, d_records, pk, operadora)
+        except:
+            messages.warning(request, "Não foi possível inserir dados no banco de dados")
+            return redirect('machine:createatualizacao')
+        atual.vigente = False
+        atual.delete()
+        messages.success(request, "Banco de dados atualizado com sucesso!")
+    elif operadora == 'C6Pay':
+        try:
+            dataframe = dataframe.drop(list, axis=0)
+            dataframe.columns = dataframe.loc[2]
+            dataframe = dataframe.drop([2], axis=0)
+            dataframe = dataframe[dataframe['Status da venda'] != 'Recusada']
+            dataframe = dataframe[dataframe['Status da venda'] != 'Devolvida']
+            dataframe = dataframe[dataframe['Tipo de operação'] != 'Pix']
+        except:
+            messages.warning(request, "Erro na formatação do dataframe")
+            return redirect('machine:createatualizacao')
+        d_records = dataframe.to_dict("records")
+        pk = atual.estabelecimento.id
+        try:
+            inserir_dados_cpay(request, d_records, pk, operadora)
+        except:
+            messages.warning(request, "Não foi possível inserir dados no banco de dados")
+            return redirect('machine:createatualizacao')
+        atual.vigente = False
+        atual.delete()
+        messages.success(request, "Banco de dados atualizado com sucesso!")
+    return redirect('machine:createatualizacao')
 
 
 class PesquisaPdf(View):
@@ -626,4 +628,77 @@ def limpa_arquivo(request):
     vendas.delete()
     messages.success(request, f"Todas as vendas do arquivo foram deletadas com sucesso!")
     return redirect('machine:readvendas')
+
+
+def enviar_email(assunto, msg):
+    send_mail(
+        assunto,
+        msg,
+        settings.EMAIL_HOST_USER,
+        ["arturmds@yahoo.com.br"],
+        fail_silently=False,
+    )
+
+
+def teste_criar_dados():
+    a = random.randint(1, 2)
+    if a == 1:
+        dataframe = pd.read_excel(r"static/files/c6pay.xlsx")
+        msg = "Teste C6Pay"
+    else:
+        dataframe = pd.read_excel(r"static/files/cielo.xlsx")
+        msg = "Teste Cielo"
+    num = 0
+    m = 0
+    operadora = ''
+    list = []
+    try:
+        while num == 0:
+            for dado in dataframe.iloc[m]:
+                if "Hora" in str(dado):
+                    num = 1
+            list.append(m)
+            m += 1
+        list.pop(list[-1])
+    except:
+        msg += "\n Erro na leitura da coluna"
+    num = 0
+    m = 0
+    try:
+        while num == 0:
+            for dado in dataframe.iloc[m]:
+                if "C6Pay" in str(dado):
+                    num = 1
+                    operadora = 'C6Pay'
+                    break
+                elif "Cielo" in str(dado):
+                    num = 1
+                    operadora = 'Cielo'
+                    break
+            m += 1
+    except:
+        msg += "\n Erro na leitura da coluna do arquivo"
+    if operadora == 'Cielo':
+        try:
+            dataframe = dataframe.drop(list, axis=0)
+            dataframe.columns = dataframe.loc[8]
+            dataframe = dataframe.drop([8], axis=0)
+        except:
+            msg += "\n Erro na formatação do arquivo"
+    elif operadora == 'C6Pay':
+        try:
+            dataframe = dataframe.drop(list, axis=0)
+            dataframe.columns = dataframe.loc[2]
+            dataframe = dataframe.drop([2], axis=0)
+            dataframe = dataframe[dataframe['Status da venda'] != 'Recusada']
+            dataframe = dataframe[dataframe['Status da venda'] != 'Devolvida']
+            dataframe = dataframe[dataframe['Tipo de operação'] != 'Pix']
+        except:
+            msg += "\n Erro na formatação do arquivo"
+    assunto = "USEMAK - Teste de criação de dados"
+    if msg == "Teste C6Pay" or msg == "Teste Cielo":
+        msg += "\n\nTestes finalizados sem alterações!"
+    else:
+        msg += "\n\n Testes finalizados"
+    enviar_email(assunto, msg)
 
